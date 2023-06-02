@@ -1,5 +1,9 @@
 import postgres from 'postgres'
 
-const sql = postgres(process.env.DATABASE_URL)
+const { DATABASE_URL } = process.env
+
+const sql = postgres(DATABASE_URL as string, {
+    ssl: { sslmode: 'require' },
+})
 
 export default sql

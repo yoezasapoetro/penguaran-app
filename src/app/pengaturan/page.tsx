@@ -1,6 +1,5 @@
 "use client"
 
-import { twMerge } from 'tailwind-merge'
 import Link from 'next/link'
 import { Card } from '@/app/components/card'
 import { TextSmall } from '@/app/components/Text'
@@ -13,9 +12,8 @@ import {
 
 import {
     EditingButton,
-    EditButton,
     LogoutButton
-} from './button'
+} from '@/app/components/button'
 
 const iconClassName = `h-4 w-4 `
 
@@ -33,18 +31,10 @@ const SettingSubcontainer = ({ children }: { children: React.ReactNode }) => {
     )
 }
 
-const SectionContainer = ({ children, className }: { children: React.ReactNode, className?: string }) => {
-    return (
-        <div className={twMerge('flex flex-col gap-y-2 mb-2', className)}>
-            {children}
-        </div>
-    )
-}
-
 export default function Pengaturan() {
     const containerClassName = `
         flex flex-col gap-y-3 justify-center
-        py-2 px-2 divide-y divide-green-100
+        py-2 px-2 divide-y divide-green-100 mb-2
     `
     return (
         <article className={containerClassName}>
@@ -138,68 +128,13 @@ export default function Pengaturan() {
             </SettingSubcontainer>
             <SettingSubcontainer>
                 <SettingTitle icon={<UserCircleIcon className={iconClassName} />} title="Akun" />
-                <p className=''>Data Pribadi</p>
-                <SectionContainer>
-                    <Card className="flex items-center justify-between">
-                        <div>
-                            <p className="text-xs">Nama</p>
-                            <TextSmall className='font-semibold'>John dow</TextSmall>
-                        </div>
-                        <EditButton onClick={() => { console.error('editClick 21') }} />
-                    </Card>
-                    <Card className="flex items-center justify-between">
-                        <div>
-                            <p className="text-xs">Kota</p>
-                            <TextSmall className='font-semibold'>Tennessee</TextSmall>
-                        </div>
-                        <EditButton onClick={() => { console.error('editClick 21') }} />
-                    </Card>
-                    <Card className="flex items-center justify-between">
-                        <div>
-                            <p className="text-xs">No. Telp</p>
-                            <TextSmall className='font-semibold'>(123) 456</TextSmall>
-                        </div>
-                        <EditButton onClick={() => { console.error('editClick 21') }} />
-                    </Card>
-                    <Card className="flex items-center justify-between">
-                        <div>
-                            <p className="text-xs">Jenis Kelamin</p>
-                            <TextSmall className='font-semibold'>Laki-laki</TextSmall>
-                        </div>
-                        <EditButton onClick={() => { console.error('editClick 21') }} />
-                    </Card>
-                    <Card className="flex items-center justify-between">
-                        <div>
-                            <p className="text-xs">Tanggal Lahir</p>
-                            <TextSmall className='font-semibold'>03/04/1992</TextSmall>
-                        </div>
-                        <EditButton onClick={() => { console.error('editClick 21') }} />
-                    </Card>
-                </SectionContainer>
-                <p className=''>Data Akun</p>
-                <SectionContainer>
-                    <Card className="flex items-center justify-between">
-                        <div>
-                            <p className="text-xs">Alamat E-Mail</p>
-                            <TextSmall className='font-semibold'>john@dow.com</TextSmall>
-                        </div>
-                        <EditButton onClick={() => { console.error('editClick 21') }} />
-                    </Card>
-                    <Card className="flex items-center justify-between">
-                        <div>
-                            <p className="text-xs">Username</p>
-                            <TextSmall className='font-semibold'>johndow</TextSmall>
-                        </div>
-                        <EditButton onClick={() => { console.error('editClick 21') }} />
-                    </Card>
-                    <Card className="flex items-center justify-between">
-                        <div>
-                            <p className="text-xs">Password</p>
-                            <TextSmall className='font-semibold'>********</TextSmall>
-                        </div>
-                        <EditButton onClick={() => { console.error('editClick 21') }} />
-                    </Card>
-                </SectionContainer>
+                <div className="mt-2">
+                    <Link
+                        className="text-sm px-2 rounded-full bg-white border border-green-700 border-solid"
+                        href="/pengaturan/akun">
+                        Edit akun anda
+                    </Link>
+                </div>
             </SettingSubcontainer>
             <LogoutButton />
         </article>

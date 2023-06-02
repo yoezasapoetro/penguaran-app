@@ -17,6 +17,10 @@ export default function PengaturanLayout(
         subtitle = "Penjual"
     }
 
+    if (pathname.includes("akun")) {
+        subtitle = "Akun"
+    }
+
     return (
         <section className="h-full">
             <AppHeader title="Pengaturan" subtitle={subtitle} />

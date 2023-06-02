@@ -2,9 +2,10 @@ import AppMenu from "./menu"
 
 type AppLayoutProps = {
     children: React.ReactNode
+    menu?: React.ReactNode
 }
 
-export default function DefaultLayout({ children }: AppLayoutProps) {
+export function DefaultLayout({ children, menu }: AppLayoutProps) {
     const className = `
         box-border min-h-full w-full flex flex-col
         bg-gradient-to-t from-stone-100 to-green-50
@@ -14,7 +15,25 @@ export default function DefaultLayout({ children }: AppLayoutProps) {
             <section className="flex-grow w-full h-full">
                 {children}
             </section>
-            <AppMenu />
+            {menu}
         </main>
+    )
+}
+
+export function AppLayout({ children }: AppLayoutProps) {
+    return (
+        <DefaultLayout menu={<AppMenu />}>
+            {children}
+        </DefaultLayout>
+    )
+}
+
+export function AuthLayout({ children }: AppLayoutProps) {
+    return (
+        <DefaultLayout>
+            <div className="flex flex-col items-center justify-center h-screen w-full">
+                {children}
+            </div>
+        </DefaultLayout>
     )
 }
