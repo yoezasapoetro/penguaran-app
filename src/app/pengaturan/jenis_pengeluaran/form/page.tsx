@@ -13,6 +13,7 @@ const inputClass = `
 const submitButtonClass = `
     my-1 px-5 py-[0.4rem] w-fit rounded-full bg-green-700 text-white
 `
+
 export default function Form() {
 
     return (
