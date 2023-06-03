@@ -1,4 +1,5 @@
 "use server"
+
 import sql from '@/lib/db'
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
@@ -44,4 +45,3 @@ export async function removeExpenseCategory(id: number) {
 
     revalidatePath("/pengaturan/jenis_pengeluaran")
 }
-

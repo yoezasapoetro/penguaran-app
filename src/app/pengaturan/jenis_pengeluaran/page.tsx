@@ -1,8 +1,8 @@
 import Link from "next/link"
 import { PlusCircleIcon as AddIcon } from '@heroicons/react/24/outline'
+import { getData, removeExpenseCategory } from "@/repository/ExpenseCategory"
 import { Card } from "@/app/components/card"
 import { TextSmall } from "@/app/components/Text"
-import { getData, removeExpenseCategory } from "./actions"
 import { RemoveCategory } from "./button"
 
 export const revalidate = 86400

@@ -21,7 +21,7 @@ export default async function RootLayout(props: MainLayoutProps) {
         <ClerkProvider {...ClerkOptions}>
             <html lang="en">
                 <body className={`${font.variable} font-sans box-border h-screen text-green-900`}>
-                {user
+                {!!user
                     ? <AppLayout>{props.children}{props.modal}</AppLayout>
                     : <AuthLayout>{props.children}</AuthLayout>}
                 </body>

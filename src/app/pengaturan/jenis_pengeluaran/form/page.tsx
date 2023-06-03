@@ -1,5 +1,5 @@
 import { Card } from "@/app/components/card"
-import { addCategory } from '@/app/pengaturan/jenis_pengeluaran/actions'
+import { addCategory } from '@/repository/ExpenseCategory'
 
 const containerClass = `
     py-3 px-2
