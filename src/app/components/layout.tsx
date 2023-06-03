@@ -8,7 +8,7 @@ type AppLayoutProps = {
 export function DefaultLayout({ children, menu }: AppLayoutProps) {
     const className = `
         box-border min-h-full w-full flex flex-col
-        bg-gradient-to-t from-stone-100 to-green-50
+        bg-gradient-to-t from-stone-200 to-teal-200
     `
     return (
         <main className={className}>

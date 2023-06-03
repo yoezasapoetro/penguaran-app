@@ -6,6 +6,7 @@ export default function Penjual() {
         flex flex-col gap-y-3 justify-center
         py-2 px-2 divide-y divide-green-100
     `
+
     return (
         <article className={containerClassName}>
             <Card>
