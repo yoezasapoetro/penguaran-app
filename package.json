@@ -9,28 +9,27 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/next-js": "^2.1.4",
+    "@chakra-ui/react": "^2.7.0",
     "@clerk/nextjs": "^4.19.0",
     "@clerk/themes": "^1.7.4",
-    "@headlessui/react": "^1.7.15",
-    "@heroicons/react": "^2.0.18",
-    "autoprefixer": "10.4.14",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
     "eslint": "8.41.0",
+    "framer-motion": "^10.12.16",
+    "lucide-react": "^0.233.0",
     "next": "13.4.4",
-    "postcss": "8.4.24",
     "postgres": "^3.3.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "svix": "^1.4.12",
-    "tailwindcss": "3.3.2"
+    "svix": "^1.4.12"
   },
   "devDependencies": {
-    "@tailwindcss/forms": "^0.5.3",
     "@types/node": "^20.2.5",
     "@types/react": "18.2.7",
     "@types/react-dom": "18.2.4",
     "eslint-config-next": "13.4.4",
     "eslint-config-prettier": "^8.8.0",
-    "tailwind-merge": "^1.13.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.3"
   }
