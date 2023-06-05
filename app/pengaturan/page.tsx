@@ -112,7 +112,7 @@ export default function Pengaturan() {
                     <Text>Umum</Text>
                     <SettingItem
                         title="Akun"
-                        subtitle="Dukungan dari Clerk.com untuk mengelola akun anda"
+                        subtitle="Kelola akun anda"
                         icon={<SmilePlusIcon size={24} strokeWidth={1} />}
                         link="/pengaturan/akun"
                     />
