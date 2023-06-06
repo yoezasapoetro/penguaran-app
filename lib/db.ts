@@ -1,9 +1,10 @@
-import postgres from 'postgres'
+import { Pool } from "@neondatabase/serverless"
+import { drizzle } from "drizzle-orm/neon-serverless";
+import * as schema from "@/db/schema";
 
-const { DATABASE_URL } = process.env
-
-const sql = postgres(DATABASE_URL as string, {
-    ssl: { sslmode: 'require' },
+export const pool = new Pool({
+    connectionString: process.env.DATABASE_URL
 })
 
-export default sql
+export const db = drizzle(pool, { schema })
+

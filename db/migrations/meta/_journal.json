@@ -1,0 +1,20 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1686071178678,
+      "tag": "0000_complex_pete_wisdom",
+      "breakpoints": false
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1686074556710,
+      "tag": "0001_equal_lionheart",
+      "breakpoints": false
+    }
+  ]
+}
