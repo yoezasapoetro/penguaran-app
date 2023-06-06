@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { getData, removeExpenseCategory } from "@/repository/ExpenseCategory"
+import { getData, removeExpenseCategory } from "@/repository/CategoryRepository"
 import { Card } from "@/components/card"
 import { TextSmall } from "@/components/Text"
 import { RemoveCategory } from "./button"
