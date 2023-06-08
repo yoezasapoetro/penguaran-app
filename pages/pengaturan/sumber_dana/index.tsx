@@ -5,12 +5,12 @@ import {
 import PageHeader from "@/components/header"
 import PageLayout from "@/components/page-layout"
 
-export default function Akun() {
+export default function SumberDana() {
     return (
         <Container p={0} minH="100vh">
             <PageHeader
                 title="Pengaturan"
-                subtitle="Akun"
+                subtitle="Sumber Dana"
             />
             <PageLayout>
             </PageLayout>

@@ -4,12 +4,10 @@ import {
     Stack,
     Flex,
     Text,
-    Heading,
     Card,
     CardBody,
     Center,
     Spacer,
-    Box,
     Button,
 } from "@chakra-ui/react"
 import {
@@ -18,6 +16,9 @@ import {
     SmilePlusIcon,
     UserSquareIcon,
 } from "lucide-react"
+
+import PageHeader from "@/components/header"
+import PageLayout from "@/components/page-layout"
 
 const SettingItem = ({
     title,
@@ -64,23 +65,8 @@ const SettingItem = ({
 export default function Pengaturan() {
     return (
         <Container p={0} minH="100vh">
-            <Box
-                p={4}
-                css={{
-                    borderBottom: "1px solid #f3f3f3",
-                }}
-            >
-                <Heading>Pengaturan</Heading>
-            </Box>
-            <Stack
-                spacing={3}
-                px={4}
-                pt={2}
-                bgColor="gray.50"
-                css={{
-                    height: "100vh",
-                }}
-            >
+            <PageHeader title="Pengaturan" />
+            <PageLayout>
                 <Stack
                     spacing={3}
                 >
@@ -115,7 +101,7 @@ export default function Pengaturan() {
                         link="/pengaturan/akun"
                     />
                 </Stack>
-            </Stack>
+            </PageLayout>
         </Container>
     )
 }
