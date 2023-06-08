@@ -12,19 +12,24 @@
     "migrate:up": "drizzle-kit up:pg --config=drizzle.config.ts"
   },
   "dependencies": {
+    "@auth/core": "^0.8.2",
     "@chakra-ui/next-js": "^2.1.4",
     "@chakra-ui/react": "^2.7.0",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@neondatabase/serverless": "^0.4.9",
+    "date-fns": "^2.30.0",
+    "date-fns-tz": "^2.0.0",
     "drizzle-orm": "^0.26.5",
     "eslint": "8.41.0",
+    "formik": "^2.4.1",
     "framer-motion": "^10.12.16",
     "lucide-react": "^0.233.0",
     "next": "13.4.3",
     "next-auth": "^4.22.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-icons": "^4.9.0",
     "swr": "^2.1.5"
   },
   "devDependencies": {

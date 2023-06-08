@@ -1,10 +1,19 @@
 import {
-    Container,
+    Container
 } from "@chakra-ui/react"
 
-export default function Penjual() {
+import PageHeader from "@/components/header"
+import PageLayout from "@/components/page-layout"
 
+export default function Penjual() {
     return (
-        <Container></Container>
+        <Container p={0} minH="100vh">
+            <PageHeader
+                title="Pengaturan"
+                subtitle="Tenant"
+            />
+            <PageLayout>
+            </PageLayout>
+        </Container>
     )
 }
