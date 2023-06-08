@@ -1,7 +1,10 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google"
+import { DrizzleAdapter } from "@/lib/adapter";
+import { db } from "@/lib/db";
 
-export default NextAuth({
+export const authOptions = {
+    adapter: DrizzleAdapter(db),
     providers: [
         GoogleProvider({
             name: "Google",
@@ -9,13 +12,28 @@ export default NextAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             authorization: {
                 params: {
-                    scope: "openid email profile",
                     prompt: "consent",
                     access_type: "offline",
-                    response_type: "code"
+                },
+            },
+            profile(profile) {
+                return {
+                    id: profile.sub,
+                    firstName: profile.given_name,
+                    lastName: profile.family_name,
+                    email: profile.email,
+                    image: profile.picture,
                 }
             }
         })
     ],
     useSecureCookies: false,
-})
+    pages: {
+        signIn: "/login"
+    },
+    session: {
+        strategy: "jwt",
+    }
+}
+
+export default NextAuth(authOptions)
