@@ -1,11 +1,10 @@
 import { Html, Head, Main, NextScript } from "next/document";
-import { font } from "@/lib/utils/fonts"
 
 export default function Document() {
     return (
         <Html lang="en">
             <Head />
-            <body className={font.className}>
+            <body style={{ backgroundColor: "#EBFFF9" }}>
                 <Main />
                 <NextScript />
             </body>
