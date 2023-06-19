@@ -43,6 +43,7 @@ export const store = pgTable("Store", {
 	address: varchar("address", { length: 255 }),
 	createdAt: timestamp("createdAt", { precision: 3, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updatedAt", { precision: 3, mode: 'string' }).notNull(),
+	deletedAt: timestamp("deletedAt", { precision: 3, mode: 'string' }),
 	userId: uuid("userId").references(() => user.id, { onDelete: "set null", onUpdate: "set null" } ),
 },
 (table) => {
@@ -56,6 +57,7 @@ export const category = pgTable("Category", {
 	name: varchar("name", { length: 255 }).notNull(),
 	createdAt: timestamp("createdAt", { precision: 3, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updatedAt", { precision: 3, mode: 'string' }).notNull(),
+	deletedAt: timestamp("deletedAt", { precision: 3, mode: 'string' }),
 	userId: uuid("userId").references(() => user.id, { onDelete: "set null", onUpdate: "set null" } ),
 },
 (table) => {
@@ -70,6 +72,7 @@ export const sourcePayment = pgTable("SourcePayment", {
 	type: varchar("type", { length: 255 }).notNull(),
 	createdAt: timestamp("createdAt", { precision: 3, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updatedAt", { precision: 3, mode: 'string' }).notNull(),
+	deletedAt: timestamp("deletedAt", { precision: 3, mode: 'string' }),
 	userId: uuid("userId").references(() => user.id, { onDelete: "set null", onUpdate: "set null" } ),
 },
 (table) => {

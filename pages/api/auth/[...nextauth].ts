@@ -1,9 +1,9 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google"
 import { DrizzleAdapter } from "@/lib/adapter";
 import { db } from "@/lib/db";
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
     adapter: DrizzleAdapter(db),
     providers: [
         GoogleProvider({
@@ -27,7 +27,7 @@ export const authOptions = {
             }
         })
     ],
-    useSecureCookies: false,
+    useSecureCookies: process.env.NODE_ENV !== "development",
     pages: {
         signIn: "/login"
     },

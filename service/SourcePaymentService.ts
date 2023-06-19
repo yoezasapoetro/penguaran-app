@@ -1,13 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { db } from "@/lib/db"
-import CategoryRepository from "@/repository/CategoryRepository"
+import SourcePaymentRepository from "@/repository/SourcePaymentRepository"
 
-export default class CategoryService {
-    private repository: CategoryRepository
+export default class SourcePaymentService {
+    private repository: SourcePaymentRepository
     private maxFetch = 5
 
     constructor(userId: string) {
-        this.repository = new CategoryRepository(db, userId)
+        this.repository = new SourcePaymentRepository(db, userId)
     }
 
     async getAllHandler(res: NextApiResponse) {
@@ -29,7 +29,7 @@ export default class CategoryService {
                 data: result
             })
         } catch (err) {
-            console.error('CategoryService', err)
+            console.error('SourcePaymentService', err)
             res.status(500).json({
                 status: "error",
                 message: "Internal server error"
@@ -47,7 +47,7 @@ export default class CategoryService {
                 data: result
             })
         } catch (err) {
-            console.error('CategoryService', err)
+            console.error('SourcePaymentService', err)
             res.status(500).json({
                 status: "error",
                 message: "Internal server error"
@@ -65,7 +65,7 @@ export default class CategoryService {
                 data: result
             })
         } catch (err) {
-            console.error('CategoryService', err)
+            console.error('SourcePaymentService', err)
             res.status(500).json({
                 status: "error",
                 message: "Internal server error"
@@ -73,3 +73,4 @@ export default class CategoryService {
         }
     }
 }
+
