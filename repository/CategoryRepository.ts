@@ -1,4 +1,4 @@
-import { InferModel, eq, desc } from "drizzle-orm";
+import { InferModel, eq, desc, and, isNull } from "drizzle-orm";
 import { type NeonDatabase } from "drizzle-orm/neon-serverless";
 import { category } from "@/db/schema";
 
@@ -27,7 +27,10 @@ export default class CategoryRepository {
                 updatedAt: category.updatedAt,
             })
             .from(category)
-            .where(eq(category.userId, this.userId))
+            .where(and(
+                eq(category.userId, this.userId),
+                isNull(category.deletedAt)
+            ))
             .orderBy(desc(category.createdAt))
     }
 
@@ -40,7 +43,10 @@ export default class CategoryRepository {
                 updatedAt: category.updatedAt,
             })
             .from(category)
-            .where(eq(category.id, id))
+            .where(and(
+                eq(category.id, id),
+                isNull(category.deletedAt)
+            ))
 
         return singleCategory ?? null
     }
@@ -75,16 +81,25 @@ export default class CategoryRepository {
         return updated
     }
 
-    async remove(id: number): Promise<Category> {
-        if (!this.userId) {
-            throw new Error("No User ID")
+    async remove(id: number, forceDelete: boolean = false): Promise<Category> {
+        let source: Category
+        if (forceDelete) {
+            const [forceDeleted] = await this.client
+                .delete(category)
+                .where(eq(category.id, id))
+                .returning()
+            source = forceDeleted
+        } else {
+            const [softDeleted] = await this.client
+                .update(category)
+                .set({
+                    deletedAt: new Date().toUTCString()
+                })
+                .where(eq(category.id, id))
+                .returning()
+            source = softDeleted
         }
 
-        const [deleted] = await this.client
-            .delete(category)
-            .where(eq(category.id, id))
-            .returning()
-
-        return deleted
+        return source
     }
 }

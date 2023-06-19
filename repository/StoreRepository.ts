@@ -1,0 +1,112 @@
+import { InferModel, eq, desc, and, isNull } from "drizzle-orm";
+import { type NeonDatabase } from "drizzle-orm/neon-serverless";
+import { store } from "@/db/schema";
+
+type Store = InferModel<typeof store, "select">
+type StoreModel = InferModel<typeof store, "insert">
+
+type StorePayload = {
+    name: string
+    address: string
+}
+
+export default class StoreRepository {
+    private client: NeonDatabase<Store>
+    private userId: string
+
+    constructor(client: NeonDatabase<Store>, userId: string) {
+        this.client = client
+        this.userId = userId
+    }
+
+    async getAll(): Promise<Array<Partial<Store>>> {
+        return await this.client
+            .select({
+                id: store.id,
+                name: store.name,
+                address: store.address,
+                createdAt: store.createdAt,
+                updatedAt: store.updatedAt,
+            })
+            .from(store)
+            .where(and(
+                eq(store.userId, this.userId),
+                isNull(store.deletedAt)
+            ))
+            .orderBy(desc(store.createdAt))
+    }
+
+    async getById(id: number): Promise<Partial<Store> | null> {
+        const [singleStore] = await this.client
+            .select({
+                id: store.id,
+                name: store.name,
+                type: store.address,
+                createdAt: store.createdAt,
+                updatedAt: store.updatedAt,
+            })
+            .from(store)
+            .where(and(
+                eq(store.id, id),
+                isNull(store.deletedAt)
+            ))
+
+        return singleStore ?? null
+    }
+
+    async create(payload: StorePayload): Promise<Store> {
+        const createStore: StoreModel = {
+            name: payload.name,
+            address: payload.address,
+            userId: this.userId,
+            createdAt: new Date().toUTCString(),
+            updatedAt: new Date().toUTCString()
+        }
+
+        const [created] = await this.client
+            .insert(store)
+            .values(createStore)
+            .returning()
+        return created
+    }
+
+    async edit(id: number, payload: StorePayload): Promise<Store> {
+        const updateStore: StoreModel = {
+            name: payload.name,
+            address: payload.address,
+            updatedAt: new Date().toUTCString()
+        }
+
+        const [updated] = await this.client
+            .update(store)
+            .set(updateStore)
+            .where(eq(store.id, id))
+            .returning()
+
+        return updated
+    }
+
+    async remove(id: number, forceDelete: boolean = false): Promise<Store> {
+        let source: Store
+        if (forceDelete) {
+            const [forceDeleted] = await this.client
+                .delete(store)
+                .where(eq(store.id, id))
+                .returning()
+            source = forceDeleted
+        } else {
+            const [softDeleted] = await this.client
+                .update(store)
+                .set({
+                    deletedAt: new Date().toUTCString()
+                })
+                .where(eq(store.id, id))
+                .returning()
+            source = softDeleted
+        }
+
+        return source
+    }
+}
+
+
