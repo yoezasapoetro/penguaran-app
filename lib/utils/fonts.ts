@@ -1,4 +1,4 @@
-import { Noto_Sans as Font } from 'next/font/google'
+import { Raleway as Font } from 'next/font/google'
 
 export const font = Font({
     weight: ['300', '400', '700'],
