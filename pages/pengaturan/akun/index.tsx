@@ -11,6 +11,7 @@ export default function Akun() {
             <PageHeader
                 title="Pengaturan"
                 subtitle="Akun"
+                rootUrl="/pengaturan"
             />
             <PageLayout>
             </PageLayout>

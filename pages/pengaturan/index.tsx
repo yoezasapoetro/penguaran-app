@@ -65,7 +65,7 @@ const SettingItem = ({
 export default function Pengaturan() {
     return (
         <Container p={0} minH="100vh">
-            <PageHeader title="Pengaturan" />
+            <PageHeader title="Pengaturan" rootUrl="/" />
             <PageLayout>
                 <Stack
                     spacing={3}

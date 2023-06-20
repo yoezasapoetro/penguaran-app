@@ -8,8 +8,8 @@ import {
     Stack,
     Text,
     Card,
-    CardHeader,
     CardBody,
+    Box,
     HStack,
     Icon,
     Button,
@@ -17,15 +17,19 @@ import {
     FormErrorMessage,
     Input,
     IconButton,
-    Divider,
+    Drawer,
+    DrawerOverlay,
+    DrawerContent,
+    DrawerBody,
+    useDisclosure
 } from "@chakra-ui/react"
 import {
-    InfoIcon,
     Trash2Icon,
     CalendarDaysIcon,
     BanIcon,
     PlusIcon,
-    SaveIcon
+    SaveIcon,
+    InfoIcon
 } from "lucide-react"
 
 import PageHeader from "@/components/header"
@@ -60,7 +64,7 @@ const addCategory = async ({ name, csrfToken }: AddCategoryProps) => {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "X_CSRF_TOKEN": csrfToken
+            "X-CSRF-TOKEN": csrfToken
         },
         body: JSON.stringify({
             name
@@ -136,12 +140,20 @@ async function removeCategory(id: number) {
 function CategoryItem({ category, removeCategory }: { category: Category, removeCategory: (id: number) => void }) {
     return (
         <>
-            <HStack
+            <Card
+                size="sm"
+                borderColor="#7aadd5"
+                borderRadius="xl"
+                variant="outline"
+                px={3}
+                display="flex"
+                flexDirection="row"
                 alignItems="center"
                 justifyContent="space-between"
             >
                 <Stack
                     spacing={1}
+                    py={2}
                 >
                     <Text
                         fontSize="md"
@@ -149,7 +161,7 @@ function CategoryItem({ category, removeCategory }: { category: Category, remove
                     >
                         {category.name}
                     </Text>
-                    <HStack alignItems="center" spacing={2}>
+                    <HStack alignItems="center" spacing={1}>
                         <Icon as={CalendarDaysIcon} color="gray.500" size={10} />
                         <Text
                             fontSize="xs"
@@ -162,19 +174,53 @@ function CategoryItem({ category, removeCategory }: { category: Category, remove
                 </Stack>
                 <IconButton
                     aria-label="Remove category"
-                    colorScheme="gray"
-                    icon={<Trash2Icon size={14} />}
-                    size="xs"
+                    bgColor="transparent"
+                    icon={<Trash2Icon size={17} color="#7aadd5" />}
+                    size="md"
                     onClick={() => removeCategory(category.id)}
                 />
-            </HStack>
-            <Divider borderColor="gray.200" />
+            </Card>
         </>
     )
 }
 
-export const getServerSideProps = async () => {
-    const _csrfToken = await getCsrfToken()
+function FormAlertInfo() {
+    return (
+        <Card
+            variant="outline"
+            backgroundColor="#fff"
+            borderRadius="none"
+            borderColor="#7aadd5"
+            borderLeftWidth={0}
+            borderRightWidth={0}
+            size="sm"
+        >
+            <CardBody
+                display="flex"
+                alignItems="center"
+                gap={2}
+            >
+                <Icon
+                    as={InfoIcon}
+                    height={6}
+                    width={6}
+                    color="#7aadd5"
+                />
+                <Text
+                    textColor="#7aadd5"
+                    fontSize="sm"
+                    lineHeight="22px"
+                >
+                    Jenis pengeluaran tidak perlu dikelompokkan dalam periode tertentu (misalnya hari, minggu, bulan).
+                    Sistem otomatis melakukan pengelompokan berdasarkan periode tersebut.
+                </Text>
+            </CardBody>
+        </Card>
+    )
+}
+
+export const getServerSideProps = async (context: any) => {
+    const _csrfToken = await getCsrfToken(context)
     const csrfToken = _csrfToken || ""
 
     return {
@@ -186,7 +232,7 @@ export default function JenisPengeluaran({
     csrfToken
 }: { csrfToken: string }) {
     const [formOpen, setFormOpen] = useState<Boolean>(false)
-    const [removeWarn, setRemoveWarn] = useState<Boolean>(false)
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     const { data, isLoading, mutate } = useSWR<ResponseData, ErrorResponse>(
         "/api/category", fetcher
@@ -195,87 +241,71 @@ export default function JenisPengeluaran({
     if (isLoading) return <PageLoading />
 
     return (
-        <Container p={0} minH="100vh">
-            <PageHeader
-                title="Pengaturan"
-                subtitle="Jenis Pengeluaran"
-            />
+        <Container
+            p={0}
+            minH="100vh"
+            position="relative"
+        >
+            <Box>
+                <PageHeader
+                    title="Pengaturan"
+                    subtitle="Jenis Pengeluaran"
+                />
+            </Box>
+
+            <FormAlertInfo />
+
             <PageLayout>
-                <Card
-                    mt={1}
-                    size="sm"
-                    variant="outline"
-                    borderColor="blue.400"
-                    borderWidth="1px"
-                    backgroundColor="blue.50"
+                <Stack
+                    width="100%"
+                    spacing={2}
                 >
-                    <CardBody>
-                        <Stack spacing={1}>
-                            <HStack
-                                spacing={2}
-                            >
-                                <Icon as={InfoIcon} color="blue.500" />
-                                <Text color="blue.500" lineHeight="20px" fontWeight="semibold">Info</Text>
-                            </HStack>
-                            <Text color="blue.400" fontSize="sm" lineHeight="20px">
-                                Jenis pengeluaran tidak perlu dikelompokkan dalam periode tertentu (misalnya hari, minggu, bulan).
-                                Sistem otomatis melakukan pengelompokan berdasarkan periode tersebut.
-                            </Text>
-                        </Stack>
-                    </CardBody>
-                </Card>
-
-
-                <Card
-                    variant="elevated"
-                    size="sm"
-                >
-                    <CardHeader
-                        borderBottomWidth="1px"
-                        borderBottomColor="gray.200"
+                    {data?.data?.map((category) => (
+                        <CategoryItem
+                            key={category.id}
+                            category={category}
+                            removeCategory={async (id: number) => {
+                                removeCategory(id)
+                            }}
+                        />
+                    ))}
+                </Stack>
+                {isOpen && (
+                    <Drawer
+                        placement="bottom"
+                        isOpen={isOpen}
+                        onClose={onClose}
+                        size="lg"
                     >
-                        <Text lineHeight="20px" textColor="green.700">
-                            Jenis pengeluaran saat ini
-                            {" "}
-                            <strong>{data?.total}</strong>
-                        </Text>
-                    </CardHeader>
-                    <CardBody>
-                        <Stack spacing={2}>
-                            {data?.data?.map((category) => (
-                                <CategoryItem
-                                    key={category.id}
-                                    category={category}
-                                    removeCategory={async (id: number) => {
-                                        // removeCategory(id)
-                                        console.error(id)
-                                        setRemoveWarn(!removeWarn)
-                                    }}
-                                />
-                            ))}
-                            {formOpen && (
+                        <DrawerOverlay />
+                        <DrawerContent>
+                            <DrawerBody>
                                 <CategoryForm csrfToken={csrfToken} callback={() => {
                                     setFormOpen(!formOpen)
                                     mutate()
                                 }} />
-                            )}
-                            <Button
-                                leftIcon={
-                                    formOpen
-                                        ? <BanIcon size={15} />
-                                        : <PlusIcon size={15} />
-                                }
-                                iconSpacing={1}
-                                variant="outline"
-                                size="sm"
-                                onClick={() => setFormOpen(!formOpen)}
-                            >
-                                {formOpen ? "Batal" : "Tambah"}
-                            </Button>
-                        </Stack>
-                    </CardBody>
-                </Card>
+                            </DrawerBody>
+                        </DrawerContent>
+                    </Drawer>
+                )}
             </PageLayout>
+
+            <Button
+                leftIcon={<PlusIcon size={20} />}
+                iconSpacing={1}
+                variant="solid"
+                bgColor="#7aadd5"
+                width="100%"
+                size="lg"
+                borderRadius="none"
+                onClick={onOpen}
+                position="absolute"
+                bottom={3}
+                zIndex={2}
+                color="white"
+            >
+                {formOpen ? "Batal" : "Tambah"}
+            </Button>
         </Container>
     )
 }
