@@ -8,11 +8,11 @@ export default function PageLayout({
     return (
         <Stack
             spacing={3}
-            px={4}
-            pt={2}
-            bgColor="gray.50"
+            pt={3}
+            px={3}
+            bgColor="#EBFFF9"
             css={{
-                height: "100vh",
+                height: "100%",
             }}
         >
             {children}
