@@ -1,35 +1,19 @@
-import "@/styles/globals.css"
-import type { AppProps } from "next/app"
-import { SessionProvider } from "next-auth/react"
-import { ChakraProvider } from "@chakra-ui/react"
-import { extendTheme } from "@chakra-ui/react"
-import { font } from "@/lib/utils/fonts"
+import '@/styles/globals.css';
+import type { AppInitialProps } from 'next/app';
+import { SessionProvider } from 'next-auth/react';
+import { font } from '@/lib/utils/fonts';
 
-export const theme = extendTheme({
-    fonts: {
-        heading: "var(--font-sans)",
-        body: "var(--font-sans)",
-    }
-})
-
-export default function PenguaranApp({
+export default function App({
     Component,
-    pageProps: { session, ...pageProps },
-}: AppProps) {
+    pageProps: { session, ...pageProps }
+}: AppInitialProps & { Component: any }) {
     return (
         <>
-            <style jsx global>
-                {`
-                    :root {
-                        --font-sans: ${font.style.fontFamily}
-                    }
-                `}
-            </style>
             <SessionProvider session={session}>
-                <ChakraProvider theme={theme}>
+                <main className={font.variable}>
                     <Component {...pageProps} />
-                </ChakraProvider>
+                </main>
             </SessionProvider>
         </>
-    )
+    );
 }
