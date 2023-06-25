@@ -1,10 +1,10 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google"
 import { DrizzleAdapter } from "@/lib/adapter";
-import { db } from "@/lib/db";
+import { dbPg, dbSqlite } from "@/lib/db";
 
 export const authOptions: NextAuthOptions = {
-    adapter: DrizzleAdapter(db),
+    adapter: DrizzleAdapter(dbPg, dbSqlite),
     providers: [
         GoogleProvider({
             name: "Google",
@@ -19,8 +19,7 @@ export const authOptions: NextAuthOptions = {
             profile(profile) {
                 return {
                     id: profile.sub,
-                    firstName: profile.given_name,
-                    lastName: profile.family_name,
+                    name: `${profile.given_name} ${profile.family_name}`,
                     email: profile.email,
                     image: profile.picture,
                 }
@@ -32,8 +31,15 @@ export const authOptions: NextAuthOptions = {
         signIn: "/login"
     },
     session: {
-        strategy: "jwt",
-    }
+        maxAge: 24 * 60 * 60,
+        updateAge: 8 * 60 * 60
+    },
+    callbacks: {
+        async jwt(data) {
+            console.log('jwt', data)
+            return data.token
+        },
+    },
 }
 
 export default NextAuth(authOptions)

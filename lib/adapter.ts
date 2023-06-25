@@ -1,90 +1,153 @@
-import { type Adapter, AdapterAccount, AdapterUser } from "@auth/core/adapters"
+import { type AdapterAccount, AdapterUser, AdapterSession, DefaultAdapter } from "next-auth/adapters"
 import type { NeonDatabase } from "drizzle-orm/neon-serverless"
-import { InferModel, eq, and } from "drizzle-orm"
-import { user, profile } from "@/db/schema"
+import { LibSQLDatabase } from "drizzle-orm/libsql"
+import { parseJSON } from "date-fns"
 
-type User = InferModel<typeof user>
-type UserCreated = InferModel<typeof user, "insert">
-type ProfileCreated = InferModel<typeof profile, "insert">
+import {
+    User,
+    BaseUser,
+    Account,
+    Session,
+    SessionCreated,
+} from "@/lib/models"
+import {
+    buildUserFromAdapterUser,
+    buildBaseUserFromAdapterUser
+} from "@/lib/dto/baseUserDto"
+import { buildBaseUserFromUser } from "./dto/userDto"
+import { buildAccountFromAdapterAccount } from "./dto/accountDto"
 
-function getSingleUser(currentUser: User): AdapterUser | null {
-    if (currentUser) {
-        return {
-            id: currentUser.id,
-            email: currentUser.email,
-        } as AdapterUser
+import BaseUserRepository from "@/repository/BaseUserRepository"
+import UserRepository from "@/repository/UserRepository"
+import AccountRepository from "@/repository/AccountRepository"
+import SessionRepository from "@/repository/SessionRepository"
+
+function toNextSession(_session: Session): AdapterSession {
+    const _nextSession: AdapterSession = {
+        userId: _session.userId,
+        sessionToken: _session.sessionToken,
+        expires: parseJSON(_session.expires as string)
     }
-    return null
+
+    return _nextSession
 }
 
-export function DrizzleAdapter(client: NeonDatabase<User>): Adapter {
+function toAdapterUser(_user: BaseUser): AdapterUser {
     return {
-        async linkAccount(account: AdapterAccount) {
-            const payload: Partial<UserCreated> = {
-                source: account.provider,
-                externalId: account.providerAccountId,
+        id: _user.id,
+        email: _user.email,
+        name: _user?.name,
+        image: _user?.image,
+        emailVerified: _user.emailVerified ? parseJSON(_user.emailVerified) : null
+    }
+}
+
+export function DrizzleAdapter(client: NeonDatabase<User>, clientSqlite: LibSQLDatabase<BaseUser | Session | Account>): DefaultAdapter {
+    const userRepository = new UserRepository(client)
+    const baseUserRepository = new BaseUserRepository<BaseUser>(clientSqlite)
+    const accountRepository = new AccountRepository<Account>(clientSqlite)
+    const sessionRepository = new SessionRepository<Session>(clientSqlite)
+
+    return {
+        async createUser(adapterUser: Omit<AdapterUser, "id">): Promise<AdapterUser> {
+            let user: User
+            const existingUser = await userRepository.getByEmail(adapterUser.email)
+
+            if (!existingUser) {
+                user = await userRepository.create(
+                    buildUserFromAdapterUser(adapterUser)
+                )
+            } else {
+                user = existingUser
             }
 
-            await client
-                .update(user)
-                .set(payload)
-                .where(eq(user.id, account.userId))
-        },
-        async getUserByAccount({ providerAccountId, provider }: AdapterAccount) {
-            const [currentUser] = await client
-                .select()
-                .from(user)
-                .where(
-                    and(
-                        eq(user.externalId, providerAccountId),
-                        eq(user.source, provider)
-                    ))
+            const _user: BaseUser = await baseUserRepository.create(
+                buildBaseUserFromUser(user, adapterUser)
+            )
 
-            return getSingleUser(currentUser)
+            return toAdapterUser(_user)
+        },
+        async getUser(id: string): Promise<AdapterUser | null> {
+            const _user = await baseUserRepository.getById(id)
+            if (!_user) return null
+            return toAdapterUser(_user)
         },
         async getUserByEmail(email: string): Promise<AdapterUser | null> {
-            const [currentUser] = await client
-                .select()
-                .from(user)
-                .where(eq(user.email, email))
-
-            return getSingleUser(currentUser)
+            const _user: BaseUser = await baseUserRepository.getByEmail(email)
+            if (!_user) return null
+            return toAdapterUser(_user)
         },
-        async createUser(_user: any): Promise<AdapterUser> {
-            let latestUser: User
-            const payload: UserCreated = {
-                email: _user.email,
-                username: _user.email,
-                createdAt: new Date().toUTCString(),
-                updatedAt: new Date().toUTCString()
-            }
+        async getUserByAccount({ providerAccountId, provider }: Pick<AdapterAccount, "provider" | "providerAccountId">): Promise<AdapterUser | null> {
+            const _account: Account = await accountRepository.getAccountByProvider(providerAccountId, provider)
+            if (!_account) return null
+            const _user = await baseUserRepository.getById(_account?.userId)
+            if (!_user) return null
+            return toAdapterUser(_user)
+        },
+        async updateUser(adapterUser: Partial<AdapterUser> & Pick<AdapterUser, "id">): Promise<AdapterUser> {
+            await userRepository.update(
+                buildUserFromAdapterUser(adapterUser),
+                adapterUser.id
+            )
+            const _base_user = await baseUserRepository.update(
+                buildBaseUserFromAdapterUser(adapterUser),
+                adapterUser.id
+            )
 
-            return await client.transaction<AdapterUser>(async (tx) => {
-                const [createUser] = await tx
-                    .insert(user)
-                    .values(payload)
-                    .returning()
-
-                latestUser = createUser
-
-                const profilePayload: ProfileCreated = {
-                    userId: createUser.id,
-                    firstName: _user.firstName as string,
-                    lastName: _user.lastName as string,
-                    createdAt: new Date().toUTCString(),
-                    updatedAt: new Date().toUTCString()
+            return toAdapterUser(_base_user)
+        },
+        async deleteUser(id: string): Promise<void> {
+            await baseUserRepository.remove(id)
+            await userRepository.remove(id)
+        },
+        async linkAccount(_account: any): Promise<void> {
+            const payload = buildAccountFromAdapterAccount(_account)
+            await accountRepository.create(payload)
+        },
+        async createSession(data: AdapterSession): Promise<AdapterSession> {
+            try {
+                const payload: SessionCreated = {
+                    sessionToken: data.sessionToken,
+                    userId: data.userId,
+                    expires: data.expires.toISOString(),
                 }
 
-                await tx
-                    .insert(profile)
-                    .values(profilePayload)
+                await sessionRepository.create(payload)
+
+                return data
+            } catch (error) {
+                console.error('createSession', error)
+                return data
+            }
+        },
+        async getSessionAndUser(sessionToken: string): Promise<{ session: AdapterSession, user: AdapterUser } | null> {
+            try {
+                const _session: Session = await sessionRepository.getBySessionToken(sessionToken)
+                const _user: BaseUser = await baseUserRepository.getById(_session.userId)
 
                 return {
-                    id: latestUser.id,
-                    email: latestUser.email,
-                    emailVerified: null
+                    session: toNextSession(_session),
+                    user: toAdapterUser(_user)
                 }
-            })
+            } catch (error) {
+                console.error('getSessionAndUser', error)
+                return null
+            }
+        },
+        async updateSession(data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">): Promise<AdapterSession | null> {
+            const payload: SessionCreated = {
+                sessionToken: data?.sessionToken || "",
+                userId: data?.userId || "",
+                expires: data?.expires?.toISOString() || "",
+            }
+
+            const _session = await sessionRepository.update(payload, data?.sessionToken || "")
+
+            return toNextSession(_session)
+        },
+        async deleteSession(sessionToken): Promise<null> {
+            await sessionRepository.remove(sessionToken)
+            return null
         }
     }
 }
