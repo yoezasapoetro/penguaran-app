@@ -1,10 +1,22 @@
 import { Pool } from "@neondatabase/serverless"
-import { drizzle } from "drizzle-orm/neon-serverless";
-import * as schema from "@/db/schema";
+import { drizzle as neonDrizzle } from "drizzle-orm/neon-serverless"
+import { drizzle as tursoDrizzle } from "drizzle-orm/libsql"
+import { createClient } from "@libsql/client"
+import * as pgSchema from "@/db/schemas/pg";
+import * as sqliteSchema from "@/db/schemas/sqlite";
+
+const { SQLITE_DATABASE_URL, TURSO_AUTH_TOKEN, PG_DATABASE_URL } = process.env
 
 export const pool = new Pool({
-    connectionString: process.env.DATABASE_URL
+    connectionString: PG_DATABASE_URL
 })
 
-export const db = drizzle(pool, { schema })
+export const dbPg = neonDrizzle(pool, { schema: pgSchema })
+
+const sqliteClient = createClient({
+    url: SQLITE_DATABASE_URL,
+    authToken: TURSO_AUTH_TOKEN,
+})
+
+export const dbSqlite = tursoDrizzle(sqliteClient, { schema: sqliteSchema })
 

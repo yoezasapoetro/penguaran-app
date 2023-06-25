@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { db } from "@/lib/db"
+import { dbPg } from "@/lib/db"
 import StoreRepository from "@/repository/StoreRepository"
 
 export default class StoreService {
@@ -7,7 +7,7 @@ export default class StoreService {
     private maxFetch = 5
 
     constructor(userId: string) {
-        this.repository = new StoreRepository(db, userId)
+        this.repository = new StoreRepository(dbPg, userId)
     }
 
     async getAllHandler(res: NextApiResponse) {

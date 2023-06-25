@@ -1,9 +1,8 @@
-import { InferModel, eq, desc, and, isNull } from "drizzle-orm";
+import { eq, desc, and, isNull } from "drizzle-orm";
 import { type NeonDatabase } from "drizzle-orm/neon-serverless";
-import { sourcePayment } from "@/db/schema";
 
-type SourcePayment = InferModel<typeof sourcePayment, "select">
-type SourcePaymentModel = InferModel<typeof sourcePayment, "insert">
+import { sourcePayment } from "@/db/schemas/pg";
+import { SourcePayment, SourcePaymentModel } from "@/lib/models"
 
 type SourcePaymentPayload = {
     name: string
