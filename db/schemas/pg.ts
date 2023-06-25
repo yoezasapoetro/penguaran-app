@@ -4,19 +4,13 @@ import { sql } from "drizzle-orm"
 
 export const user = pgTable("User", {
 	id: uuid("id").default(sql`uuid_generate_v4()`).primaryKey().notNull(),
-	username: varchar("username", { length: 255 }).notNull(),
 	email: varchar("email", { length: 255 }).notNull(),
-	passwordHash: varchar("passwordHash", { length: 255 }),
-	source: varchar("source", { length: 255 }).default(sql`'email'::character varying`),
-	externalId: varchar("externalId", { length: 255 }),
 	createdAt: timestamp("createdAt", { precision: 3, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updatedAt", { precision: 3, mode: 'string' }).notNull(),
 },
 (table) => {
 	return {
 		emailKey: uniqueIndex("User_email_key").on(table.email),
-		usernameEmailIdx: index("User_username_email_idx").on(table.username, table.email),
-		usernameKey: uniqueIndex("User_username_key").on(table.username),
 	}
 });
 
@@ -105,13 +99,4 @@ export const expenseDetails = pgTable("ExpenseDetails", {
 	return {
 		expenseIdTypeIdx: index("ExpenseDetails_expenseId_type_idx").on(table.type, table.expenseId),
 	}
-});
-
-export const profile = pgTable("Profile", {
-	id: uuid("id").default(sql`uuid_generate_v4()`).primaryKey().notNull(),
-	firstName: varchar("firstName", { length: 255 }).notNull(),
-	lastName: varchar("lastName", { length: 255 }).notNull(),
-	createdAt: timestamp("createdAt", { precision: 3, mode: 'string' }).defaultNow().notNull(),
-	updatedAt: timestamp("updatedAt", { precision: 3, mode: 'string' }).notNull(),
-	userId: uuid("userId").notNull().references(() => user.id, { onDelete: "cascade", onUpdate: "cascade" } ),
 });

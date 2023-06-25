@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { db } from "@/lib/db"
+import { dbPg } from "@/lib/db"
 import CategoryRepository from "@/repository/CategoryRepository"
 
 export default class CategoryService {
@@ -7,7 +7,7 @@ export default class CategoryService {
     private maxFetch = 5
 
     constructor(userId: string) {
-        this.repository = new CategoryRepository(db, userId)
+        this.repository = new CategoryRepository(dbPg, userId)
     }
 
     async getAllHandler(res: NextApiResponse) {

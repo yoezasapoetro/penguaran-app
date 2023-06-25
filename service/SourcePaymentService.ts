@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { db } from "@/lib/db"
+import { dbPg } from "@/lib/db"
 import SourcePaymentRepository from "@/repository/SourcePaymentRepository"
 
 export default class SourcePaymentService {
@@ -7,7 +7,7 @@ export default class SourcePaymentService {
     private maxFetch = 5
 
     constructor(userId: string) {
-        this.repository = new SourcePaymentRepository(db, userId)
+        this.repository = new SourcePaymentRepository(dbPg, userId)
     }
 
     async getAllHandler(res: NextApiResponse) {
