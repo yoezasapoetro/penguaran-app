@@ -1,13 +1,16 @@
-import { Html, Head, Main, NextScript } from "next/document";
+import { Html, Head, Main, NextScript } from 'next/document';
 
-export default function Document() {
+function PenguaranDocument() {
     return (
         <Html lang="en">
             <Head />
-            <body style={{ backgroundColor: "#EBFFF9" }}>
+            <body>
                 <Main />
                 <NextScript />
             </body>
         </Html>
-    )
+    );
 }
+
+export default PenguaranDocument;
+
