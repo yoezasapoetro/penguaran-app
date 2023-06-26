@@ -7,6 +7,7 @@ import {
     Card,
     CardContent,
     AspectRatio,
+    Box,
 } from "@mui/joy"
 
 import Image, { StaticImageData } from "next/image"
@@ -16,14 +17,30 @@ import SumberDanaIcon from "@/assets/icons/sumber_dana.png"
 import SellerIcon from "@/assets/icons/seller.png"
 import { PageContainer } from "@/components/ui"
 
-function BottomNavigation() {
+import colors from "@/components/colors"
+
+function PageTitle() {
     return (
-        <Stack
-            position="absolute"
-            bottom={0}
+        <Box
+            position="fixed"
+            sx={{
+                backgroundColor: colors.neutral,
+                height: 40,
+                width: "100%",
+                zIndex: 2,
+                padding: 1,
+            }}
         >
-            Nav Here
-        </Stack>
+            <Typography
+                level="h4"
+                textAlign="center"
+                sx={{
+                    color: colors.background
+                }}
+            >
+                Pengaturan
+            </Typography>
+        </Box>
     )
 }
 
@@ -89,57 +106,59 @@ const SettingItem = ({
 
 export default function Pengaturan() {
     return (
-        <PageContainer
-            rowGap={2}
-        >
-            <Typography
-                level="h5"
-                width="100%"
+        <>
+            <PageTitle />
+            <PageContainer
+                rowGap={2}
+                paddingTop={8}
             >
-                Transaksi
-            </Typography>
-            <Stack
-                spacing={3}
-                width="100%"
-            >
-                <SettingItem
-                    title="Jenis Pengeluaran"
-                    subtitle="Kelompokan transaksi pengeluaran berdasarkan jenis."
-                    image={JenisPengeluaranIcon}
-                    link="/pengaturan/jenis_pengeluaran"
-                />
-                <SettingItem
-                    title="Sumber Dana"
-                    subtitle="Tentukan sumber dana yang anda bayarkan saat bertransaksi."
-                    image={SumberDanaIcon}
-                    link="/pengaturan/sumber_dana"
-                />
-                <SettingItem
-                    title="Penjual"
-                    subtitle="Penjual merupakan pihak yang bertransaksi dengan anda."
-                    image={SellerIcon}
-                    link="/pengaturan/penjual"
-                />
-            </Stack>
-            <Typography
-                level="h5"
-                width="100%"
-            >
-                Umum
-            </Typography>
-            <Stack
-                spacing={3}
-                width="100%"
-            >
-                <SettingItem
-                    title="Akun"
-                    subtitle="Kelola akun anda"
-                    image={JenisPengeluaranIcon}
-                    link="/pengaturan/akun"
-                />
-            </Stack>
-
-            <BottomNavigation />
-        </PageContainer>
+                <Typography
+                    level="h5"
+                    width="100%"
+                >
+                    Transaksi
+                </Typography>
+                <Stack
+                    spacing={3}
+                    width="100%"
+                >
+                    <SettingItem
+                        title="Jenis Pengeluaran"
+                        subtitle="Kelompokan transaksi pengeluaran berdasarkan jenis."
+                        image={JenisPengeluaranIcon}
+                        link="/pengaturan/jenis_pengeluaran"
+                    />
+                    <SettingItem
+                        title="Sumber Dana"
+                        subtitle="Tentukan sumber dana yang anda bayarkan saat bertransaksi."
+                        image={SumberDanaIcon}
+                        link="/pengaturan/sumber_dana"
+                    />
+                    <SettingItem
+                        title="Penjual"
+                        subtitle="Penjual merupakan pihak yang bertransaksi dengan anda."
+                        image={SellerIcon}
+                        link="/pengaturan/penjual"
+                    />
+                </Stack>
+                <Typography
+                    level="h5"
+                    width="100%"
+                >
+                    Umum
+                </Typography>
+                <Stack
+                    spacing={3}
+                    width="100%"
+                >
+                    <SettingItem
+                        title="Akun"
+                        subtitle="Kelola akun anda"
+                        image={JenisPengeluaranIcon}
+                        link="/pengaturan/akun"
+                    />
+                </Stack>
+            </PageContainer >
+        </>
     )
 }
