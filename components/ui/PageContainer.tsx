@@ -1,19 +1,16 @@
 import { Container, Stack } from "@mui/system"
 
-const colors = {
-    primary: '#C2EABA',
-    accent: '#0AD3FF',
-    secondary: '#7E5A9B',
-    neutral: '#63458A',
-    background: '#E1FAF9',
-}
+import colors from "../colors"
+import BottomNavigation from "./BottomNavigation"
 
 export default function PageContainer({
     children,
-    rowGap
+    rowGap,
+    paddingTop = 1
 }: {
     children: React.ReactNode,
-    rowGap?: number
+    rowGap?: number,
+    paddingTop?: number
 }) {
     return (
         <Container
@@ -23,18 +20,23 @@ export default function PageContainer({
             sx={{
                 width: "100%",
                 height: "100%",
-                backgroundColor: colors.background
+                minHeight: "100vh",
+                backgroundColor: colors.background,
+                position: "relative",
             }}
         >
             <Stack
-                minHeight="100vh"
                 flexDirection="column"
                 alignItems="center"
-                padding="1rem"
+                padding="0rem 1rem 1rem 1rem"
+                paddingTop={paddingTop}
+                height="100%"
                 rowGap={rowGap}
             >
                 {children}
             </Stack>
+
+            <BottomNavigation />
         </Container>
     )
 }
