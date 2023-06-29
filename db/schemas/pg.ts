@@ -49,6 +49,7 @@ export const store = pgTable("Store", {
 export const category = pgTable("Category", {
 	id: serial("id").primaryKey().notNull(),
 	name: varchar("name", { length: 255 }).notNull(),
+    priority: integer("priority").default(0),
 	createdAt: timestamp("createdAt", { precision: 3, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updatedAt", { precision: 3, mode: 'string' }).notNull(),
 	deletedAt: timestamp("deletedAt", { precision: 3, mode: 'string' }),

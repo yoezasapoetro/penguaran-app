@@ -29,6 +29,13 @@
       "when": 1687511790888,
       "tag": "0003_lean_namorita",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1687791974537,
+      "tag": "0004_cool_newton_destine",
+      "breakpoints": true
     }
   ]
 }
