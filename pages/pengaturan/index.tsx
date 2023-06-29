@@ -3,12 +3,16 @@ import { useRouter } from "next/navigation"
 import {
     Typography,
     Stack,
-    Button,
+    IconButton,
     Card,
     CardContent,
     AspectRatio,
     Box,
 } from "@mui/joy"
+
+import {
+    SlArrowRight as ContinueIcon
+} from "react-icons/sl"
 
 import Image, { StaticImageData } from "next/image"
 
@@ -35,7 +39,7 @@ function PageTitle() {
                 level="h4"
                 textAlign="center"
                 sx={{
-                    color: colors.background
+                    color: colors.primary
                 }}
             >
                 Pengaturan
@@ -49,13 +53,11 @@ const SettingItem = ({
     subtitle,
     image,
     link,
-    linkText = "Kelola"
 }: {
     title: string,
     subtitle: string,
     image: StaticImageData
     link: string,
-    linkText?: string
 }) => {
     const router = useRouter()
     return (
@@ -87,18 +89,30 @@ const SettingItem = ({
                 }}
             >
                 <Stack>
-                    <Typography lineHeight="md" fontSize="lg">{title}</Typography>
-                    <Typography lineHeight="sm" fontSize="sm">{subtitle}</Typography>
+                    <Typography
+                        lineHeight="md"
+                        fontSize="lg"
+                        textColor={colors.neutral}
+                    >
+                        {title}
+                    </Typography>
+                    <Typography
+                        lineHeight="sm"
+                        fontSize="sm"
+                        textColor={colors.secondary}
+                    >
+                        {subtitle}
+                    </Typography>
                 </Stack>
-                <Button
+                <IconButton
                     variant="plain"
                     size="sm"
                     onClick={() => {
                         router.push(link)
                     }}
                 >
-                    {linkText}
-                </Button>
+                    <ContinueIcon size={20} color={colors.neutral} />
+                </IconButton>
             </CardContent>
         </Card>
     )
@@ -109,12 +123,13 @@ export default function Pengaturan() {
         <>
             <PageTitle />
             <PageContainer
-                rowGap={2}
+                rowGap={1}
                 paddingTop={8}
             >
                 <Typography
                     level="h5"
                     width="100%"
+                    textColor={colors.secondary}
                 >
                     Transaksi
                 </Typography>
@@ -123,20 +138,20 @@ export default function Pengaturan() {
                     width="100%"
                 >
                     <SettingItem
-                        title="Jenis Pengeluaran"
-                        subtitle="Kelompokan transaksi pengeluaran berdasarkan jenis."
+                        title="Kategori Pengeluaran"
+                        subtitle="Pengeluaran transaksi diorganisir dan dikelompokkan berdasarkan kategori tertentu."
                         image={JenisPengeluaranIcon}
-                        link="/pengaturan/jenis_pengeluaran"
+                        link="/pengaturan/kategori-pengeluaran"
                     />
                     <SettingItem
                         title="Sumber Dana"
-                        subtitle="Tentukan sumber dana yang anda bayarkan saat bertransaksi."
+                        subtitle="Tentukan sumber dana pembayaran transaksi Anda."
                         image={SumberDanaIcon}
-                        link="/pengaturan/sumber_dana"
+                        link="/pengaturan/sumber-dana"
                     />
                     <SettingItem
                         title="Penjual"
-                        subtitle="Penjual merupakan pihak yang bertransaksi dengan anda."
+                        subtitle="Penjual adalah orang atau entitas yang Anda melakukan transaksi pembelian dengan mereka."
                         image={SellerIcon}
                         link="/pengaturan/penjual"
                     />
@@ -144,6 +159,7 @@ export default function Pengaturan() {
                 <Typography
                     level="h5"
                     width="100%"
+                    textColor={colors.secondary}
                 >
                     Umum
                 </Typography>
@@ -153,12 +169,12 @@ export default function Pengaturan() {
                 >
                     <SettingItem
                         title="Akun"
-                        subtitle="Kelola akun anda"
+                        subtitle="Manajemen akun Anda"
                         image={JenisPengeluaranIcon}
                         link="/pengaturan/akun"
                     />
                 </Stack>
-            </PageContainer >
+            </PageContainer>
         </>
     )
 }

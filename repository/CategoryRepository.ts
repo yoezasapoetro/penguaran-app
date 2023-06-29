@@ -6,6 +6,7 @@ import { Category, CategoryModel } from "@/lib/models"
 
 type CategoryPayload = {
     name: string
+    priority: number
 }
 
 export default class CategoryRepository {
@@ -17,11 +18,12 @@ export default class CategoryRepository {
         this.userId = userId
     }
 
-    async getAll(): Promise<Array<Partial<Category>>> {
+    async getAll(limit: number): Promise<Array<Partial<Category>>> {
         return await this.client
             .select({
                 id: category.id,
                 name: category.name,
+                priority: category.priority,
                 createdAt: category.createdAt,
                 updatedAt: category.updatedAt,
             })
@@ -30,7 +32,11 @@ export default class CategoryRepository {
                 eq(category.userId, this.userId),
                 isNull(category.deletedAt)
             ))
-            .orderBy(desc(category.createdAt))
+            .orderBy(
+                desc(category.priority),
+                desc(category.updatedAt)
+            )
+            .limit(limit)
     }
 
     async getById(id: number): Promise<Partial<Category> | null> {
@@ -38,6 +44,7 @@ export default class CategoryRepository {
             .select({
                 id: category.id,
                 name: category.name,
+                priority: category.priority,
                 createdAt: category.createdAt,
                 updatedAt: category.updatedAt,
             })
@@ -54,6 +61,7 @@ export default class CategoryRepository {
         const createCategory: CategoryModel = {
             name: payload.name,
             userId: this.userId,
+            priority: payload.priority,
             createdAt: new Date().toUTCString(),
             updatedAt: new Date().toUTCString()
         }
@@ -68,6 +76,7 @@ export default class CategoryRepository {
     async edit(id: number, payload: CategoryPayload): Promise<Category> {
         const updateCategory: CategoryModel = {
             name: payload.name,
+            priority: payload.priority,
             updatedAt: new Date().toUTCString()
         }
 

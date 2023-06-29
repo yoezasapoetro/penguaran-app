@@ -35,6 +35,8 @@
         "process.d.ts",
         "**/*.ts",
         "**/*.tsx",
+        "types/**/*.ts",
+        "types/**/*.d.ts",
         ".next/types/**/*.ts"
     ],
     "exclude": [

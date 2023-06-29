@@ -48,7 +48,7 @@ function LoginPage({ providers }: any) {
                 alignItems="center"
                 rowGap={1}
             >
-                {Object.values(providers).map((provider: any) => (
+                {providers && Object.values(providers).map((provider: any) => (
                     <Button
                         fullWidth
                         key={provider.name}
