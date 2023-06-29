@@ -1,4 +1,9 @@
-import { type AdapterAccount, AdapterUser, AdapterSession, DefaultAdapter } from "next-auth/adapters"
+import {
+    AdapterAccount,
+    AdapterUser,
+    AdapterSession,
+    DefaultAdapter,
+} from "next-auth/adapters"
 import type { NeonDatabase } from "drizzle-orm/neon-serverless"
 import { LibSQLDatabase } from "drizzle-orm/libsql"
 import { parseJSON } from "date-fns"
@@ -42,6 +47,22 @@ function toAdapterUser(_user: BaseUser): AdapterUser {
     }
 }
 
+function toAdapterAccount(_account: Account): AdapterAccount {
+    return {
+        userId: _account.userId,
+        providerAccountId: _account.providerAccountId,
+        provider: _account.provider,
+        type: _account.type as any,
+        access_token: _account?.access_token || undefined,
+        token_type: _account?.token_type || undefined,
+        id_token: _account?.id_token || undefined,
+        refresh_token: _account?.refresh_token || undefined,
+        scope: _account?.scope || undefined,
+        expires_at: _account?.expires_at || undefined,
+        session_state: _account?.session_state || undefined,
+    }
+}
+
 export function DrizzleAdapter(client: NeonDatabase<User>, clientSqlite: LibSQLDatabase<BaseUser | Session | Account>): DefaultAdapter {
     const userRepository = new UserRepository(client)
     const baseUserRepository = new BaseUserRepository<BaseUser>(clientSqlite)
@@ -68,7 +89,7 @@ export function DrizzleAdapter(client: NeonDatabase<User>, clientSqlite: LibSQLD
             return toAdapterUser(_user)
         },
         async getUser(id: string): Promise<AdapterUser | null> {
-            const _user = await baseUserRepository.getById(id)
+            const _user: BaseUser = await baseUserRepository.getById(id)
             if (!_user) return null
             return toAdapterUser(_user)
         },
@@ -100,9 +121,10 @@ export function DrizzleAdapter(client: NeonDatabase<User>, clientSqlite: LibSQLD
             await baseUserRepository.remove(id)
             await userRepository.remove(id)
         },
-        async linkAccount(_account: any): Promise<void> {
+        async linkAccount(_account: AdapterAccount): Promise<AdapterAccount> {
             const payload = buildAccountFromAdapterAccount(_account)
-            await accountRepository.create(payload)
+            const __account = await accountRepository.create(payload)
+            return toAdapterAccount(__account)
         },
         async createSession(data: AdapterSession): Promise<AdapterSession> {
             try {
@@ -112,9 +134,9 @@ export function DrizzleAdapter(client: NeonDatabase<User>, clientSqlite: LibSQLD
                     expires: data.expires.toISOString(),
                 }
 
-                await sessionRepository.create(payload)
+                const _session = await sessionRepository.create(payload)
 
-                return data
+                return toNextSession(_session)
             } catch (error) {
                 console.error('createSession', error)
                 return data
@@ -145,9 +167,10 @@ export function DrizzleAdapter(client: NeonDatabase<User>, clientSqlite: LibSQLD
 
             return toNextSession(_session)
         },
-        async deleteSession(sessionToken): Promise<null> {
-            await sessionRepository.remove(sessionToken)
-            return null
+        async deleteSession(sessionToken): Promise<AdapterSession | null> {
+            const _session = await sessionRepository.remove(sessionToken)
+            if (!_session) return null
+            return toNextSession(_session)
         }
     }
 }
