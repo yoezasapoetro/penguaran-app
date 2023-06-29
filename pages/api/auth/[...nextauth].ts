@@ -3,7 +3,10 @@ import GoogleProvider from "next-auth/providers/google"
 import { DrizzleAdapter } from "@/lib/adapter";
 import { dbPg, dbSqlite } from "@/lib/db";
 
+const isDev = process.env.NODE_ENV !== "development"
+
 export const authOptions: NextAuthOptions = {
+    debug: isDev,
     adapter: DrizzleAdapter(dbPg, dbSqlite),
     providers: [
         GoogleProvider({
@@ -26,18 +29,21 @@ export const authOptions: NextAuthOptions = {
             }
         })
     ],
-    useSecureCookies: process.env.NODE_ENV !== "development",
+    useSecureCookies: isDev,
     pages: {
         signIn: "/login"
     },
     session: {
+        strategy: "jwt",
         maxAge: 24 * 60 * 60,
         updateAge: 8 * 60 * 60
     },
     callbacks: {
         async jwt(data) {
-            console.log('jwt', data)
             return data.token
+        },
+        async session({ session }) {
+            return session
         },
     },
 }

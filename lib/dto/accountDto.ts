@@ -1,4 +1,4 @@
-import { AdapterAccount } from "@auth/core/adapters"
+import { AdapterAccount } from "next-auth/adapters"
 import { Account } from "../models";
 import { randomUUID } from "crypto";
 import { ProviderType } from "next-auth/providers";
