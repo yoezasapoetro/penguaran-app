@@ -11,12 +11,17 @@ export default function App({
     pageProps: { session, ...pageProps }
 }: AppInitialProps & { Component: any }) {
     return (
-        <SessionProvider session={session}>
-            <QueryClientProvider client={queryClient}>
-                <main className={font.variable}>
+        <>
+            <style jsx global>{`
+                :root {
+                    --joy-fontFamily-body: ${font.style.fontFamily}
+                }
+            `}</style>
+            <SessionProvider session={session}>
+                <QueryClientProvider client={queryClient}>
                     <Component {...pageProps} />
-                </main>
-            </QueryClientProvider>
-        </SessionProvider>
+                </QueryClientProvider>
+            </SessionProvider>
+        </>
     );
 }

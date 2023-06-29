@@ -10,10 +10,11 @@ import { NextRouter, useRouter } from "next/router"
 import colors from "../colors"
 
 import {
-    HomeIcon,
-    LucideIcon,
-    SettingsIcon
-} from "lucide-react"
+    LuHome as HomeIcon,
+    LuSettings as SettingsIcon,
+} from "react-icons/lu"
+
+import type { IconType } from "react-icons"
 
 function isActive(route: string, routerPath: NextRouter): boolean {
     return route === routerPath.route
@@ -27,7 +28,7 @@ function NavButton({
 }: {
     router: NextRouter,
     to: string
-    icon: LucideIcon,
+    icon: IconType,
     action: () => void
 }) {
     const IconSet = icon
@@ -67,7 +68,7 @@ export default function BottomNavigation() {
 
     return (
         <Stack
-            position="absolute"
+            position="sticky"
             bottom={0}
             height={70}
             width="100%"

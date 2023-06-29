@@ -11,35 +11,41 @@ export default class SessionRepository<T extends Record<string, unknown>> {
         this.client = client
     }
 
-    async create(payload: SessionCreated): Promise<void> {
-        this.client.insert(session).values(payload).run()
+    async create(payload: SessionCreated): Promise<Session> {
+        return this.client
+            .insert(session)
+            .values(payload)
+            .returning()
+            .get()
     }
 
     async getBySessionToken(sessionToken: string): Promise<Session> {
-        const _session: Session = await this.client
+        return await this.client
             .select()
             .from(session)
             .where(
                 eq(session.sessionToken, sessionToken)
             ).get()
-        return _session
     }
 
     async update(payload: SessionCreated, sessionToken: string): Promise<Session> {
-        const _session: Session = await this.client.update(session)
+        return this.client.update(session)
             .set(payload)
             .where(
                 eq(session.sessionToken, sessionToken)
             )
             .returning()
             .get()
-        return _session
     }
 
-    async remove(sessionToken: string): Promise<void> {
-        this.client.delete(session)
+    async remove(sessionToken: string): Promise<Session | null> {
+        const _session: Session | undefined = await this.client.delete(session)
             .where(
                 eq(session.sessionToken, sessionToken)
             )
+            .returning()
+            .get()
+        if (!_session) return null
+        return _session
     }
 }

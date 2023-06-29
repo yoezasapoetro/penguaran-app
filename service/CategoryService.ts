@@ -4,14 +4,14 @@ import CategoryRepository from "@/repository/CategoryRepository"
 
 export default class CategoryService {
     private repository: CategoryRepository
-    private maxFetch = 5
+    private maxFetch = 10
 
     constructor(userId: string) {
         this.repository = new CategoryRepository(dbPg, userId)
     }
 
     async getAllHandler(res: NextApiResponse) {
-        const result = await this.repository.getAll()
+        const result = await this.repository.getAll(this.maxFetch)
         const chunked = result.splice(0, this.maxFetch)
 
         return res.status(200).json({
