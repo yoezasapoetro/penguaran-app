@@ -14,26 +14,10 @@ export const user = pgTable("User", {
 	}
 });
 
-export const expense = pgTable("Expense", {
-	id: serial("id").primaryKey().notNull(),
-	categoryId: integer("categoryId").notNull().references(() => category.id),
-	userId: uuid("userId").notNull().references(() => user.id, { onDelete: "cascade", onUpdate: "cascade" } ),
-	storeId: integer("storeId").notNull().references(() => store.id),
-	sourcePaymentId: integer("sourcePaymentId").notNull().references(() => sourcePayment.id),
-	total: numeric("total", { precision: 10, scale:  2 }).notNull(),
-	expenseDate: date("expenseDate").notNull(),
-	createdAt: timestamp("createdAt", { precision: 3, mode: 'string' }).defaultNow().notNull(),
-	updatedAt: timestamp("updatedAt", { precision: 3, mode: 'string' }).notNull(),
-},
-(table) => {
-	return {
-		userIdCategoryIdSourcePaymentIdStoreIdExpenseDaIdx: index("Expense_userId_categoryId_sourcePaymentId_storeId_expenseDa_idx").on(table.categoryId, table.userId, table.storeId, table.sourcePaymentId, table.expenseDate),
-	}
-});
-
 export const store = pgTable("Store", {
 	id: serial("id").primaryKey().notNull(),
 	name: varchar("name", { length: 255 }).notNull(),
+	type: varchar("type", { length: 255 }).notNull(),
 	address: varchar("address", { length: 255 }),
 	createdAt: timestamp("createdAt", { precision: 3, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updatedAt", { precision: 3, mode: 'string' }).notNull(),
@@ -42,7 +26,8 @@ export const store = pgTable("Store", {
 },
 (table) => {
 	return {
-		nameAddressIdx: index("Store_name_address_idx").on(table.name, table.address),
+		nameTypeIdx: index("Store_name_type_idx").on(table.name, table.type),
+        userIdStoreIdx: index("Store_userId_idx").on(table.userId),
 	}
 });
 
@@ -57,7 +42,8 @@ export const category = pgTable("Category", {
 },
 (table) => {
 	return {
-		nameIdx: index("Category_name_idx").on(table.name),
+		namePriorityIdx: index("Category_name_priority_idx").on(table.name, table.priority),
+        userIdCategoryIdx: index("Category_userId_idx").on(table.userId),
 	}
 });
 
@@ -73,6 +59,41 @@ export const sourcePayment = pgTable("SourcePayment", {
 (table) => {
 	return {
 		nameTypeIdx: index("SourcePayment_name_type_idx").on(table.name, table.type),
+        userIdSourcePaymentIx: index("SourcePayment_userId_idx").on(table.userId),
+	}
+});
+
+export const expense = pgTable("Expense", {
+	id: serial("id").primaryKey().notNull(),
+    userId: uuid("userId").notNull().references(() => user.id, { onDelete: "cascade", onUpdate: "cascade" } ),
+	categoryId: integer("categoryId").notNull().references(() => category.id, { onDelete: "cascade", onUpdate: "cascade" }),
+	storeId: integer("storeId").notNull().references(() => store.id, { onDelete: "cascade", onUpdate: "cascade" }),
+	sourcePaymentId: integer("sourcePaymentId").notNull().references(() => sourcePayment.id, { onDelete: "cascade", onUpdate: "cascade" }),
+	total: numeric("total", { precision: 10, scale:  2 }).notNull(),
+	expenseDate: date("expenseDate").notNull(),
+	createdAt: timestamp("createdAt", { precision: 3, mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updatedAt", { precision: 3, mode: 'string' }).notNull(),
+},
+(table) => {
+	return {
+        userIdExpenseIdx: index("Expense_userId_idx").on(table.userId),
+        categoryIdExpenseIdx: index("Expense_categoryId_idx").on(table.categoryId),
+        storeIdExpenseIdx: index("Expense_storeId_idx").on(table.storeId),
+        sourcePaymentIdExpenseIdx: index("Expense_sourcePaymentId_idx").on(table.sourcePaymentId),
+	}
+});
+
+export const expenseDetails = pgTable("ExpenseDetails", {
+	id: serial("id").primaryKey().notNull(),
+	detail: varchar("detail", { length: 255 }),
+	amount: numeric("amount", { precision: 10, scale:  2 }).notNull(),
+	createdAt: timestamp("createdAt", { precision: 3, mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updatedAt", { precision: 3, mode: 'string' }).notNull(),
+	expenseId: integer("expenseId").notNull().references(() => expense.id, { onUpdate: "cascade", onDelete: "cascade" }),
+},
+(table) => {
+	return {
+        expenseIdIdx: index("ExpenseDetails_expenseId_idx").on(table.expenseId),
 	}
 });
 
@@ -84,20 +105,5 @@ export const expenseSplits = pgTable("ExpenseSplits", {
 (table) => {
 	return {
 		expenseIdIdx: index("ExpenseSplits_expenseId_idx").on(table.expenseId),
-	}
-});
-
-export const expenseDetails = pgTable("ExpenseDetails", {
-	id: serial("id").primaryKey().notNull(),
-	type: varchar("type", { length: 255 }).notNull(),
-	detail: varchar("detail", { length: 255 }),
-	amount: numeric("amount", { precision: 10, scale:  2 }).notNull(),
-	createdAt: timestamp("createdAt", { precision: 3, mode: 'string' }).defaultNow().notNull(),
-	updatedAt: timestamp("updatedAt", { precision: 3, mode: 'string' }).notNull(),
-	expenseId: integer("expenseId").notNull().references(() => expense.id, { onDelete: "cascade" } ),
-},
-(table) => {
-	return {
-		expenseIdTypeIdx: index("ExpenseDetails_expenseId_type_idx").on(table.type, table.expenseId),
 	}
 });
