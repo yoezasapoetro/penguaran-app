@@ -4,19 +4,18 @@ import SourcePaymentRepository from "@/repository/SourcePaymentRepository"
 
 export default class SourcePaymentService {
     private repository: SourcePaymentRepository
-    private maxFetch = 5
+    private maxFetch = 10
 
     constructor(userId: string) {
         this.repository = new SourcePaymentRepository(dbPg, userId)
     }
 
     async getAllHandler(res: NextApiResponse) {
-        const result = await this.repository.getAll()
-        const chunked = result.splice(0, this.maxFetch)
+        const result = await this.repository.getAll(this.maxFetch)
 
         return res.status(200).json({
-            data: chunked,
-            total: chunked.length
+            data: result,
+            total: result.length
         })
     }
 
@@ -39,9 +38,9 @@ export default class SourcePaymentService {
 
     async editHandler(req: NextApiRequest, res: NextApiResponse) {
         try {
-            const categoryId = parseInt(req.query.categoryId as string)
+            const sourcePaymentId = parseInt(req.query.sourcePaymentId as string)
             const payload = req.body
-            const result = await this.repository.edit(categoryId, payload)
+            const result = await this.repository.edit(sourcePaymentId, payload)
             res.status(200).json({
                 status: "ok",
                 data: result
@@ -57,9 +56,9 @@ export default class SourcePaymentService {
 
     async removeHandler(req: NextApiRequest, res: NextApiResponse) {
         try {
-            const categoryId = parseInt(req.query.categoryId as string)
+            const sourcePaymentId = parseInt(req.query.sourcePaymentId as string)
             const isForceDeleted = req.query.forceDelete ? Boolean(req.query.forceDelete as string) : false
-            const result = await this.repository.remove(categoryId, isForceDeleted)
+            const result = await this.repository.remove(sourcePaymentId, isForceDeleted)
             res.status(200).json({
                 status: "ok",
                 data: result
