@@ -7,7 +7,6 @@ import {
     Card,
     CardContent,
     AspectRatio,
-    Box,
 } from "@mui/joy"
 
 import {
@@ -19,34 +18,9 @@ import Image, { StaticImageData } from "next/image"
 import JenisPengeluaranIcon from "@/assets/icons/jenis_pengeluaran.png"
 import SumberDanaIcon from "@/assets/icons/sumber_dana.png"
 import SellerIcon from "@/assets/icons/seller.png"
-import { PageContainer } from "@/components/ui"
+import { PageContainer, PageTitle } from "@/components/ui"
 
 import colors from "@/components/colors"
-
-function PageTitle() {
-    return (
-        <Box
-            position="fixed"
-            sx={{
-                backgroundColor: colors.neutral,
-                height: 40,
-                width: "100%",
-                zIndex: 2,
-                padding: 1,
-            }}
-        >
-            <Typography
-                level="h4"
-                textAlign="center"
-                sx={{
-                    color: colors.primary
-                }}
-            >
-                Pengaturan
-            </Typography>
-        </Box>
-    )
-}
 
 const SettingItem = ({
     title,
@@ -121,7 +95,7 @@ const SettingItem = ({
 export default function Pengaturan() {
     return (
         <>
-            <PageTitle />
+            <PageTitle title="Pengaturan" />
             <PageContainer
                 rowGap={1}
                 paddingTop={8}
@@ -150,8 +124,8 @@ export default function Pengaturan() {
                         link="/pengaturan/sumber-dana"
                     />
                     <SettingItem
-                        title="Penjual"
-                        subtitle="Penjual adalah orang atau entitas yang Anda melakukan transaksi pembelian dengan mereka."
+                        title="Penjual & Entitas"
+                        subtitle="Penjual atau Entitas yang Anda melakukan transaksi pembelian dengan mereka."
                         image={SellerIcon}
                         link="/pengaturan/penjual"
                     />
