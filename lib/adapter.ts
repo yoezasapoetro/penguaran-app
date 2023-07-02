@@ -71,22 +71,33 @@ export function DrizzleAdapter(client: NeonDatabase<User>, clientSqlite: LibSQLD
 
     return {
         async createUser(adapterUser: Omit<AdapterUser, "id">): Promise<AdapterUser> {
-            let user: User
-            const existingUser = await userRepository.getByEmail(adapterUser.email)
+            try {
+                let user: User
+                const existingUser = await userRepository.getByEmail(adapterUser.email)
 
-            if (!existingUser) {
-                user = await userRepository.create(
-                    buildUserFromAdapterUser(adapterUser)
+                if (!existingUser) {
+                    user = await userRepository.create(
+                        buildUserFromAdapterUser(adapterUser)
+                    )
+                } else {
+                    user = existingUser
+                }
+
+                const _user: BaseUser = await baseUserRepository.create(
+                    buildBaseUserFromUser(user, adapterUser)
                 )
-            } else {
-                user = existingUser
+
+                return toAdapterUser(_user)
+            } catch (error) {
+                console.error('createUser', error)
+                return toAdapterUser({
+                    id: "",
+                    name: "",
+                    email: "",
+                    emailVerified: "",
+                    image: "",
+                })
             }
-
-            const _user: BaseUser = await baseUserRepository.create(
-                buildBaseUserFromUser(user, adapterUser)
-            )
-
-            return toAdapterUser(_user)
         },
         async getUser(id: string): Promise<AdapterUser | null> {
             const _user: BaseUser = await baseUserRepository.getById(id)

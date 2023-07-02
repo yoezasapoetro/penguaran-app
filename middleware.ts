@@ -1,17 +1,7 @@
-import { withAuth } from "next-auth/middleware"
-
-export default withAuth(
-    function middleware(req) {
-    },
-    {
-        callbacks: {
-            authorized: ({ token }) => {
-                return !!token
-            },
-        },
-    }
-)
+export { default } from "next-auth/middleware"
 
 export const config = {
-    matcher: []
+    matcher: [
+        '/((?!api/auth/:path*|login|logout|_next/static|_next/image|favicon.ico).*)'
+    ],
 }
