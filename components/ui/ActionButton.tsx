@@ -45,12 +45,16 @@ export default function ActionButton({
 
     const editActionProps = {
         ...actionProps,
-        textColor: "var(--joy-palette-neutral-plainDisabledColor)",
+        ...(disableEdit ? {
+            textColor: "var(--joy-palette-neutral-plainDisabledColor)"
+        } : {}),
     }
 
     const editActionIconProps = {
         ...actionIconProps,
-        color: "var(--joy-palette-neutral-plainDisabledColor)",
+        ...(disableEdit ? {
+            color: "var(--joy-palette-neutral-plainDisabledColor)"
+        } : {}),
     }
 
     const _id = 'action-button-' + React.useId()

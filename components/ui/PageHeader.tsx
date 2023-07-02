@@ -44,7 +44,7 @@ export default function PageHeader(props: {
             justifyContent="space-between"
             spacing={1}
             sx={{
-                backgroundColor: colors.neutral,
+                backgroundColor: colors.secondary,
                 height: 70,
                 pt: 2,
                 pb: 3,

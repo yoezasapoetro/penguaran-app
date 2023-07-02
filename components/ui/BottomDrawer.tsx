@@ -9,25 +9,23 @@ import colors from "../colors"
 export type DrawerProps = {
     open: boolean
     onClose: () => void
+    height?: number
     children: React.ReactNode
 }
 
-export default function BottomDrawer({
-    open,
-    onClose,
-    children
-}: DrawerProps) {
-    const size = "clamp(30rem, 80%, 50rem)"
+export default function BottomDrawer(props: DrawerProps) {
+    const height = props.height ?? 80;
+    const size = `clamp(30rem, ${height}%, 50rem)`
     return (
         <Modal
             keepMounted
-            open={open}
-            onClose={onClose}
+            open={props.open}
+            onClose={props.onClose}
             sx={{
                 transitionProperty: "visibility",
-                transitionDelay: open ? "0s" : "300ms",
+                transitionDelay: props.open ? "0s" : "300ms",
                 [`& .${modalClasses.backdrop}`]: {
-                    opacity: open ? 1 : 0,
+                    opacity: props.open ? 1 : 0,
                     transition: "opacity 0.3s ease"
                 },
             }}
@@ -53,14 +51,14 @@ export default function BottomDrawer({
                     position: "fixed",
                     overflow: "auto",
                     bottom: 0,
-                    transform: open ? "translateY(0)" : "translateY(100%)",
+                    transform: props.open ? "translateY(0)" : "translateY(100%)",
                     height: size,
                     width: "100vw",
                     boxShadow: "sm",
                     transition: "transform 0.3s ease",
                 }}
             >
-                {children}
+                {props.children}
             </Sheet>
         </Modal>
     )

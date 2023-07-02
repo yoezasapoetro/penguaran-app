@@ -4,16 +4,19 @@ import {
     FormLabel,
     FormHelperText,
     Input,
-    InputProps,
 } from "@mui/joy"
 
 import colors from "../colors"
+import { useField } from "formik"
 
-export default function FormInput(props: InputProps & {
+export default function FormInput(props: {
     label: string
-    error: boolean
-    errorMessage: string | null
+    type?: string
+    placeholder: string
+    name: string
 }) {
+    const [field, meta] = useField(props.name)
+
     const inputProps = {
         sx: {
             '--Input-radius': 0,
@@ -22,20 +25,19 @@ export default function FormInput(props: InputProps & {
             fontSize: 15,
             color: colors.neutral,
         },
-        ...props,
-        ...({
-            type: props.type ?? "text",
-        })
+        ...field,
+        type: props.type ?? "text",
+        placeholder: props.placeholder,
     }
 
     return (
-        <FormControl error={props.error}>
+        <FormControl error={Boolean(meta.error && meta.touched)}>
             <FormLabel>{props.label}</FormLabel>
             <Input
                 {...inputProps}
             />
-            {props.error && <FormHelperText>
-                {props.errorMessage}
+            {meta.error && meta.touched && <FormHelperText>
+                {meta.error}
             </FormHelperText>}
         </FormControl>
     )
