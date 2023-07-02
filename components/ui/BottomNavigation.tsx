@@ -10,9 +10,13 @@ import { NextRouter, useRouter } from "next/router"
 import colors from "../colors"
 
 import {
-    LuHome as HomeIcon,
-    LuSettings as SettingsIcon,
-} from "react-icons/lu"
+    TbSettings2 as SettingsIcon,
+} from "react-icons/tb"
+
+import {
+    LiaHomeSolid as HomeIcon,
+    LiaHandsHelpingSolid as ExpenseIcon,
+} from "react-icons/lia"
 
 import type { IconType } from "react-icons"
 
@@ -35,8 +39,7 @@ function NavButton({
     const isActiveMenu = isActive(to, router)
     const iconProps = {
         size: 32,
-        strokeWidth: 2,
-        color: !isActiveMenu ? "white" : colors.neutral,
+        color: !isActiveMenu ? colors.accent : colors.neutral,
     }
 
     return (
@@ -75,9 +78,10 @@ export default function BottomNavigation() {
             maxWidth="sm"
             zIndex={2}
             sx={{
-                bgcolor: colors.accent,
-                paddding: "1rem",
-                borderRadius: "1.5rem 1.5rem 0rem 0rem"
+                bgcolor: colors.background,
+                borderTopWidth: 1,
+                borderTopColor: colors.primary,
+                borderTopStyle: "solid",
             }}
             useFlexGap
             direction="row"
@@ -89,6 +93,12 @@ export default function BottomNavigation() {
                 router={router}
                 to="/"
                 icon={HomeIcon}
+            />
+            <NavButton
+                action={() => router.replace("/pengeluaran")}
+                router={router}
+                to="/pengeluaran"
+                icon={ExpenseIcon}
             />
             <NavButton
                 action={() => router.replace("/pengaturan")}
