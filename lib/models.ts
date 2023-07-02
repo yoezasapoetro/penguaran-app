@@ -1,6 +1,6 @@
 import { InferModel } from "drizzle-orm"
 
-import { user, category, sourcePayment, store } from "@/db/schemas/pg"
+import { user, expense, expenseDetails, category, sourcePayment, store } from "@/db/schemas/pg"
 import { user as base_user, account, session } from "@/db/schemas/sqlite"
 
 // PG
@@ -10,8 +10,12 @@ export type Category = InferModel<typeof category>
 export type CategoryModel = InferModel<typeof category, "insert">
 export type SourcePayment = InferModel<typeof sourcePayment>
 export type SourcePaymentModel = InferModel<typeof sourcePayment, "insert">
-export type Store = InferModel<typeof store, "select">
+export type Store = InferModel<typeof store>
 export type StoreModel = InferModel<typeof store, "insert">
+export type Expense = InferModel<typeof expense>
+export type ExpenseModel = InferModel<typeof expense, "insert">
+export type ExpenseDetails = InferModel<typeof expenseDetails>
+export type ExpenseDetailsModel = InferModel<typeof expenseDetails, "insert">
 
 // SQLite
 export type BaseUser = InferModel<typeof base_user>
