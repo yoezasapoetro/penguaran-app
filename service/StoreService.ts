@@ -11,12 +11,11 @@ export default class StoreService {
     }
 
     async getAllHandler(res: NextApiResponse) {
-        const result = await this.repository.getAll()
-        const chunked = result.splice(0, this.maxFetch)
+        const result = await this.repository.getAll(this.maxFetch)
 
         return res.status(200).json({
-            data: chunked,
-            total: chunked.length
+            data: result,
+            total: result.length
         })
     }
 
@@ -39,9 +38,9 @@ export default class StoreService {
 
     async editHandler(req: NextApiRequest, res: NextApiResponse) {
         try {
-            const categoryId = parseInt(req.query.categoryId as string)
+            const storeId = parseInt(req.query.storeId as string)
             const payload = req.body
-            const result = await this.repository.edit(categoryId, payload)
+            const result = await this.repository.edit(storeId, payload)
             res.status(200).json({
                 status: "ok",
                 data: result
@@ -57,9 +56,9 @@ export default class StoreService {
 
     async removeHandler(req: NextApiRequest, res: NextApiResponse) {
         try {
-            const categoryId = parseInt(req.query.categoryId as string)
+            const storeId = parseInt(req.query.storeId as string)
             const isForceDeleted = req.query.forceDelete ? Boolean(req.query.forceDelete as string) : false
-            const result = await this.repository.remove(categoryId, isForceDeleted)
+            const result = await this.repository.remove(storeId, isForceDeleted)
             res.status(200).json({
                 status: "ok",
                 data: result

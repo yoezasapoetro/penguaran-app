@@ -6,7 +6,8 @@ import { Store, StoreModel } from "@/lib/models"
 
 type StorePayload = {
     name: string
-    address: string
+    type: string
+    address?: string
 }
 
 export default class StoreRepository {
@@ -18,11 +19,12 @@ export default class StoreRepository {
         this.userId = userId
     }
 
-    async getAll(): Promise<Array<Partial<Store>>> {
+    async getAll(limit: number): Promise<Array<Partial<Store>>> {
         return await this.client
             .select({
                 id: store.id,
                 name: store.name,
+                type: store.type,
                 address: store.address,
                 createdAt: store.createdAt,
                 updatedAt: store.updatedAt,
@@ -32,6 +34,7 @@ export default class StoreRepository {
                 eq(store.userId, this.userId),
                 isNull(store.deletedAt)
             ))
+            .limit(limit)
             .orderBy(desc(store.createdAt))
     }
 
@@ -40,13 +43,15 @@ export default class StoreRepository {
             .select({
                 id: store.id,
                 name: store.name,
-                type: store.address,
+                type: store.type,
+                address: store.address,
                 createdAt: store.createdAt,
                 updatedAt: store.updatedAt,
             })
             .from(store)
             .where(and(
                 eq(store.id, id),
+                eq(store.userId, this.userId),
                 isNull(store.deletedAt)
             ))
 
@@ -56,6 +61,7 @@ export default class StoreRepository {
     async create(payload: StorePayload): Promise<Store> {
         const createStore: StoreModel = {
             name: payload.name,
+            type: payload.type,
             address: payload.address,
             userId: this.userId,
             createdAt: new Date().toUTCString(),
@@ -72,6 +78,7 @@ export default class StoreRepository {
     async edit(id: number, payload: StorePayload): Promise<Store> {
         const updateStore: StoreModel = {
             name: payload.name,
+            type: payload.type,
             address: payload.address,
             updatedAt: new Date().toUTCString()
         }
@@ -79,7 +86,10 @@ export default class StoreRepository {
         const [updated] = await this.client
             .update(store)
             .set(updateStore)
-            .where(eq(store.id, id))
+            .where(and(
+                eq(store.id, id),
+                eq(store.userId, this.userId),
+            ))
             .returning()
 
         return updated
@@ -90,7 +100,10 @@ export default class StoreRepository {
         if (forceDelete) {
             const [forceDeleted] = await this.client
                 .delete(store)
-                .where(eq(store.id, id))
+                .where(and(
+                    eq(store.id, id),
+                    eq(store.userId, this.userId),
+                ))
                 .returning()
             source = forceDeleted
         } else {
@@ -99,7 +112,10 @@ export default class StoreRepository {
                 .set({
                     deletedAt: new Date().toUTCString()
                 })
-                .where(eq(store.id, id))
+                .where(and(
+                    eq(store.id, id),
+                    eq(store.userId, this.userId),
+                ))
                 .returning()
             source = softDeleted
         }

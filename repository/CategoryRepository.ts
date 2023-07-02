@@ -51,6 +51,7 @@ export default class CategoryRepository {
             .from(category)
             .where(and(
                 eq(category.id, id),
+                eq(category.userId, this.userId),
                 isNull(category.deletedAt)
             ))
 
@@ -83,7 +84,10 @@ export default class CategoryRepository {
         const [updated] = await this.client
             .update(category)
             .set(updateCategory)
-            .where(eq(category.id, id))
+            .where(and(
+                eq(category.id, id),
+                eq(category.userId, this.userId),
+            ))
             .returning()
 
         return updated
@@ -94,7 +98,10 @@ export default class CategoryRepository {
         if (forceDelete) {
             const [forceDeleted] = await this.client
                 .delete(category)
-                .where(eq(category.id, id))
+                .where(and(
+                    eq(category.id, id),
+                    eq(category.userId, this.userId),
+                ))
                 .returning()
             source = forceDeleted
         } else {
@@ -103,7 +110,10 @@ export default class CategoryRepository {
                 .set({
                     deletedAt: new Date().toUTCString()
                 })
-                .where(eq(category.id, id))
+                .where(and(
+                    eq(category.id, id),
+                    eq(category.userId, this.userId),
+                ))
                 .returning()
             source = softDeleted
         }

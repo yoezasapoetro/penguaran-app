@@ -10,4 +10,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method === "GET") {
         return await service.getAllHandler(res)
     }
+
+    if (req.method === "POST") {
+        return await service.createHandler(req, res)
+    }
 }

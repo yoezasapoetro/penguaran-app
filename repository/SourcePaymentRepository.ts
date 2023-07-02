@@ -18,7 +18,7 @@ export default class SourcePaymentRepository {
         this.userId = userId
     }
 
-    async getAll(): Promise<Array<Partial<SourcePayment>>> {
+    async getAll(limit: number): Promise<Array<Partial<SourcePayment>>> {
         return await this.client
             .select({
                 id: sourcePayment.id,
@@ -32,6 +32,7 @@ export default class SourcePaymentRepository {
                 eq(sourcePayment.userId, this.userId),
                 isNull(sourcePayment.deletedAt)
             ))
+            .limit(limit)
             .orderBy(desc(sourcePayment.createdAt))
     }
 
@@ -47,6 +48,7 @@ export default class SourcePaymentRepository {
             .from(sourcePayment)
             .where(and(
                 eq(sourcePayment.id, id),
+                eq(sourcePayment.userId, this.userId),
                 isNull(sourcePayment.deletedAt)
             ))
 
@@ -79,7 +81,10 @@ export default class SourcePaymentRepository {
         const [updated] = await this.client
             .update(sourcePayment)
             .set(updateSourcePayment)
-            .where(eq(sourcePayment.id, id))
+            .where(and(
+                eq(sourcePayment.id, id),
+                eq(sourcePayment.userId, this.userId),
+            ))
             .returning()
 
         return updated
@@ -90,7 +95,10 @@ export default class SourcePaymentRepository {
         if (forceDelete) {
             const [forceDeleted] = await this.client
                 .delete(sourcePayment)
-                .where(eq(sourcePayment.id, id))
+                .where(and(
+                    eq(sourcePayment.id, id),
+                    eq(sourcePayment.userId, this.userId),
+                ))
                 .returning()
             source = forceDeleted
         } else {
@@ -99,7 +107,10 @@ export default class SourcePaymentRepository {
                 .set({
                     deletedAt: new Date().toUTCString()
                 })
-                .where(eq(sourcePayment.id, id))
+                .where(and(
+                    eq(sourcePayment.id, id),
+                    eq(sourcePayment.userId, this.userId),
+                ))
                 .returning()
             source = softDeleted
         }
