@@ -8,8 +8,8 @@ export type KategoriPengeluaran = {
 }
 
 export type KategoriPengeluaranFormProps = {
-    formData: Partial<KategoriPengeluaran>,
-    formMode: string | null,
+    formData: Partial<KategoriPengeluaran>
+    formMode: string | null
 }
 
 export type KategoriPengeluaranData = {
@@ -23,4 +23,14 @@ export type PrioritasPengeluaranData = {
     icon: IconType
     iconColor: string
 }
+
+export type KategoriPengeluaranItemsReturn = Promise<{
+    data: KategoriPengeluaran[]
+    total: number
+}>
+
+export type KategoriPengeluaranItemReturn = Promise<{
+    data: KategoriPengeluaran
+    status: string
+}>
 

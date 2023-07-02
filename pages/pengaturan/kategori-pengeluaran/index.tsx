@@ -5,22 +5,15 @@ import {
     Button,
     Box,
     Typography,
-    Alert,
     ListItemDecorator,
     ListItemContent,
     Option,
 } from "@mui/joy"
-
-import {
-    LuInfo as InfoIcon,
-} from "react-icons/lu"
-
 import {
     MdFiberManualRecord as LowPriority,
     MdRadioButtonChecked as MediumPriority,
     MdFiberSmartRecord as HighPriority,
 } from "react-icons/md"
-
 import {
     useMutation,
     useQuery,
@@ -34,7 +27,6 @@ import {
     Formik
 } from "formik"
 import { string, number, object } from "yup"
-
 import colors, { priorityColors } from "@/components/colors"
 import {
     BottomDrawer,
@@ -46,6 +38,8 @@ import {
     FormSelect,
     ConfirmationModal,
     DataWrapper,
+    LogDate,
+    InformationBanner,
 } from "@/components/ui"
 import { dataLogDate } from "@/lib/utils/date"
 import { kategoriPengeluaranData, prioritasPengeluaranData } from "@/data"
@@ -61,40 +55,6 @@ import {
     fetchKategoriPengeluaran,
     removeKategoriPengeluaran
 } from "@/actions/kategoriPengeluaran"
-
-export function InformationBanner(props: {
-    title: string
-    children: React.ReactNode
-}) {
-    return (
-        <Alert
-            variant="outlined"
-            color="info"
-            sx={{
-                mx: "-0.5rem",
-                alignItems: "flex-start",
-            }}
-            slotProps={{
-                startDecorator: {
-                    sx: {
-                        marginTop: 0.25,
-                    }
-                }
-            }}
-            startDecorator={<InfoIcon size={22} />}
-        >
-            <div>
-                <Typography
-                    level="h6"
-                    color="info"
-                >
-                    {props.title}
-                </Typography>
-                {props.children}
-            </div>
-        </Alert>
-    )
-}
 
 function KategoriPengeluaranModalForm({
     formMode,
@@ -339,21 +299,7 @@ function DataItem({
                     >
                         {item.name}
                     </Typography>
-                    <Stack
-                        useFlexGap
-                        direction="row"
-                        alignItems="center"
-                        spacing={0.7}
-                    >
-                        <InfoIcon color={colors.secondary} size={15} />
-                        <Typography
-                            lineHeight="sm"
-                            fontSize={13}
-                            textColor={colors.secondary}
-                        >
-                            {logDateString}
-                        </Typography>
-                    </Stack>
+                    <LogDate date={logDateString} />
                 </Box>
             </Stack>
             <ActionButton

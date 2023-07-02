@@ -1,5 +1,3 @@
-import type { IconType } from "react-icons"
-
 import {
     MdFiberManualRecord as LowPriority,
     MdRadioButtonChecked as MediumPriority,

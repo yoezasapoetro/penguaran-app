@@ -1,35 +1,21 @@
-export const fetchKategoriPengeluaran = (): Promise<{ data: KategoriPengeluaran[], total: number }> =>
-    fetch("/api/category", {
-        credentials: "same-origin",
-        mode: "cors",
-    }).then(resp => resp.json())
+import {
+    KategoriPengeluaran,
+    KategoriPengeluaranItemReturn,
+    KategoriPengeluaranItemsReturn
+} from "@/types/KategoriPengeluaran"
+import Api from "@/lib/utils/api"
 
-export const addKategoriPengeluaran = (payload: Partial<KategoriPengeluaran>): Promise<{ data: KategoriPengeluaran, status: string }> =>
-    fetch("/api/category", {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: {
-            "Content-Type": "application/json",
-        },
-        credentials: "same-origin",
-        mode: "cors",
-    }).then(resp => resp.json())
+const api = new Api("/api/category")
 
-export const removeKategoriPengeluaran = (id: number | undefined): Promise<{ data: KategoriPengeluaran, status: string }> =>
-    fetch(`/api/category/${id}`, {
-        method: "DELETE",
-        credentials: "same-origin",
-        mode: "cors",
-    }).then(resp => resp.json())
+export const fetchKategoriPengeluaran = (): KategoriPengeluaranItemsReturn =>
+    api.get("/")
 
-export const editKategoriPengeluaran = (payload: Partial<KategoriPengeluaran>): Promise<{ data: KategoriPengeluaran, status: string }> =>
-    fetch(`/api/category/${payload.id}`, {
-        method: "PUT",
-        body: JSON.stringify(payload),
-        headers: {
-            "Content-Type": "application/json",
-        },
-        credentials: "same-origin",
-        mode: "cors",
-    }).then(resp => resp.json())
+export const addKategoriPengeluaran = (payload: Partial<KategoriPengeluaran>): KategoriPengeluaranItemReturn =>
+    api.post(`/${payload.id}`, payload)
+
+export const editKategoriPengeluaran = (payload: Partial<KategoriPengeluaran>): KategoriPengeluaranItemReturn =>
+    api.put(`/${payload.id}`, payload)
+
+export const removeKategoriPengeluaran = (id: number | undefined): KategoriPengeluaranItemReturn =>
+    api.delete(`/${id}`)
 
