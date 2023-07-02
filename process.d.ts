@@ -7,5 +7,10 @@ declare namespace NodeJS {
         GOOGLE_CLIENT_SECRET: string
         SQLITE_DATABASE_URL: string
         TURSO_AUTH_TOKEN: string
+        PG_HOST: string
+        PG_POR: string
+        PG_USER: string
+        PG_PASS: string
+        PG_DATABASE: string
     }
 }
