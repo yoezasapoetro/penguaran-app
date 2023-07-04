@@ -8,7 +8,8 @@ import {
     ListItemDecorator,
     Option,
     Stack,
-    Typography
+    Typography,
+    colors
 } from "@mui/joy"
 import { Form, Formik, FormikConfig, FormikHelpers } from "formik"
 import { object, string } from "yup"
@@ -32,6 +33,7 @@ import {
     FormSelect,
     FormInput,
     ConfirmationModal,
+    FormRadioGroup,
 } from "@/components/ui"
 import {
     SumberDana,
@@ -45,7 +47,6 @@ import {
     removeSumberDana
 } from "@/actions/sumberDana"
 import { dataLogDate } from "@/lib/utils/date"
-import colors from "@/components/colors"
 import { sumberDanaType } from "@/data"
 
 function SumberDanaModalForm({
@@ -92,84 +93,58 @@ function SumberDanaModalForm({
             open={isOpen}
             onClose={onClose}
         >
-            <Stack
-                sx={{
-                    paddingInline: 2,
-                }}
-                spacing={2}
+            <Typography
+                fontSize="lg"
+                textColor="primary.900"
+                width="100%"
+                textAlign="center"
             >
-                <Typography
-                    fontSize="lg"
-                    textColor={colors.neutral}
-                    width="100%"
-                    textAlign="center"
-                >
-                    {formMode && title[formMode]}
-                </Typography>
+                {formMode && title[formMode]}
+            </Typography>
 
-                <Formik
-                    {...formikConfig}
-                >
-                    {() => (
-                        <Form
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                width: "100%",
-                                height: "100%",
-                                rowGap: "1rem",
-                                flex: "1",
+            <Formik
+                {...formikConfig}
+            >
+                {() => (
+                    <Form
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                            height: "100%",
+                            rowGap: "1rem",
+                            flex: "1",
+                        }}
+                    >
+                        <FormInput
+                            name="name"
+                            label="Nama"
+                            placeholder="Nama sumber dana anda."
+                        />
+                        <FormRadioGroup
+                            hasIconDecorator
+                            name="type"
+                            label="Tipe"
+                            placeholder="Tipe sumber dana anda."
+                            defaultValue="bank"
+                            options={sumberDanaType}
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            sx={{
+                                borderRadius: "3rem",
+                                color: "success.300",
+                                fontWeight: 400,
+                                backgroundColor: "primary.900",
+                                fontSize: "md",
                             }}
                         >
-                            <FormInput
-                                name="name"
-                                label="Nama"
-                                placeholder="Nama sumber dana anda."
-                            />
-                            <FormSelect
-                                name="type"
-                                label="Tipe"
-                                placeholder="Tipe sumber dana anda."
-                                options={sumberDanaType}
-                                renderOption={(option: SumberDanaTypeData) => {
-                                    const OptionIcon = React.createElement(option.icon, {
-                                        size: 20,
-                                    })
-                                    return (
-                                        <React.Fragment key={option.label}>
-                                            <Option
-                                                value={option.label}
-                                                label={option.labelText}
-                                            >
-                                                <ListItemDecorator>
-                                                    {OptionIcon}
-                                                </ListItemDecorator>
-                                                <ListItemContent>
-                                                    {option.labelText}
-                                                </ListItemContent>
-                                            </Option>
-                                        </React.Fragment>
-                                    )
-                                }}
-                            />
-                            <Button
-                                type="submit"
-                                fullWidth
-                                sx={{
-                                    alignSelf: "flex-end",
-                                    borderRadius: "3rem",
-                                    color: colors.neutral,
-                                    fontWeight: 400,
-                                    backgroundColor: colors.primary,
-                                    fontSize: "md",
-                                }}
-                            >
-                                Simpan
-                            </Button>
-                        </Form>
-                    )}
-                </Formik>
-            </Stack>
+                            Simpan
+                        </Button>
+                    </Form>
+                )}
+            </Formik>
         </BottomDrawer >
     )
 }
@@ -192,19 +167,19 @@ function DeleteSumberDanaModal({
             confirmText="Ya, Hapus"
         >
             <Typography
-                level="body1"
+                fontSize="sm"
                 lineHeight="sm"
                 gutterBottom
-                textColor={colors.secondary}
+                textColor="primary.900"
             >
                 *Mohon dipertimbangkan dengan baik sebelum menghapus data.
                 Tindakan ini berpengaruh pada konsistensi laporan keuangan Anda.
                 Data yang dihapus tidak dapat dikembalikan dan berpotensi menyebabkan kehilangan informasi penting.
             </Typography>
             <Typography
-                fontSize="lg"
                 lineHeight="sm"
-                textColor={colors.neutral}
+                gutterBottom
+                textColor="primary.900"
             >
                 Apakah anda yakin ingin menghapus sumber dana ini?
             </Typography>
@@ -212,21 +187,18 @@ function DeleteSumberDanaModal({
     )
 }
 
-function DataItem({
-    item,
-    onEdit,
-    onDelete,
-}: {
+function DataItem(props: {
     item: SumberDana,
     onEdit: (item: Partial<SumberDana>) => void,
     onDelete: (id: number) => void,
 }) {
+    const { item } = props
     const logDate = dataLogDate(item)
     const logDateString = `${logDate.textDate} ${logDate.date}`
 
     const iconProps = {
         size: 21,
-        color: colors.secondary,
+        color: colors.grey[300]
     }
 
     return (
@@ -252,8 +224,7 @@ function DataItem({
                     maxWidth={300}
                 >
                     <Typography
-                        fontSize={17}
-                        textColor={colors.secondary}
+                        textColor="primary.900"
                     >
                         {item.name}
                     </Typography>
@@ -261,8 +232,8 @@ function DataItem({
                 </Box>
             </Stack>
             <ActionButton
-                onEdit={() => onEdit(item)}
-                onDelete={() => onDelete(item.id)}
+                onEdit={() => props.onEdit(item)}
+                onDelete={() => props.onDelete(item.id)}
             />
         </Stack>
     )
@@ -382,13 +353,11 @@ export default function SumberDana() {
                     subtitle="Sumber Dana"
                     backUrl="/pengaturan"
                 />
-                <CreateButton onClick={createCallback} />
                 {isLoading && !isEmpty ? (
                     <Loading />
                 ) : (
                     <Stack
-                        marginTop="1.2rem"
-                        padding="1.5rem"
+                        padding="1rem"
                         useFlexGap
                         spacing={2}
                     >
@@ -397,13 +366,10 @@ export default function SumberDana() {
                         >
                             <div>
                                 <Typography
-                                    fontSize={15}
+                                    fontSize="sm"
                                     lineHeight="sm"
-                                    fontWeight={400}
-                                    color="neutral"
-                                    sx={{
-                                        opacity: 0.8,
-                                    }}
+                                    fontWeight="xs"
+                                    textColor="common.white"
                                 >
                                     Harap berikan kategori sumber dana untuk pengeluaran Anda.
                                     Ini akan membantu Anda mengelompokkan dan melacak pengeluaran dengan lebih baik.
@@ -436,6 +402,7 @@ export default function SumberDana() {
                     onCommit={deleteSumberDanaCallback}
                 />
             </PageLayout>
+            <CreateButton onClick={createCallback} />
         </>
     )
 }

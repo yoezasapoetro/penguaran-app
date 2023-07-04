@@ -3,13 +3,13 @@ import {
     Typography,
     TypographyProps,
     IconButton,
+    colors,
 } from "@mui/joy"
 
 import {
-    IoIosArrowBack as BackIcon
-} from "react-icons/io"
+    MdOutlineArrowBackIosNew as BackIcon
+} from "react-icons/md"
 
-import colors from "../colors"
 import { useRouter } from "next/router"
 
 export default function PageHeader(props: {
@@ -21,19 +21,20 @@ export default function PageHeader(props: {
     const back = () => router.replace(props.backUrl)
 
     const titleProps: TypographyProps = {
-        fontSize: 24,
+        fontSize: "md",
         level: "h4",
         lineHeight: "sm",
         width: "100%",
-        textColor: colors.primary,
+        textAlign: "center",
+        textColor: "primary.900",
     }
 
     const subtitleProps: TypographyProps = {
         width: "100%",
         lineHeight: "sm",
-        fontSize: 18,
-        gutterBottom: true,
-        textColor: colors.accent,
+        fontSize: "lg",
+        textAlign: "center",
+        textColor: "primary.900",
     }
 
     return (
@@ -42,22 +43,31 @@ export default function PageHeader(props: {
             direction="row"
             alignItems="flex-start"
             justifyContent="space-between"
-            spacing={1}
+            maxWidth="sm"
+            width="100%"
             sx={{
-                backgroundColor: colors.secondary,
-                height: 70,
-                pt: 2,
-                pb: 3,
+                backgroundColor: "transparent",
+                boxShadow: "sm",
+                py: 2,
             }}
         >
             <IconButton
-                variant="plain"
+                variant="solid"
+                sx={{
+                    borderRadius: 100,
+                    zIndex: 2,
+                    ml: 2,
+                    position: "absolute",
+                    backgroundColor: colors.green[100],
+                }}
                 onClick={back}
             >
-                <BackIcon color={colors.background} size={24} />
+                <BackIcon color={colors.blue[900]} size={24} />
             </IconButton>
             <Stack
                 width="100%"
+                sx={{
+                }}
             >
                 <Typography {...titleProps}>{props.title}</Typography>
                 <Typography {...subtitleProps}>{props.subtitle}</Typography>

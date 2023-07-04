@@ -7,6 +7,7 @@ import {
     Menu,
     MenuItem,
     ListItemDecorator,
+    colors,
 } from "@mui/joy"
 
 import {
@@ -14,8 +15,6 @@ import {
     LuTrash2 as Trash2Icon,
     LuMoreVertical as MoreVerticalIcon,
 } from "react-icons/lu"
-
-import colors from "../colors"
 
 export default function ActionButton({
     onEdit,
@@ -34,13 +33,13 @@ export default function ActionButton({
     }
 
     const actionProps = {
-        textColor: colors.secondary,
+        textColor: colors.blue[900],
         lineHeight: "sm",
     }
 
     const actionIconProps = {
         size: 15,
-        color: colors.secondary,
+        color: colors.blue[900],
     }
 
     const editActionProps = {
@@ -78,7 +77,7 @@ export default function ActionButton({
                     setOpen(!open)
                 }}
             >
-                <MoreVerticalIcon size={20} color={colors.neutral} />
+                <MoreVerticalIcon size={20} color={colors.blue[900]} />
             </IconButton>
             <Menu
                 id={_id}
@@ -90,12 +89,8 @@ export default function ActionButton({
                 size="sm"
                 keepMounted={true}
                 disablePortal={true}
-                slotProps={{
-                    root: {
-                        style: {
-                            backgroundColor: colors.background,
-                        }
-                    }
+                sx={{
+                    boxShadow: "sm",
                 }}
             >
                 <MenuItem

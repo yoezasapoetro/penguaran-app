@@ -3,9 +3,8 @@ import {
     Box,
     Modal,
     ModalDialog,
+    colors,
 } from "@mui/joy"
-
-import colors from "../colors"
 
 export default function ConfirmationModal(props: {
     open: boolean
@@ -30,7 +29,6 @@ export default function ConfirmationModal(props: {
                         borderRadius: 0,
                         transform: "none",
                         maxWidth: "unset",
-                        backgroundColor: colors.background,
                     }
                 })}
             >
@@ -50,8 +48,8 @@ export default function ConfirmationModal(props: {
                             fontSize: "md",
                             fontWeight: 400,
                             borderRadius: "3rem",
-                            borderColor: colors.neutral,
-                            color: colors.neutral
+                            borderColor: colors.blue[900],
+                            color: colors.blue[900],
                         }}
                         onClick={props.onCancel}
                     >
@@ -64,8 +62,8 @@ export default function ConfirmationModal(props: {
                             fontSize: "md",
                             fontWeight: 500,
                             borderRadius: "3rem",
-                            backgroundColor: colors.primary,
-                            color: colors.neutral
+                            backgroundColor: colors.blue[900],
+                            color: colors.green[300],
                         }}
                         onClick={props.onConfirm}
                     >

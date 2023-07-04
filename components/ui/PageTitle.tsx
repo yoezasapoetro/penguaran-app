@@ -3,28 +3,29 @@ import {
     Typography,
 } from "@mui/joy"
 
-import colors from "../colors"
-
 export default function PageTitle(props: {
     title: string
 }) {
     return (
         <Box
             position="fixed"
+            maxWidth="sm"
+            width="100%"
             sx={{
-                backgroundColor: colors.secondary,
+                backgroundColor: "rgba(255, 255, 255, 255, 0.4)",
+                backdropFilter: "blur(8px)",
                 height: 40,
                 width: "100%",
                 zIndex: 2,
-                padding: 1,
+                py: 1,
+                boxShadow: "sm",
             }}
         >
             <Typography
-                level="h4"
+                fontSize="xl2"
+                fontWeight={500}
                 textAlign="center"
-                sx={{
-                    color: colors.primary
-                }}
+                textColor="primary.900"
             >
                 {props.title}
             </Typography>

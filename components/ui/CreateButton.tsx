@@ -1,17 +1,13 @@
-import { Box, Button } from "@mui/joy"
+import { Box, Button, colors } from "@mui/joy"
 
-import colors from "../colors"
-
-export default function CreateButton({
-    onClick
-}: {
+export default function CreateButton(props: {
     onClick: () => void
 }) {
     return (
         <Box
             sx={{
                 position: "absolute",
-                top: 85,
+                bottom: 20,
                 left: 0,
                 right: 0,
                 margin: "0 1.5rem",
@@ -22,12 +18,12 @@ export default function CreateButton({
             <Button
                 fullWidth
                 size="lg"
-                onClick={onClick}
+                onClick={props.onClick}
                 sx={{
-                    fontWeight: 500,
-                    backgroundColor: colors.primary,
+                    fontWeight: 400,
+                    backgroundColor: "primary.900",
                     borderRadius: "0",
-                    color: colors.neutral,
+                    color: colors.green[300],
                     boxShadow: "md",
                 }}
             >

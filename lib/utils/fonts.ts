@@ -1,4 +1,4 @@
-import { Rubik as Font } from 'next/font/google'
+import { Poppins as Font } from 'next/font/google'
 
 export const font = Font({
     weight: ['300', '400', '500', '600', '700'],

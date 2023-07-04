@@ -1,9 +1,9 @@
 const colors: Record<string, string> = {
-    primary: '#C2EABA',
-    accent: '#0AD3FF',
-    secondary: '#7E5A9B',
-    neutral: '#63458A',
-    background: '#E1FAF9',
+    primary: '#071540',
+    accent: '#84D9B1',
+    secondary: '#41BF78',
+    neutral: '#2CBF6C',
+    background: '#F2F2F2',
 }
 
 export const priorityColors: Record<string, string> = {

@@ -1,17 +1,15 @@
-import { Container, Stack } from "@mui/system"
+import {
+    Container,
+    Stack,
+    StackProps,
+} from "@mui/joy"
 
-import colors from "../colors"
 import BottomNavigation from "./BottomNavigation"
 
-export default function PageContainer({
-    children,
-    rowGap,
-    paddingTop = 1
-}: {
+export default function PageContainer(props: StackProps & {
     children: React.ReactNode,
-    rowGap?: number,
-    paddingTop?: number
 }) {
+    const { children, ...stackProps } = props
     return (
         <>
             <Container
@@ -21,17 +19,14 @@ export default function PageContainer({
                 sx={{
                     width: "100%",
                     height: "100%",
-                    minHeight: "100vh",
-                    backgroundColor: colors.background,
                 }}
             >
                 <Stack
                     flexDirection="column"
                     alignItems="center"
                     padding="0rem 1rem 1rem 1rem"
-                    paddingTop={paddingTop}
                     height="100%"
-                    rowGap={rowGap}
+                    {...stackProps}
                 >
                     {children}
                 </Stack>

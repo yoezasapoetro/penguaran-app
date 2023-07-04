@@ -8,12 +8,12 @@ import {
     Button,
     Stack,
     Typography,
-    AspectRatio
+    AspectRatio,
+    colors
 } from "@mui/joy"
 
 import AuthenticationImage from "@/assets/illustrations/authentication.png"
 import AppLogoImage from "@/assets/icons/app_icon.png"
-import colors from "@/components/colors"
 
 function LoginPage({ providers }: any) {
     return (
@@ -28,8 +28,8 @@ function LoginPage({ providers }: any) {
         >
             <Typography
                 level="body1"
-                textColor={colors.neutral}
                 lineHeight="sm"
+                textAlign="center"
                 width="100%"
             >
                 Mulai tanpa repot akan mengumpulkan kembali catatan dari berbagai sumber.
@@ -37,7 +37,6 @@ function LoginPage({ providers }: any) {
             <Typography
                 level="body2"
                 lineHeight="sm"
-                textColor={colors.secondary}
                 textAlign="center"
                 width="100%"
             >
@@ -78,6 +77,15 @@ function Jumbotron() {
             height="100%"
             flexGrow={1}
             flexShrink={0}
+            sx={{
+                borderBottomWidth: 1,
+                borderBottomStyle: "solid",
+                borderBottomLeftRadius: 35,
+                borderBottomRightRadius: 35,
+                borderBottomColor: colors.grey[50],
+                backgroundColor: colors.grey[50],
+                boxShadow: "sm",
+            }}
         >
             <AppLogo />
             <AspectRatio
@@ -112,7 +120,7 @@ function AppLogo() {
                 variant="plain"
                 ratio="1"
                 sx={{
-                    width: "15%"
+                    width: "40%"
                 }}
             >
                 <Image
@@ -120,17 +128,11 @@ function AppLogo() {
                     alt="App Logo"
                 />
             </AspectRatio>
-            <Typography
-                level="h3"
-                textColor={colors.accent}
-            >
-                Penguaran
-            </Typography>
         </Stack>
     )
 }
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps() {
     const providers = await getProviders()
 
     return {
@@ -151,17 +153,11 @@ export default function Login({
             width="100%"
             minHeight="100vh"
             maxWidth="sm"
-            sx={{
-                backgroundColor: colors.neutral
-            }}
         >
             <Jumbotron />
             <Stack
                 width="100%"
-                borderRadius="1.5rem 1.5rem 0rem 0rem"
-                sx={{
-                    backgroundColor: colors.background
-                }}
+                maxWidth="sm"
             >
                 <LoginPage providers={providers}></LoginPage>
             </Stack>

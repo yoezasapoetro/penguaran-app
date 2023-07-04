@@ -9,10 +9,9 @@ export default function InformationBanner(props: {
 }) {
     return (
         <Alert
-            variant="outlined"
+            variant="solid"
             color="info"
             sx={{
-                mx: "-0.5rem",
                 alignItems: "flex-start",
             }}
             slotProps={{
@@ -22,12 +21,12 @@ export default function InformationBanner(props: {
                     }
                 }
             }}
-            startDecorator={<InfoIcon size={22} />}
+            startDecorator={<InfoIcon size={20} />}
         >
             <div>
                 <Typography
-                    level="h6"
-                    color="info"
+                    fontSize="md"
+                    textColor="white"
                 >
                     {props.title}
                 </Typography>
