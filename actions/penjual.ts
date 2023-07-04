@@ -7,8 +7,8 @@ import Api from "@/lib/utils/api";
 
 const api = new Api("/api/store")
 
-export const fetchPenjual = (): PenjualItemsReturn =>
-    api.get("/")
+export const fetchPenjual = (page: number): PenjualItemsReturn =>
+    api.get(`/?page=${page}`)
 
 export const addPenjual = (payload: Partial<Penjual>): PenjualItemReturn =>
     api.post("/", payload)

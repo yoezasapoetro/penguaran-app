@@ -7,8 +7,8 @@ import Api from "@/lib/utils/api"
 
 const api = new Api("/api/category")
 
-export const fetchKategoriPengeluaran = (): KategoriPengeluaranItemsReturn =>
-    api.get("/")
+export const fetchKategoriPengeluaran = (page: number): KategoriPengeluaranItemsReturn =>
+    api.get(`/?page=${page}`)
 
 export const addKategoriPengeluaran = (payload: Partial<KategoriPengeluaran>): KategoriPengeluaranItemReturn =>
     api.post(`/${payload.id}`, payload)

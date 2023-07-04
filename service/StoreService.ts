@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { dbPg } from "@/lib/db"
 import StoreRepository from "@/repository/StoreRepository"
+import { Store } from "@/lib/models"
 
 export default class StoreService {
     private repository: StoreRepository
@@ -10,12 +11,28 @@ export default class StoreService {
         this.repository = new StoreRepository(dbPg, userId)
     }
 
-    async getAllHandler(res: NextApiResponse) {
-        const result = await this.repository.getAll(this.maxFetch)
+    async getAllHandler(req: NextApiRequest, res: NextApiResponse) {
+        let result: Array<Partial<Store>> = []
+        const { page = "1" } = req.query
+
+        const currentPage = Number(page)
+
+        if (currentPage < 0) result = []
+
+        const offset = (currentPage - 1) * this.maxFetch
+
+        const total = await this.repository.countAll()
+
+        if (currentPage > total) {
+            result = []
+        } else {
+            result = await this.repository.getAll(offset, this.maxFetch)
+        }
 
         return res.status(200).json({
             data: result,
-            total: result.length
+            total,
+            totalPage: Math.ceil(total / this.maxFetch),
         })
     }
 

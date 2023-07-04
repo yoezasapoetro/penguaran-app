@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const service = new SourcePaymentService(userId)
 
     if (req.method === "GET") {
-        return await service.getAllHandler(res)
+        return await service.getAllHandler(req, res)
     }
 
     if (req.method === "POST") {

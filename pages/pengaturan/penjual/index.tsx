@@ -41,6 +41,7 @@ import { penjualType } from "@/data"
 import {
     FaCity as LocationIcon
 } from "react-icons/fa"
+import DataPagination from "@/components/ui/DataPagination"
 
 function PenjualModalForm({
     formMode,
@@ -262,6 +263,7 @@ function DataItem(props: {
 export default function Penjual() {
     const queryClient = useQueryClient()
 
+    const [currentPage, setCurrentPage] = useState<number>(1)
     const [mode, setMode] = useState<"create" | "edit" | null>(null)
     const [formData, setFormData] = useState<Partial<Penjual>>({
         name: "",
@@ -274,8 +276,8 @@ export default function Penjual() {
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false)
 
     const { data, isLoading } = useQuery({
-        queryKey: ["penjual"],
-        queryFn: fetchPenjual
+        queryKey: ["penjual", currentPage],
+        queryFn: () => fetchPenjual(currentPage)
     })
 
     const mutationDelete = useMutation({
@@ -300,6 +302,7 @@ export default function Penjual() {
     })
 
     const items: Array<Penjual> | undefined = data?.data
+    const totalPage = data?.totalPage as number
     const isEmpty: boolean = data?.total === 0
 
     const createCallback = () => {
@@ -413,6 +416,11 @@ export default function Penjual() {
                                     onDelete={deleteCallback}
                                 />
                             )}
+                        />
+                        <DataPagination
+                            totalPage={totalPage}
+                            currentPage={currentPage}
+                            onPageChange={setCurrentPage}
                         />
                     </Stack>
                 )}

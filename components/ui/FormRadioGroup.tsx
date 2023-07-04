@@ -93,7 +93,7 @@ export default function FormRadioGroup(props: {
                                 size: 20,
                             })}
                             <Radio
-                                id={item.label}
+                                id={item.labelText}
                                 value={item.label}
                                 checkedIcon={
                                     <Box

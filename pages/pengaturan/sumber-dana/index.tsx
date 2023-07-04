@@ -48,6 +48,7 @@ import {
 } from "@/actions/sumberDana"
 import { dataLogDate } from "@/lib/utils/date"
 import { sumberDanaType } from "@/data"
+import DataPagination from "@/components/ui/DataPagination"
 
 function SumberDanaModalForm({
     formMode,
@@ -242,6 +243,7 @@ function DataItem(props: {
 export default function SumberDana() {
     const queryClient = useQueryClient()
 
+    const [currentPage, setCurrentPage] = useState<number>(1)
     const [mode, setMode] = useState<"create" | "edit" | null>(null)
     const [formData, setFormData] = useState<Partial<SumberDana>>({
         name: "",
@@ -253,8 +255,8 @@ export default function SumberDana() {
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false)
 
     const { data, isLoading } = useQuery({
-        queryKey: ["sumberDana"],
-        queryFn: fetchSumberDana
+        queryKey: ["sumberDana", currentPage],
+        queryFn: () => fetchSumberDana(currentPage)
     })
 
     const mutationDelete = useMutation({
@@ -279,6 +281,7 @@ export default function SumberDana() {
     })
 
     const items: Array<SumberDana> | undefined = data?.data
+    const totalPage = data?.totalPage as number
     const isEmpty: boolean = data?.total === 0
 
     const createCallback = () => {
@@ -386,6 +389,11 @@ export default function SumberDana() {
                                     onDelete={deleteCallback}
                                 />
                             )}
+                        />
+                        <DataPagination
+                            currentPage={currentPage}
+                            totalPage={totalPage}
+                            onPageChange={setCurrentPage}
                         />
                     </Stack>
                 )}
