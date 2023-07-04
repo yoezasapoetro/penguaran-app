@@ -7,8 +7,8 @@ import Api from "@/lib/utils/api";
 
 const api = new Api("/api/source-payment")
 
-export const fetchSumberDana = (): SumberDanaItemsReturn =>
-    api.get("/")
+export const fetchSumberDana = (page: number): SumberDanaItemsReturn =>
+    api.get(`/?page=${page}`)
 
 export const addSumberDana = (payload: Partial<SumberDana>): SumberDanaItemReturn =>
     api.post("/", payload)

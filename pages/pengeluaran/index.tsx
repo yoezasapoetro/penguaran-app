@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
     Tabs,
     Tab,
@@ -8,6 +8,8 @@ import {
     Typography,
     IconButton,
     colors,
+    Autocomplete,
+    CircularProgress,
 } from "@mui/joy"
 
 import { Formik, FormikConfig } from "formik"
@@ -22,12 +24,73 @@ import {
     BottomDrawer,
 } from "@/components/ui"
 import { Pengeluaran } from "@/types/Pengeluaran"
+import { CategorySearch } from "@/types/KategoriPengeluaran"
+
+function FormAutocomplete(props: {
+}) {
+    const [open, setOpen] = useState<boolean>(false)
+    const [options, setOptions] = useState<Array<CategorySearch>>([])
+
+    const loading = open && options.length === 0
+
+    const mapper = (item: CategorySearch) => ({
+        id: item.id,
+        name: item.name,
+        priority: item.priority
+    })
+
+    useEffect(() => {
+        let active = true
+
+        if (!loading) {
+            return undefined
+        }
+
+        (async () => {
+            if (active) {
+            }
+        })()
+
+        return () => {
+            active = false
+        }
+    }, [loading])
+
+    useEffect(() => {
+        if (!open) {
+            setOptions([])
+        }
+    }, [open])
+
+    return (
+        <Autocomplete
+            placeholder="Kategori pengeluaran"
+            open={open}
+            onOpen={() => {
+                setOpen(true)
+            }}
+            onClose={() => {
+                setOpen(false)
+            }}
+            isOptionEqualToValue={(option: CategorySearch, value: CategorySearch) => option.id === value.id}
+            getOptionLabel={(option: CategorySearch) => option.name}
+            options={options}
+            loading={loading}
+            endDecorator={
+                loading ? (
+                    <CircularProgress size="sm" sx={{ bgcolor: "background.surface" }} />
+                ) : null
+            }
+        />
+    )
+}
 
 function PengeluaranForm(props: {
     open: boolean
     onClose: () => void
 }) {
     const formikConfig: FormikConfig<Pengeluaran> = {
+        onSubmit: () => { },
         initialValues: {
         }
     }
@@ -196,14 +259,10 @@ export default function Pengeluaran() {
         <>
             <PageTitle title="Pengeluaran"></PageTitle>
             <PageContainer
-                paddingTop={3}
+                paddingTop={13}
+
             >
-                <TimelineTabs
-                />
-                <PengeluaranForm
-                    open={formOpen}
-                    onClose={formCloseCallback}
-                />
+                <FormAutocomplete />
             </PageContainer >
             <FabButton
                 onClick={addPengeluaranCallback}

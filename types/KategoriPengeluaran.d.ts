@@ -27,6 +27,7 @@ export type PrioritasPengeluaranData = {
 export type KategoriPengeluaranItemsReturn = Promise<{
     data: KategoriPengeluaran[]
     total: number
+    totalPage: number
 }>
 
 export type KategoriPengeluaranItemReturn = Promise<{

@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { dbPg } from "@/lib/db"
+import { Category } from "@/lib/models"
 import CategoryRepository from "@/repository/CategoryRepository"
 
 export default class CategoryService {
@@ -10,13 +11,28 @@ export default class CategoryService {
         this.repository = new CategoryRepository(dbPg, userId)
     }
 
-    async getAllHandler(res: NextApiResponse) {
-        const result = await this.repository.getAll(this.maxFetch)
-        const chunked = result.splice(0, this.maxFetch)
+    async getAllHandler(req: NextApiRequest, res: NextApiResponse) {
+        let result: Array<Partial<Category>> = []
+        const { page = "1" } = req.query
+
+        const currentPage = Number(page)
+
+        if (currentPage < 0) result = []
+
+        const offset = (currentPage - 1) * this.maxFetch
+
+        const total = await this.repository.countAll()
+
+        if (currentPage > total) {
+            result = []
+        } else {
+            result = await this.repository.getAll(offset, this.maxFetch)
+        }
 
         return res.status(200).json({
-            data: chunked,
-            total: chunked.length
+            data: result,
+            total,
+            totalPage: Math.ceil(total / this.maxFetch)
         })
     }
 

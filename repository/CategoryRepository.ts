@@ -1,4 +1,4 @@
-import { eq, desc, and, isNull } from "drizzle-orm";
+import { eq, desc, and, isNull, sql } from "drizzle-orm";
 import { type NeonDatabase } from "drizzle-orm/neon-serverless";
 
 import { category } from "@/db/schemas/pg";
@@ -18,7 +18,7 @@ export default class CategoryRepository {
         this.userId = userId
     }
 
-    async getAll(limit: number): Promise<Array<Partial<Category>>> {
+    async getAll(offset: number, limit: number): Promise<Array<Partial<Category>>> {
         return await this.client
             .select({
                 id: category.id,
@@ -36,7 +36,22 @@ export default class CategoryRepository {
                 desc(category.priority),
                 desc(category.updatedAt)
             )
+            .offset(offset)
             .limit(limit)
+    }
+
+    async countAll(): Promise<number> {
+        const [{ count }] = await this.client
+            .select({
+                count: sql<number>`count(*)`
+            })
+            .from(category)
+            .where(and(
+                eq(category.userId, this.userId),
+                isNull(category.deletedAt)
+            ))
+
+        return count
     }
 
     async getById(id: number): Promise<Partial<Category> | null> {

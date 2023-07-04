@@ -11,6 +11,7 @@ export type SumberDana = {
 export type SumberDanaItemsReturn = Promise<{
     data: SumberDana[]
     total: number
+    totalPage: number
 }>
 
 export type SumberDanaItemReturn = Promise<{

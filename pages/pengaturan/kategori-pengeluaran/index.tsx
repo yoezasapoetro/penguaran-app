@@ -13,6 +13,7 @@ import {
     MdRadioButtonChecked as MediumPriority,
     MdFiberSmartRecord as HighPriority,
 } from "react-icons/md"
+
 import {
     useMutation,
     useQuery,
@@ -40,6 +41,7 @@ import {
     DataWrapper,
     LogDate,
     InformationBanner,
+    DataPagination,
 } from "@/components/ui"
 import { dataLogDate } from "@/lib/utils/date"
 import { kategoriPengeluaranData, prioritasPengeluaranData } from "@/data"
@@ -47,7 +49,6 @@ import {
     KategoriPengeluaran,
     KategoriPengeluaranData,
     KategoriPengeluaranFormProps,
-    PrioritasPengeluaranData
 } from "@/types/KategoriPengeluaran"
 import {
     addKategoriPengeluaran,
@@ -274,6 +275,7 @@ function DataItem(props: {
 export default function KategoriPengeluaran() {
     const queryClient = useQueryClient()
 
+    const [currentPage, setCurrentPage] = useState<number>(1)
     const [mode, setMode] = useState<"create" | "edit" | null>(null)
     const [formData, setFormData] = useState<Partial<KategoriPengeluaran>>({
         name: "",
@@ -284,8 +286,8 @@ export default function KategoriPengeluaran() {
     const [isOpenFormModal, setIsOpenFormModal] = useState<boolean>(false)
 
     const { data, isLoading } = useQuery({
-        queryKey: ["kategoriPengeluaran"],
-        queryFn: fetchKategoriPengeluaran
+        queryKey: ["kategoriPengeluaran", currentPage],
+        queryFn: () => fetchKategoriPengeluaran(currentPage),
     })
 
     const mutationDelete = useMutation({
@@ -310,6 +312,7 @@ export default function KategoriPengeluaran() {
     })
 
     const items: Array<KategoriPengeluaran> | undefined = data?.data
+    const totalPage = data?.totalPage as number
     const isEmpty: boolean = data?.total === 0
 
     const createCallback = () => {
@@ -417,6 +420,11 @@ export default function KategoriPengeluaran() {
                                     onDelete={deleteCallback}
                                 />
                             )}
+                        />
+                        <DataPagination
+                            totalPage={totalPage}
+                            currentPage={currentPage}
+                            onPageChange={setCurrentPage}
                         />
                     </Stack>
                 )}

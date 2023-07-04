@@ -10,6 +10,7 @@ export type Penjual = {
 export type PenjualItemsReturn = Promise<{
     data: Penjual[]
     total: number
+    totalPage: number
 }>
 
 export type PenjualItemReturn = Promise<{

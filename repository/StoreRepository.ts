@@ -1,4 +1,4 @@
-import { eq, desc, and, isNull } from "drizzle-orm";
+import { eq, desc, and, isNull, sql } from "drizzle-orm";
 import { type NeonDatabase } from "drizzle-orm/neon-serverless";
 
 import { store } from "@/db/schemas/pg";
@@ -19,7 +19,7 @@ export default class StoreRepository {
         this.userId = userId
     }
 
-    async getAll(limit: number): Promise<Array<Partial<Store>>> {
+    async getAll(offset: number, limit: number): Promise<Array<Partial<Store>>> {
         return await this.client
             .select({
                 id: store.id,
@@ -34,8 +34,23 @@ export default class StoreRepository {
                 eq(store.userId, this.userId),
                 isNull(store.deletedAt)
             ))
+            .offset(offset)
             .limit(limit)
             .orderBy(desc(store.createdAt))
+    }
+
+    async countAll(): Promise<number> {
+        const [{ count }] = await this.client
+            .select({
+                count: sql<number>`count(*)`
+            })
+            .from(store)
+            .where(and(
+                eq(store.userId, this.userId),
+                isNull(store.deletedAt)
+            ))
+
+        return count
     }
 
     async getById(id: number): Promise<Partial<Store> | null> {
