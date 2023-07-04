@@ -1,9 +1,8 @@
 import {
     Stack,
     Divider,
+    colors,
 } from "@mui/joy"
-
-import colors from "../colors"
 
 export default function DataWrapper(props: {
     data: Array<any> | undefined
@@ -13,7 +12,7 @@ export default function DataWrapper(props: {
         <Stack
             useFlexGap
             height="100%"
-            divider={<Divider sx={{ borderColor: colors.neutral }} />}
+            divider={<Divider sx={{ '--Divider-lineColor': colors.grey[100] }} />}
             spacing={1}
         >
             {props.data?.map(props.renderItem)}

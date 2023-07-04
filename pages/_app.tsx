@@ -2,10 +2,25 @@ import '@/styles/globals.css'
 import Head from "next/head"
 import type { AppInitialProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
-import { font } from '@/lib/utils/fonts'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
+import { CssVarsProvider, extendTheme } from '@mui/joy'
+import { font } from '@/lib/utils/fonts'
 
 const queryClient = new QueryClient()
+
+const theme = extendTheme({
+    components: {
+        JoyIconButton: {
+            styleOverrides: {
+                root: () => ({
+                    ['&:active, &:hover']: {
+                        backgroundColor: "unset",
+                    }
+                })
+            }
+        }
+    }
+})
 
 export default function App({
     Component,
@@ -23,7 +38,9 @@ export default function App({
             `}</style>
             <SessionProvider session={session}>
                 <QueryClientProvider client={queryClient}>
-                    <Component {...pageProps} />
+                    <CssVarsProvider theme={theme}>
+                        <Component {...pageProps} />
+                    </CssVarsProvider>
                 </QueryClientProvider>
             </SessionProvider>
         </>

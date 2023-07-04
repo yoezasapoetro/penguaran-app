@@ -9,21 +9,22 @@ import { PrioritasPengeluaranData } from "@/types/KategoriPengeluaran"
 
 export const prioritasPengeluaranData: Array<PrioritasPengeluaranData> = [
     {
-        label: 1,
-        labelText: "Prioritas rendah",
-        icon: LowPriority,
-        iconColor: priorityColors.low,
+        label: 3,
+        labelText: "Prioritas tinggi",
+        icon: HighPriority,
+        iconColor: priorityColors.high,
     },
     {
         label: 2,
         labelText: "Prioritas medium",
         icon: MediumPriority,
         iconColor: priorityColors.medium,
-    }, {
-        label: 3,
-        labelText: "Prioritas tinggi",
-        icon: HighPriority,
-        iconColor: priorityColors.high,
-    }
+    },
+    {
+        label: 1,
+        labelText: "Prioritas rendah",
+        icon: LowPriority,
+        iconColor: priorityColors.low,
+    },
 ]
 

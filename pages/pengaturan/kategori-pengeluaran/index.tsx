@@ -5,7 +5,6 @@ import {
     Button,
     Box,
     Typography,
-    ListItemDecorator,
     ListItemContent,
     Option,
 } from "@mui/joy"
@@ -27,7 +26,7 @@ import {
     Formik
 } from "formik"
 import { string, number, object } from "yup"
-import colors, { priorityColors } from "@/components/colors"
+import { priorityColors } from "@/components/colors"
 import {
     BottomDrawer,
     PageLayout,
@@ -36,6 +35,7 @@ import {
     CreateButton,
     ActionButton,
     FormSelect,
+    FormRadioGroup,
     ConfirmationModal,
     DataWrapper,
     LogDate,
@@ -103,121 +103,88 @@ function KategoriPengeluaranModalForm({
             open={isOpen}
             onClose={onClose}
         >
-            <Stack
-                sx={{
-                    paddingInline: 2,
-                }}
-                spacing={2}
+            <Typography
+                fontSize="lg"
+                width="100%"
+                textAlign="center"
             >
-                <Typography
-                    fontSize="lg"
-                    textColor={colors.neutral}
-                    width="100%"
-                    textAlign="center"
-                >
-                    {formMode && title[formMode]}
-                </Typography>
+                {formMode && title[formMode]}
+            </Typography>
 
-                <Formik
-                    {...formikConfig}
-                >
-                    {() => (
-                        <Form
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                width: "100%",
-                                height: "100%",
-                                rowGap: "1rem",
-                                flex: "1",
+            <Formik
+                {...formikConfig}
+            >
+                {() => (
+                    <Form
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                            height: "100%",
+                            rowGap: "1rem",
+                        }}
+                    >
+                        <FormSelect
+                            name="name"
+                            label="Nama"
+                            placeholder="Nama kategori pengeluaran anda."
+                            options={kategoriPengeluaranData}
+                            renderOption={(option: KategoriPengeluaranData) => (
+                                <React.Fragment key={option.label}>
+                                    <Option
+                                        value={option.label}
+                                        label={option.label}
+                                    >
+                                        <ListItemContent
+                                            sx={{ fontSize: "sm" }}
+                                        >
+                                            {option.label}
+                                            <Typography level="body3">
+                                                {option.group}
+                                            </Typography>
+                                        </ListItemContent>
+                                    </Option>
+                                </React.Fragment>
+                            )}
+                        />
+                        <FormRadioGroup
+                            hasIconDecorator
+                            name="priority"
+                            label="Skala Prioritas"
+                            placeholder="Skala prioritas kategori pengeluaran."
+                            defaultValue={1}
+                            options={prioritasPengeluaranData}
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            sx={{
+                                borderRadius: "3rem",
+                                fontWeight: 400,
+                                fontSize: "md",
+                                bgcolor: "primary.900",
+                                color: "success.300",
                             }}
                         >
-                            <FormSelect
-                                name="name"
-                                label="Nama"
-                                placeholder="Nama kategori pengeluaran anda."
-                                options={kategoriPengeluaranData}
-                                renderOption={(option: KategoriPengeluaranData) => (
-                                    <React.Fragment key={option.label}>
-                                        <Option
-                                            value={option.label}
-                                            label={option.label}
-                                        >
-                                            <ListItemContent
-                                                sx={{ fontSize: "sm" }}
-                                            >
-                                                {option.label}
-                                                <Typography level="body3">
-                                                    {option.group}
-                                                </Typography>
-                                            </ListItemContent>
-                                        </Option>
-                                    </React.Fragment>
-                                )}
-                            />
-                            <FormSelect
-                                name="priority"
-                                label="Skala Prioritas"
-                                placeholder="Skala prioritas kategori pengeluaran."
-                                options={prioritasPengeluaranData}
-                                renderOption={(option: PrioritasPengeluaranData) => {
-                                    const OptionIcon = React.createElement(option.icon, {
-                                        color: option.iconColor,
-                                        size: 20,
-                                    })
-                                    return (
-                                        <React.Fragment key={option.label}>
-                                            <Option
-                                                value={option.label}
-                                                label={option.labelText}
-                                            >
-                                                <ListItemDecorator>
-                                                    {OptionIcon}
-                                                </ListItemDecorator>
-                                                <ListItemContent>
-                                                    {option.labelText}
-                                                </ListItemContent>
-                                            </Option>
-                                        </React.Fragment>
-                                    )
-                                }}
-                            />
-                            <Button
-                                type="submit"
-                                fullWidth
-                                sx={{
-                                    alignSelf: "flex-end",
-                                    borderRadius: "3rem",
-                                    color: colors.neutral,
-                                    fontWeight: 400,
-                                    backgroundColor: colors.primary,
-                                    fontSize: "md",
-                                }}
-                            >
-                                Simpan
-                            </Button>
-                        </Form>
-                    )}
-                </Formik>
-            </Stack>
+                            Simpan
+                        </Button>
+                    </Form>
+                )}
+            </Formik>
         </BottomDrawer >
     )
 }
 
-function DeleteKategoriPengeluaranModal({
-    isOpen,
-    onClose,
-    onCommit,
-}: {
+function DeleteKategoriPengeluaranModal(props: {
     isOpen: boolean,
     onClose: () => void,
     onCommit: () => void,
 }) {
     return (
         <ConfirmationModal
-            open={isOpen}
-            onCancel={onClose}
-            onConfirm={onCommit}
+            open={props.isOpen}
+            onCancel={props.onClose}
+            onConfirm={props.onCommit}
             cancelText="Batalkan"
             confirmText="Ya, Hapus"
         >
@@ -225,7 +192,6 @@ function DeleteKategoriPengeluaranModal({
                 level="body1"
                 lineHeight="sm"
                 gutterBottom
-                textColor={colors.secondary}
             >
                 *Mohon dipertimbangkan dengan baik sebelum menghapus data.
                 Tindakan ini berpengaruh pada konsistensi laporan keuangan Anda.
@@ -234,7 +200,6 @@ function DeleteKategoriPengeluaranModal({
             <Typography
                 fontSize="lg"
                 lineHeight="sm"
-                textColor={colors.neutral}
             >
                 Apakah anda yakin ingin menghapus kategori pengeluaran ini?
             </Typography>
@@ -242,18 +207,16 @@ function DeleteKategoriPengeluaranModal({
     )
 }
 
-function DataItem({
-    item,
-    onEdit,
-    onDelete,
-}: {
+function DataItem(props: {
     item: KategoriPengeluaran,
     onEdit: (item: Partial<KategoriPengeluaran>) => void,
     onDelete: (id: number) => void,
 }) {
     const iconProps = {
-        size: 24,
+        size: 20,
     }
+
+    const { item } = props
 
     const lowIconProps = {
         ...iconProps,
@@ -294,8 +257,6 @@ function DataItem({
                     maxWidth={300}
                 >
                     <Typography
-                        fontSize={17}
-                        textColor={colors.secondary}
                     >
                         {item.name}
                     </Typography>
@@ -303,9 +264,8 @@ function DataItem({
                 </Box>
             </Stack>
             <ActionButton
-                disableEdit
-                onEdit={() => onEdit(item)}
-                onDelete={() => onDelete(item.id)}
+                onEdit={() => props.onEdit(item)}
+                onDelete={() => props.onDelete(item.id)}
             />
         </Stack>
     )
@@ -424,13 +384,11 @@ export default function KategoriPengeluaran() {
                     subtitle="Kategori Pengeluaran"
                     backUrl="/pengaturan"
                 />
-                <CreateButton onClick={createCallback} />
                 {isLoading && !isEmpty ? (
                     <Loading />
                 ) : (
                     <Stack
-                        marginTop="1.2rem"
-                        padding="1.5rem"
+                        padding="1rem"
                         useFlexGap
                         spacing={2}
                     >
@@ -439,13 +397,10 @@ export default function KategoriPengeluaran() {
                         >
                             <div>
                                 <Typography
-                                    fontSize={15}
+                                    fontSize="sm"
                                     lineHeight="sm"
-                                    fontWeight={400}
-                                    color="neutral"
-                                    sx={{
-                                        opacity: 0.8,
-                                    }}
+                                    fontWeight="sm"
+                                    textColor="white"
                                 >
                                     Kategori pengeluaran adalah cara untuk mengelompokkan pengeluaran Anda.
                                     Dengan menggunakan kategori, Anda dapat dengan mudah melihat laporan keuangan Anda berdasarkan prioritas.
@@ -466,6 +421,7 @@ export default function KategoriPengeluaran() {
                     </Stack>
                 )}
             </PageLayout>
+            <CreateButton onClick={createCallback} />
             <KategoriPengeluaranModalForm
                 formMode={mode}
                 isOpen={isOpenFormModal}

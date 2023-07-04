@@ -3,19 +3,15 @@ import {
     Stack,
     IconButton,
     Box,
+    colors,
 } from "@mui/joy"
 
 import { NextRouter, useRouter } from "next/router"
 
-import colors from "../colors"
-
-import {
-    TbSettings2 as SettingsIcon,
-} from "react-icons/tb"
-
 import {
     LiaHomeSolid as HomeIcon,
-    LiaHandsHelpingSolid as ExpenseIcon,
+    LiaClipboardListSolid as ExpenseIcon,
+    LiaCogSolid as SettingsIcon,
 } from "react-icons/lia"
 
 import type { IconType } from "react-icons"
@@ -24,27 +20,22 @@ function isActive(route: string, routerPath: NextRouter): boolean {
     return route === routerPath.route
 }
 
-function NavButton({
-    router,
-    to,
-    icon,
-    action
-}: {
+function NavButton(props: {
     router: NextRouter,
     to: string
     icon: IconType,
     action: () => void
 }) {
-    const IconSet = icon
-    const isActiveMenu = isActive(to, router)
+    const IconSet = props.icon
+    const isActiveMenu = isActive(props.to, props.router)
     const iconProps = {
         size: 32,
-        color: !isActiveMenu ? colors.accent : colors.neutral,
+        color: !isActiveMenu ? colors.blue[900] : "white",
     }
 
     return (
         <IconButton
-            onClick={action}
+            onClick={props.action}
             size="lg"
             variant="plain"
             sx={{
@@ -54,11 +45,13 @@ function NavButton({
         >
             {isActiveMenu && <Box
                 sx={{
-                    width: 20,
-                    height: 4,
+                    width: 40,
+                    height: 10,
+                    borderBottomLeftRadius: "1.5rem",
+                    borderBottomRightRadius: "1.5rem",
                     position: "absolute",
-                    bgcolor: colors.neutral,
-                    top: 0,
+                    bgcolor: "common.white",
+                    top: -5,
                 }}
             />}
             <IconSet {...iconProps} />
@@ -71,17 +64,14 @@ export default function BottomNavigation() {
 
     return (
         <Stack
-            position="sticky"
+            position="fixed"
             bottom={0}
-            height={70}
+            paddingBottom={1}
             width="100%"
             maxWidth="sm"
             zIndex={2}
             sx={{
-                bgcolor: colors.background,
-                borderTopWidth: 1,
-                borderTopColor: colors.primary,
-                borderTopStyle: "solid",
+                bgcolor: colors.green[300],
             }}
             useFlexGap
             direction="row"

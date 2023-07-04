@@ -7,9 +7,10 @@ import {
     tabClasses,
     Typography,
     IconButton,
+    colors,
 } from "@mui/joy"
-import { Formik, FormikConfig } from "formik"
 
+import { Formik, FormikConfig } from "formik"
 
 import {
     IoAdd as AddIcon
@@ -20,7 +21,6 @@ import {
     PageContainer,
     BottomDrawer,
 } from "@/components/ui"
-import colors from "@/components/colors"
 import { Pengeluaran } from "@/types/Pengeluaran"
 
 function PengeluaranForm(props: {
@@ -43,7 +43,7 @@ function PengeluaranForm(props: {
                 gutterBottom
                 width="100%"
                 textAlign="center"
-                textColor={colors.neutral}
+                textColor="primary.900"
             >
                 Pengeluaran Form
             </Typography>
@@ -63,8 +63,8 @@ function FabButton(props: {
         <Box
             sx={{
                 position: "fixed",
-                bottom: "5.5rem",
-                right: "1.5rem",
+                bottom: "4.5rem",
+                right: "1rem",
                 zIndex: 3,
             }}
         >
@@ -72,13 +72,13 @@ function FabButton(props: {
                 onClick={props.onClick}
                 size="lg"
                 sx={{
-                    backgroundColor: colors.primary,
+                    backgroundColor: "primary.900",
                     borderRadius: "100px",
-                    boxShadow: "md",
+                    boxShadow: "xl",
                 }}
                 variant="solid"
             >
-                <AddIcon size={30} color={colors.neutral} />
+                <AddIcon size={30} color={colors.green[300]} />
             </IconButton>
         </Box>
     )
@@ -104,7 +104,7 @@ function TimelineTabs(props: {
 
     return (
         <Box
-            marginTop="3.5rem"
+            marginTop="3rem"
             width="100%"
             maxWidth="sm"
             position="relative"
@@ -112,7 +112,7 @@ function TimelineTabs(props: {
             <Typography
                 fontSize="lg"
                 fontWeight="md"
-                textColor={colors.neutral}
+                textColor={colors.blue[900]}
             >
                 Timeline Pengeluaran
             </Typography>
@@ -137,7 +137,6 @@ function TimelineTabs(props: {
                             style: {
                                 overflowY: "scroll",
                                 scrollBehavior: "smooth",
-                                backgroundColor: colors.background,
                             }
                         }
                     }}
@@ -150,11 +149,9 @@ function TimelineTabs(props: {
                         ['&::-webkit-scrollbar']: {
                             display: "none",
                         },
-                        backgroundColor: colors.background,
                         [`& .${tabClasses.root}`]: {
                             boxShadow: "none",
-                            backgroundColor: colors.background,
-                            color: colors.secondary,
+                            color: colors.blue[900],
                             [`&.${tabClasses.selected}::before`]: {
                                 content: '""',
                                 display: "block",
@@ -165,7 +162,10 @@ function TimelineTabs(props: {
                                 height: 4,
                                 borderBottomLeftRadius: 12,
                                 borderBottomRightRadius: 12,
-                                bgcolor: colors.neutral,
+                                bgcolor: colors.green[300],
+                            },
+                            [`&.${tabClasses.selected}`]: {
+                                color: colors.green[300],
                             }
                         }
                     }}
@@ -195,7 +195,9 @@ export default function Pengeluaran() {
     return (
         <>
             <PageTitle title="Pengeluaran"></PageTitle>
-            <PageContainer>
+            <PageContainer
+                paddingTop={3}
+            >
                 <TimelineTabs
                 />
                 <PengeluaranForm

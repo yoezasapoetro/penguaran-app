@@ -1,25 +1,22 @@
 import { Container, Stack } from "@mui/joy"
 
-import colors from "../colors"
-
-export default function PageLayout({
-    children
-}: { children: React.ReactNode }) {
+export default function PageLayout(props: {
+    children: React.ReactNode
+}) {
     return (
         <Container
             fixed
             disableGutters
             maxWidth="sm"
             sx={{
-                minHeight: "100vh",
+                minWidth: "100vw",
                 height: "100%",
                 width: "100%",
-                backgroundColor: colors.background,
                 position: "relative",
             }}
         >
             <Stack height="100%">
-                {children}
+                {props.children}
             </Stack>
         </Container>
     )

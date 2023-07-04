@@ -2,9 +2,8 @@ import {
     Modal,
     modalClasses,
     Sheet,
+    Stack,
 } from "@mui/joy"
-
-import colors from "../colors"
 
 export type DrawerProps = {
     open: boolean
@@ -41,12 +40,6 @@ export default function BottomDrawer(props: DrawerProps) {
                 sx={{
                     px: 2,
                     py: 1.5,
-                    borderTopWidth: 1,
-                    borderTopStyle: "solid",
-                    borderTopColor: colors.accent,
-                    backgroundColor: colors.background,
-                    borderTopLeftRadius: "2rem",
-                    borderTopRightRadius: "2rem",
                     boxSizing: "border-box",
                     position: "fixed",
                     overflow: "auto",
@@ -58,7 +51,15 @@ export default function BottomDrawer(props: DrawerProps) {
                     transition: "transform 0.3s ease",
                 }}
             >
-                {props.children}
+                <Stack
+                    sx={{
+                        paddingInline: 1,
+                        height: "100%",
+                    }}
+                    spacing={2}
+                >
+                    {props.children}
+                </Stack>
             </Sheet>
         </Modal>
     )

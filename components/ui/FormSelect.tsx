@@ -7,9 +7,8 @@ import {
     FormLabel,
     FormHelperText,
     Select,
+    colors,
 } from "@mui/joy"
-
-import colors from "../colors"
 
 export default function FormSelect(props: {
     label: string
@@ -36,8 +35,14 @@ export default function FormSelect(props: {
                 slotProps={{
                     root: {
                         sx: {
-                            color: colors.neutral,
                             borderRadius: 0,
+                        }
+                    },
+                    listbox: {
+                        sx: {
+                            borderRadius: 0,
+                            boxShadow: "sm",
+                            borderColor: "success.400",
                         }
                     }
                 }}

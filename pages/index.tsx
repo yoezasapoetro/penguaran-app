@@ -15,7 +15,7 @@ function Greeting(props: {
             <Typography
                 fontSize="lg"
                 lineHeight="sm"
-                textColor={colors.neutral}
+                textColor={colors.primary}
             >
                 Hi, {' '}
                 {data?.user?.name}
@@ -23,7 +23,7 @@ function Greeting(props: {
             <Typography
                 level="body1"
                 lineHeight="sm"
-                textColor={colors.secondary}
+                textColor={colors.primary}
             >
                 Selamat Datang!
             </Typography>

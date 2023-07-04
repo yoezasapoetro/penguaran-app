@@ -1,13 +1,13 @@
-import { Stack, Typography } from "@mui/joy"
+import { Stack, Typography, colors } from "@mui/joy"
 import {
     LuInfo as InfoIcon,
 } from "react-icons/lu"
 
-import colors from "../colors"
-
 export default function LogDate(props: {
     date: string
 }) {
+    const color = colors.grey[400]
+
     return (
         <Stack
             useFlexGap
@@ -15,11 +15,11 @@ export default function LogDate(props: {
             alignItems="center"
             spacing={0.7}
         >
-            <InfoIcon color={colors.secondary} size={15} />
+            <InfoIcon color={color} size={14} />
             <Typography
                 lineHeight="sm"
-                fontSize={13}
-                textColor={colors.secondary}
+                fontSize="xs"
+                textColor={color}
             >
                 {props.date}
             </Typography>

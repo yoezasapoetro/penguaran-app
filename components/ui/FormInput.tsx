@@ -6,7 +6,6 @@ import {
     Input,
 } from "@mui/joy"
 
-import colors from "../colors"
 import { useField } from "formik"
 
 export default function FormInput(props: {
@@ -21,9 +20,7 @@ export default function FormInput(props: {
         sx: {
             '--Input-radius': 0,
             '--Input-focusedThickness': 1,
-            '--Input-placeholderColor': colors.secondary,
-            fontSize: 15,
-            color: colors.neutral,
+            fontSize: "md",
         },
         ...field,
         type: props.type ?? "text",

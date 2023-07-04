@@ -3,10 +3,11 @@ import { useRouter } from "next/navigation"
 import {
     Typography,
     Stack,
-    IconButton,
+    Box,
     Card,
     CardContent,
     AspectRatio,
+    colors,
 } from "@mui/joy"
 
 import {
@@ -19,8 +20,6 @@ import JenisPengeluaranIcon from "@/assets/icons/jenis_pengeluaran.png"
 import SumberDanaIcon from "@/assets/icons/sumber_dana.png"
 import SellerIcon from "@/assets/icons/seller.png"
 import { PageContainer, PageTitle } from "@/components/ui"
-
-import colors from "@/components/colors"
 
 const SettingItem = ({
     title,
@@ -39,6 +38,14 @@ const SettingItem = ({
             orientation="horizontal"
             sx={{
                 alignItems: "center",
+                borderColor: "neutral.outlinedBorder",
+                borderStyle: "solid",
+                borderWidth: 1,
+                ['&:hover']: {
+                    borderColor: "success.300",
+                    cursor: "pointer",
+                    boxShadow: "md",
+                }
             }}
             onClick={() => {
                 router.push(link)
@@ -65,28 +72,23 @@ const SettingItem = ({
                 <Stack>
                     <Typography
                         lineHeight="md"
-                        fontSize="lg"
-                        textColor={colors.neutral}
+                        fontSize="md"
+                        fontWeight="md"
+                        textColor="primary.900"
                     >
                         {title}
                     </Typography>
                     <Typography
                         lineHeight="sm"
-                        fontSize="sm"
-                        textColor={colors.secondary}
+                        fontSize="xs"
+                        textColor="text.tertiary"
                     >
                         {subtitle}
                     </Typography>
                 </Stack>
-                <IconButton
-                    variant="plain"
-                    size="sm"
-                    onClick={() => {
-                        router.push(link)
-                    }}
-                >
-                    <ContinueIcon size={20} color={colors.neutral} />
-                </IconButton>
+                <Box>
+                    <ContinueIcon size={20} color={colors.grey[500]} />
+                </Box>
             </CardContent>
         </Card>
     )
@@ -101,9 +103,9 @@ export default function Pengaturan() {
                 paddingTop={8}
             >
                 <Typography
-                    level="h5"
+                    fontSize="lg"
                     width="100%"
-                    textColor={colors.secondary}
+                    textColor="primary.900"
                 >
                     Transaksi
                 </Typography>
@@ -131,9 +133,9 @@ export default function Pengaturan() {
                     />
                 </Stack>
                 <Typography
-                    level="h5"
+                    fontSize="lg"
                     width="100%"
-                    textColor={colors.secondary}
+                    textColor="primary.900"
                 >
                     Umum
                 </Typography>
