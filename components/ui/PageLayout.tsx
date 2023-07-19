@@ -15,7 +15,12 @@ export default function PageLayout(props: {
                 position: "relative",
             }}
         >
-            <Stack height="100%">
+            <Stack
+                height="100%"
+                sx={{
+                    minHeight: "calc(100vh - 80px)",
+                }}
+            >
                 {props.children}
             </Stack>
         </Container>
