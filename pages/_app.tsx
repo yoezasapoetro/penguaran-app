@@ -3,12 +3,20 @@ import Head from "next/head"
 import type { AppInitialProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
-import { CssVarsProvider, extendTheme } from '@mui/joy'
+import {
+    CssVarsProvider as JoyCssVarsProvider,
+    extendTheme as extendJoyTheme
+} from '@mui/joy/styles'
+import {
+    Experimental_CssVarsProvider as MaterialCssVarsProvider,
+    experimental_extendTheme as extendMaterialTheme,
+    THEME_ID as MATERIAL_THEME_ID,
+} from '@mui/material/styles'
 import { font } from '@/lib/utils/fonts'
 
 const queryClient = new QueryClient()
 
-const theme = extendTheme({
+const joyTheme = extendJoyTheme({
     components: {
         JoyIconButton: {
             styleOverrides: {
@@ -21,6 +29,8 @@ const theme = extendTheme({
         }
     }
 })
+
+const materialTheme = extendMaterialTheme()
 
 export default function App({
     Component,
@@ -38,9 +48,11 @@ export default function App({
             `}</style>
             <SessionProvider session={session}>
                 <QueryClientProvider client={queryClient}>
-                    <CssVarsProvider theme={theme}>
-                        <Component {...pageProps} />
-                    </CssVarsProvider>
+                    <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
+                        <JoyCssVarsProvider theme={joyTheme}>
+                            <Component {...pageProps} />
+                        </JoyCssVarsProvider>
+                    </MaterialCssVarsProvider>
                 </QueryClientProvider>
             </SessionProvider>
         </>
