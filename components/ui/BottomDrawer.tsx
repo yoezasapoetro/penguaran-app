@@ -9,17 +9,29 @@ export type DrawerProps = {
     open: boolean
     onClose: () => void
     height?: number
+    backdropClick?: boolean
     children: React.ReactNode
 }
 
 export default function BottomDrawer(props: DrawerProps) {
-    const height = props.height ?? 80;
+    const height = props.height ?? 80
+    const backdropClick = props.backdropClick ?? false
     const size = `clamp(30rem, ${height}%, 50rem)`
+
+    function handleClose(_: any, reason: string) {
+        if (
+            (reason === "backdropClick" && backdropClick) ||
+            reason === "closeClick"
+        ) {
+            props.onClose()
+        }
+    }
+
     return (
         <Modal
             keepMounted
             open={props.open}
-            onClose={props.onClose}
+            onClose={handleClose}
             sx={{
                 transitionProperty: "visibility",
                 transitionDelay: props.open ? "0s" : "300ms",
@@ -31,7 +43,8 @@ export default function BottomDrawer(props: DrawerProps) {
             slotProps={{
                 backdrop: {
                     sx: {
-                        backdropFilter: "blur(2px)",
+                        backdropFilter: "blur(4px)",
+                        backgroundColor: "rgba(0, 0, 0, 0.4)",
                     }
                 }
             }}
@@ -52,9 +65,10 @@ export default function BottomDrawer(props: DrawerProps) {
                 }}
             >
                 <Stack
+                    useFlexGap
                     sx={{
-                        paddingInline: 1,
                         height: "100%",
+                        width: "100%",
                     }}
                     spacing={2}
                 >
