@@ -4,9 +4,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import {
     Box,
     Button,
-    ListItemContent,
-    ListItemDecorator,
-    Option,
     Stack,
     Typography,
     colors
@@ -30,7 +27,6 @@ import {
     LogDate,
     InformationBanner,
     BottomDrawer,
-    FormSelect,
     FormInput,
     ConfirmationModal,
     FormRadioGroup,
@@ -38,7 +34,6 @@ import {
 import {
     SumberDana,
     SumberDanaFormProps,
-    SumberDanaTypeData,
 } from "@/types/SumberDana"
 import {
     addSumberDana,
@@ -93,6 +88,7 @@ function SumberDanaModalForm({
         <BottomDrawer
             open={isOpen}
             onClose={onClose}
+            backdropClick
         >
             <Typography
                 fontSize="lg"
@@ -146,7 +142,7 @@ function SumberDanaModalForm({
                     </Form>
                 )}
             </Formik>
-        </BottomDrawer >
+        </BottomDrawer>
     )
 }
 

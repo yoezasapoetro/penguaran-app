@@ -103,6 +103,7 @@ function KategoriPengeluaranModalForm({
         <BottomDrawer
             open={isOpen}
             onClose={onClose}
+            backdropClick
         >
             <Typography
                 fontSize="lg"
@@ -172,7 +173,7 @@ function KategoriPengeluaranModalForm({
                     </Form>
                 )}
             </Formik>
-        </BottomDrawer >
+        </BottomDrawer>
     )
 }
 
