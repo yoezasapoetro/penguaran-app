@@ -88,6 +88,7 @@ function PenjualModalForm({
         <BottomDrawer
             open={isOpen}
             onClose={onClose}
+            backdropClick
         >
             <Typography
                 fontSize="lg"
@@ -164,7 +165,7 @@ function PenjualModalForm({
                     </Form>
                 )}
             </Formik>
-        </BottomDrawer >
+        </BottomDrawer>
     )
 }
 
