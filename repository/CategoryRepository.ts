@@ -18,40 +18,54 @@ export default class CategoryRepository {
         this.userId = userId
     }
 
-    async getAll(offset: number, limit: number): Promise<Array<Partial<Category>>> {
-        return await this.client
-            .select({
-                id: category.id,
-                name: category.name,
-                priority: category.priority,
-                createdAt: category.createdAt,
-                updatedAt: category.updatedAt,
-            })
-            .from(category)
-            .where(and(
-                eq(category.userId, this.userId),
-                isNull(category.deletedAt)
-            ))
-            .orderBy(
-                desc(category.priority),
-                desc(category.updatedAt)
+    private selectAllSubquery() {
+        return this.client
+            .$with("selectAllSubquery")
+            .as(
+                this.client
+                    .select()
+                    .from(category)
+                    .where(and(
+                        eq(category.userId, this.userId),
+                        isNull(category.deletedAt)
+                    ))
+                    .orderBy(
+                        desc(category.priority),
+                        desc(category.updatedAt)
+                    )
             )
+    }
+
+    async getAll(offset: number, limit: number): Promise<Array<Partial<Category>>> {
+        const subquery = this.selectAllSubquery()
+
+        const data = await this.client
+            .with(subquery)
+            .select({
+                id: subquery.id,
+                name: subquery.name,
+                priority: subquery.priority,
+                createdAt: subquery.createdAt,
+                updatedAt: subquery.updatedAt,
+            })
+            .from(subquery)
             .offset(offset)
             .limit(limit)
+
+        return data
     }
 
     async countAll(): Promise<number> {
-        const [{ count }] = await this.client
-            .select({
-                count: sql<number>`count(*)`
-            })
-            .from(category)
-            .where(and(
-                eq(category.userId, this.userId),
-                isNull(category.deletedAt)
-            ))
+        const subquery = this.selectAllSubquery()
 
-        return count
+        const [{ total }]: Array<{ total: number }> = await this.client
+            .with(subquery)
+            .select({
+                total: sql<number>`count(*)`
+            })
+            .from(subquery)
+
+        return total
     }
 
     async getById(id: number): Promise<Partial<Category> | null> {
