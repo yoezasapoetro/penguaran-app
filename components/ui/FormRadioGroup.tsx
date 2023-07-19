@@ -19,6 +19,28 @@ import {
 import {
     GoCheckCircleFill as CheckedIcon,
 } from "react-icons/go"
+import { SxProps } from "@mui/joy/styles/types"
+
+const radioGroupSxProps: SxProps = {
+    margin: 0,
+    gap: 2,
+    [`& .${radioClasses.checked}`]: {
+        [`& .${radioClasses.action}`]: {
+            inset: -1,
+            border: "2px solid",
+            borderColor: "success.300",
+        },
+    },
+    [`& .${radioClasses.radio}`]: {
+        display: "contents",
+        ['& > div']: {
+            zIndex: 2,
+            position: "absolute",
+            top: "-11px",
+            right: "-11px",
+        }
+    }
+}
 
 export default function FormRadioGroup(props: {
     label: string
@@ -51,26 +73,7 @@ export default function FormRadioGroup(props: {
                 aria-labelledby={fieldId}
                 value={field.value}
                 onChange={handleChange}
-                sx={{
-                    margin: 0,
-                    gap: 2,
-                    [`& .${radioClasses.checked}`]: {
-                        [`& .${radioClasses.action}`]: {
-                            inset: -1,
-                            border: "2px solid",
-                            borderColor: "success.300",
-                        },
-                    },
-                    [`& .${radioClasses.radio}`]: {
-                        display: "contents",
-                        ['& > div']: {
-                            zIndex: 2,
-                            position: "absolute",
-                            top: "-11px",
-                            right: "-11px",
-                        }
-                    }
-                }}
+                sx={radioGroupSxProps}
             >
                 {options.map((item) => {
                     const checkIconSize = 22
