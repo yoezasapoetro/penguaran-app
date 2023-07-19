@@ -3,20 +3,7 @@ import { dbPg } from "@/lib/db"
 import { ExpenseDetailsModel, ExpenseModel } from "@/lib/models"
 import ExpenseDetailRepository from "@/repository/ExpenseDetailRepository"
 import ExpenseRepository from "@/repository/ExpenseRepository"
-
-type ExpenseDetailPayload = {
-    detail: string
-    amount: string
-}
-
-type ExpensePayload = {
-    expenseDate: string
-    total: string
-    storeId: number
-    categoryId: number
-    sourcePaymentId: number
-    detail: ExpenseDetailPayload[]
-}
+import { ExpenseDetailPayload, ExpensePayload } from "@/types/Expense"
 
 export default class ExpenseService {
     private expenseRepository: ExpenseRepository
@@ -61,10 +48,10 @@ export default class ExpenseService {
     }
 
     async createHandler(req: NextApiRequest, res: NextApiResponse) {
-        const { detail, ...expense }: ExpensePayload = req.body
+        const { details, ...expense }: ExpensePayload = req.body
         const expensePayload: Partial<ExpenseModel> = {
             expenseDate: expense.expenseDate,
-            total: expense.total,
+            total: expense.total.toString(),
             storeId: expense.storeId,
             categoryId: expense.categoryId,
             sourcePaymentId: expense.sourcePaymentId,
@@ -77,18 +64,21 @@ export default class ExpenseService {
             return
         }
 
-        const expenseDetailPayload: Array<Partial<ExpenseDetailsModel>> = detail
+        if (details && details.length) {
+        const expenseDetailPayload: Array<Partial<ExpenseDetailsModel>> = details
             .map((d: ExpenseDetailPayload) => {
                 return {
                     expenseId: created.id,
-                    detail: d?.detail,
-                    amount: d.amount,
+                    detail: d.detail,
+                    amount: d.amount.toString(),
                 }
             })
 
-        const total = await this.expenseDetailRepository.createMany(expenseDetailPayload)
+            await this.expenseDetailRepository.createMany(expenseDetailPayload)
+        }
 
-        res.status(201).json({ message: "Successfully created.", total })
+
+        res.status(201).json({ message: "Successfully created." })
     }
 
     async deleteHandler(req: NextApiRequest, res: NextApiResponse) {

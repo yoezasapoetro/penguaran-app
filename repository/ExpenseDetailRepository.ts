@@ -18,9 +18,10 @@ export default class ExpenseDetailRepository extends AbstractRepository {
             .transaction(async (tx) => {
                 const returnValues: Array<ExpenseDetailsModel> = []
                 for (const payload of payloads) {
-                    const _payload: Array<Omit<ExpenseDetailsModel, "id">> = {
-                        detail: payload.detail ?? null,
-                        amount: payload.amount ?? 0,
+                    const _payload: ExpenseDetailsModel = {
+                        expenseId: payload.expenseId as number,
+                        detail: payload.detail,
+                        amount: payload.amount as string,
                         createdAt: self.getDateString(),
                         updatedAt: self.getDateString(),
                     }
