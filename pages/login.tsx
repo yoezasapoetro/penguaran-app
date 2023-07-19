@@ -82,8 +82,8 @@ function Jumbotron() {
                 borderBottomStyle: "solid",
                 borderBottomLeftRadius: 35,
                 borderBottomRightRadius: 35,
-                borderBottomColor: colors.grey[50],
-                backgroundColor: colors.grey[50],
+                borderBottomColor: colors.green[50],
+                backgroundColor: colors.green[100],
                 boxShadow: "sm",
             }}
         >
@@ -114,13 +114,12 @@ function AppLogo() {
             direction="row"
             justifyContent="center"
             alignItems="center"
-            columnGap={2}
         >
             <AspectRatio
                 variant="plain"
                 ratio="1"
                 sx={{
-                    width: "40%"
+                    width: "4rem",
                 }}
             >
                 <Image
@@ -128,6 +127,11 @@ function AppLogo() {
                     alt="App Logo"
                 />
             </AspectRatio>
+            <Typography
+                level="h3"
+            >
+                Penguaran
+            </Typography>
         </Stack>
     )
 }
