@@ -1,18 +1,18 @@
-import '@/styles/globals.css'
+import "@/styles/globals.css"
 import Head from "next/head"
-import type { AppInitialProps } from 'next/app'
-import { SessionProvider } from 'next-auth/react'
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
+import type { AppInitialProps } from "next/app"
+import { SessionProvider } from "next-auth/react"
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 import {
     CssVarsProvider as JoyCssVarsProvider,
     extendTheme as extendJoyTheme
-} from '@mui/joy/styles'
+} from "@mui/joy/styles"
 import {
     Experimental_CssVarsProvider as MaterialCssVarsProvider,
     experimental_extendTheme as extendMaterialTheme,
     THEME_ID as MATERIAL_THEME_ID,
-} from '@mui/material/styles'
-import { font } from '@/lib/utils/fonts'
+} from "@mui/material/styles"
+import { font } from "@/lib/utils/fonts"
 
 const queryClient = new QueryClient()
 
@@ -21,7 +21,7 @@ const joyTheme = extendJoyTheme({
         JoyIconButton: {
             styleOverrides: {
                 root: () => ({
-                    ['&:active, &:hover']: {
+                    ["&:active, &:hover"]: {
                         backgroundColor: "unset",
                     }
                 })
@@ -39,7 +39,14 @@ export default function App({
     return (
         <>
             <Head>
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <meta name="description" content="Penguaran - Family Expense Tracker" />
+                <meta
+                    name="viewport"
+                    content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover" />
+                <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+                <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
+                <link rel="manifest" href="/manifest.json" />
+                <link rel="shortcut icon" href="/icons/favicon.ico" />
             </Head>
             <style jsx global>{`
                 :root {
