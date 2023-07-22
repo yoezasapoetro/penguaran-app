@@ -2,8 +2,8 @@ import {
     AdapterAccount,
     AdapterUser,
     AdapterSession,
-    DefaultAdapter,
 } from "next-auth/adapters"
+import type { Adapter as DefaultAdapter } from "next-auth/adapters"
 import type { NeonDatabase } from "drizzle-orm/neon-serverless"
 import { LibSQLDatabase } from "drizzle-orm/libsql"
 import { parseJSON } from "date-fns"
