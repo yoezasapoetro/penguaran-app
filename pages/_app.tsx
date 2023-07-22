@@ -43,10 +43,10 @@ export default function App({
                 <meta
                     name="viewport"
                     content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover" />
-                <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
-                <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
-                <link rel="manifest" href="/manifest.json" />
-                <link rel="shortcut icon" href="/icons/favicon.ico" />
+                <link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32x32.png" />
+                <link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16x16.png" />
+                <link rel="shortcut icon" href="/static/icons/favicon.ico" />
+                <link rel="manifest" href="/static/manifest.json" />
             </Head>
             <style jsx global>{`
                 :root {
