@@ -1,4 +1,4 @@
-import { desc, between, and, eq } from "drizzle-orm";
+import { desc, between, and, eq, sql } from "drizzle-orm";
 import { subDays, addMonths } from "date-fns"
 
 import {
@@ -24,36 +24,74 @@ export default class ExpenseRepository extends AbstractRepository {
         return subDays(month, 1)
     }
 
-    async getAllByMonth(month: number, limit: number): Promise<Array<any>> {
+    private sqlQuery(startDate: Date, endDate: Date) {
+        return this.client
+            .$with("sqlQuery")
+            .as(
+                this.client
+                    .select({
+                        id: expense.id,
+                        date: expense.expenseDate,
+                        total: expense.total,
+                        storeName: sql<string>`${store.name}`.as("storeName"),
+                        categoryName: sql<string>`${category.name}`.as("categoryName"),
+                        sourcePaymentName: sql<string>`${sourcePayment.name}`.as("sourcePaymentName"),
+                        createdAt: expense.createdAt,
+                        updatedAt: expense.updatedAt,
+                    })
+                    .from(expense)
+                    .innerJoin(store, eq(store.id, expense.storeId))
+                    .innerJoin(sourcePayment, eq(sourcePayment.id, expense.sourcePaymentId))
+                    .innerJoin(category, eq(category.id, expense.categoryId))
+                    .where(and(
+                        eq(expense.userId, this.userId),
+                        between(
+                            expense.expenseDate,
+                            startDate.toDateString(),
+                            endDate.toDateString(),
+                        )
+                    ))
+                    .orderBy(desc(expense.expenseDate))
+            )
+    }
+
+    selectAllExpense(month: number) {
         const startDate = this._getBeginDateFromMonth(month)
         const endDate = this._getEndDateFromMonth(startDate)
 
+        return this.sqlQuery(startDate, endDate)
+    }
+
+    selectTodayExpense() {
+        const currentDate = new Date()
+
+        return this.sqlQuery(currentDate, currentDate)
+    }
+
+    async getAllByMonth(month: number, offset: number, limit: number): Promise<Array<any>> {
+        const query = this.selectAllExpense(month)
+
         const result = await this.client
-            .select({
-                id: expense.id,
-                date: expense.expenseDate,
-                storeName: store.name,
-                categoryName: category.name,
-                sourcePaymentName: sourcePayment.name,
-                createdAt: expense.createdAt,
-                updatedAt: expense.updatedAt,
-            })
-            .from(expense)
-            .innerJoin(store, eq(store.id, expense.storeId))
-            .innerJoin(sourcePayment, eq(sourcePayment.id, expense.sourcePaymentId))
-            .innerJoin(category, eq(category.id, expense.categoryId))
-            .where(and(
-                eq(expense.userId, this.userId),
-                between(
-                    expense.expenseDate,
-                    startDate.toDateString(),
-                    endDate.toDateString(),
-                )
-            ))
+            .with(query)
+            .select()
+            .from(query)
+            .offset(offset)
             .limit(limit)
-            .orderBy(desc(expense.expenseDate))
 
         return result
+    }
+
+    async countAllByMonth(month: number): Promise<number> {
+        const query = this.selectAllExpense(month)
+
+        const [{ count }]: Array<{ count: number }> = await this.client
+            .with(query)
+            .select({
+                count: sql<number>`count(*)`
+            })
+            .from(query)
+
+        return count
     }
 
     async create(payload: Partial<ExpenseModel>): Promise<Partial<Expense>> {
@@ -106,5 +144,10 @@ export default class ExpenseRepository extends AbstractRepository {
                     ))
             }
         })
+    }
+
+    // dashboard stuff
+    async getTodayExpenses() {
+
     }
 }

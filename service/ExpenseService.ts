@@ -3,30 +3,79 @@ import { dbPg } from "@/lib/db"
 import { ExpenseDetailsModel, ExpenseModel } from "@/lib/models"
 import ExpenseDetailRepository from "@/repository/ExpenseDetailRepository"
 import ExpenseRepository from "@/repository/ExpenseRepository"
-import { ExpenseDetailPayload, ExpensePayload } from "@/types/Expense"
+import { ExpenseDetailPayload, ExpensePayload, ExpenseResults } from "@/types/Expense"
 
 export default class ExpenseService {
     private expenseRepository: ExpenseRepository
     private expenseDetailRepository: ExpenseDetailRepository
-    private maxReach = 10
+    private maxFetch = 10
 
     constructor(userId: string) {
         this.expenseRepository = new ExpenseRepository(dbPg, userId)
         this.expenseDetailRepository = new ExpenseDetailRepository(dbPg, userId)
     }
 
+    mappingResults(results: Array<any>): ExpenseResults {
+        let groups: ExpenseResults = []
+        let groupResults: Record<string, Array<any>> = {}
+
+        for (const result of results) {
+            if (groupResults[result.date]) {
+                groupResults[result.date].push({
+                    id: result.id,
+                    storeName: result.storeName,
+                    sourcePaymentName: result.sourcePaymentName,
+                    categoryName: result.categoryName,
+                    total: result.total,
+                    createdAt: result.createdAt,
+                    updatedAt: result.updatedAt,
+                })
+            } else {
+                groupResults[result.date] = [{
+                    id: result.id,
+                    storeName: result.storeName,
+                    sourcePaymentName: result.sourcePaymentName,
+                    categoryName: result.categoryName,
+                    total: result.total,
+                    createdAt: result.createdAt,
+                    updatedAt: result.updatedAt,
+                }]
+            }
+        }
+
+        for (const [key, value] of Object.entries(groupResults)) {
+            groups.push({
+                dateGroup: key,
+                expenses: value,
+            })
+        }
+
+        return groups;
+    }
+
     async getAllByMonthHandler(req: NextApiRequest, res: NextApiResponse) {
+        let result: Array<Partial<ExpenseModel>> = []
         let month = Number(req.query.month || "0")
+        const { page = "1" } = req.query
 
         if (!month) {
             month = this.expenseRepository.currentMonth
         }
 
-        const results = await this.expenseRepository.getAllByMonth(month, this.maxReach)
+        const currentPage = Number(page)
+
+        if (currentPage < 0) result = []
+
+        const offset = (currentPage - 1) * this.maxFetch
+
+        const results = await this.expenseRepository.getAllByMonth(month, offset, this.maxFetch)
+        const total = await this.expenseRepository.countAllByMonth(month)
+
+        const groupResults = this.mappingResults(results)
 
         return res.status(200).json({
-            data: results,
-            total: results.length,
+            data: groupResults,
+            total,
         })
     }
 
@@ -65,14 +114,14 @@ export default class ExpenseService {
         }
 
         if (details && details.length) {
-        const expenseDetailPayload: Array<Partial<ExpenseDetailsModel>> = details
-            .map((d: ExpenseDetailPayload) => {
-                return {
-                    expenseId: created.id,
-                    detail: d.detail,
-                    amount: d.amount.toString(),
-                }
-            })
+            const expenseDetailPayload: Array<Partial<ExpenseDetailsModel>> = details
+                .map((d: ExpenseDetailPayload) => {
+                    return {
+                        expenseId: created.id,
+                        detail: d.detail,
+                        amount: d.amount.toString(),
+                    }
+                })
 
             await this.expenseDetailRepository.createMany(expenseDetailPayload)
         }
