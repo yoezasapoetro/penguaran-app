@@ -3,6 +3,21 @@ export type ExpenseDetailPayload = {
     amount: number
 }
 
+export type ExpenseItem = {
+    id: number
+    total: string
+    storeName: string
+    categoryName: string
+    sourcePaymentName: string
+    createdAt: string
+    updatedAt: string
+}
+
+export type ExpenseResults = Array<{
+    dateGroup: string
+    expenses: Array<ExpenseItem>
+}>
+
 export type ExpensePayload = {
     expenseDate: string
     total: number

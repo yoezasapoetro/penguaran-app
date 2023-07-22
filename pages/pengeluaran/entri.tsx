@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import {
     Stack,
     Input,
@@ -20,6 +20,7 @@ import {
     PageHeader,
     PageLayout,
 } from "@/components/ui"
+import { GlobalStyles } from '@mui/joy'
 import { SxProps } from "@mui/joy/styles/types"
 import {
     BsPlusLg as AddIcon,
@@ -42,6 +43,8 @@ import {
     string
 } from "yup"
 import dayjs from "dayjs"
+import { Toaster, toast } from "sonner"
+import { useRouter } from "next/router"
 
 import { KategoriPengeluaran } from "@/types/KategoriPengeluaran"
 import { Penjual } from "@/types/Penjual"
@@ -66,10 +69,6 @@ function CategoryPicker(props: {
     const [open, setOpen] = useState<boolean>(false)
 
     const [field, meta, helpers] = useField(props.name)
-
-    useEffect(() => {
-        if (field.value === 0) setInputValue("")
-    }, [field])
 
     function handleChange(val: number) {
         helpers.setValue(val)
@@ -134,10 +133,6 @@ function StorePicker(props: {
 
     const [field, meta, helpers] = useField(props.name)
 
-    useEffect(() => {
-        if (field.value === 0) setInputValue("")
-    }, [field])
-
     function handleChange(val: number) {
         helpers.setValue(val)
         const [_value] = result.filter(
@@ -197,10 +192,6 @@ function SourcePaymentPicker(props: {
 
     const [field, meta, helpers] = useField(props.name)
 
-    useEffect(() => {
-        if (field.value === 0) setInputValue("")
-    }, [field])
-
     function handleChange(val: number) {
         helpers.setValue(val)
         const [_value] = result.filter(
@@ -252,6 +243,7 @@ function SourcePaymentPicker(props: {
 }
 
 function EntriPengeluaranForm() {
+    const router = useRouter()
     const mutation = useMutation({
         mutationKey: ["entriPengeluaran"],
         mutationFn: addExpense,
@@ -307,6 +299,13 @@ function EntriPengeluaranForm() {
             mutation.mutate(values)
             actions.resetForm()
             actions.setSubmitting(false)
+            toast.success("Selamat, anda baru menambahkan data pengeluaran.", {
+                description: "Kembali untuk melihat data.",
+                action: {
+                    label: "lihat",
+                    onClick: () => router.push("/pengeluaran")
+                },
+            })
         }
     }
     return (
@@ -514,12 +513,25 @@ function MainForm() {
 export default function EntriPengeluaran() {
     return (
         <>
+            <GlobalStyles
+                styles={(theme) => `
+                    [data-sonner-toaster][data-theme] {
+                        font-family: ${theme.vars.fontFamily.body};
+                        fontsize: ${theme.fontSize.md};
+                        --border-radius: ${theme.vars.radius.md};
+                        --success-bg: ${theme.vars.palette.success.softBg};
+                        --success-border: rgb(${theme.vars.palette.success.mainChannel} / 0.2);
+                        --success-text: ${theme.vars.palette.success.softColor};
+                    }
+                `}
+            />
             <PageHeader
                 title="Pengeluaran"
                 subtitle="Entri pengeluaran"
                 backUrl="/pengeluaran"
             />
             <PageLayout>
+                <Toaster position="top-center" richColors />
                 <EntriPengeluaranForm />
             </PageLayout>
         </>
