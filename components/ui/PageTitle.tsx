@@ -12,7 +12,6 @@ export default function PageTitle(props: {
             maxWidth="sm"
             width="100%"
             sx={{
-                backgroundColor: "rgba(255, 255, 255, 255, 0.4)",
                 backdropFilter: "blur(8px)",
                 height: 40,
                 width: "100%",
