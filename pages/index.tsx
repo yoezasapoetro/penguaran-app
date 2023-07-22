@@ -1,7 +1,6 @@
-import { Card, Stack, Typography } from "@mui/joy"
+import { Stack, Typography } from "@mui/joy"
 import { SessionContextValue, useSession } from "next-auth/react"
 import { PageContainer } from "@/components/ui"
-import colors from "@/components/colors"
 
 function Greeting(props: {
     session: SessionContextValue<boolean>
@@ -10,20 +9,27 @@ function Greeting(props: {
     return (
         <Stack
             useFlexGap
-            width="100%"
+            sx={{
+                width: "100%",
+                padding: "0.375rem 1rem",
+                backgroundColor: "success.50",
+                border: "1px solid",
+                borderColor: "success.400",
+                borderRadius: "0.5rem",
+            }}
         >
             <Typography
                 fontSize="lg"
-                lineHeight="sm"
-                textColor={colors.primary}
+                width="100%"
+                textColor="primary.900"
             >
                 Hi, {' '}
                 {data?.user?.name}
             </Typography>
             <Typography
-                level="body1"
-                lineHeight="sm"
-                textColor={colors.primary}
+                width="100%"
+                fontWeight={500}
+                textColor="primary.900"
             >
                 Selamat Datang!
             </Typography>
@@ -37,23 +43,68 @@ export default function Home() {
     return (
         <PageContainer
             rowGap={2}
+            margin={2}
         >
             <Greeting session={session} />
 
-            <Stack
-                useFlexGap
+            <Typography
                 width="100%"
-                spacing={2}
+                fontSize="lg"
+                fontWeight={500}
+                textColor="primary.900"
             >
-                <Card>
-                    Summary
-                </Card>
-                <Card>
-                    Summary
-                </Card>
-                <Card>
-                    Summary
-                </Card>
+                Pengeluaran Hari Ini
+            </Typography>
+            <Stack
+                sx={{
+                    width: "100%",
+                    padding: "0.375rem 1rem",
+                    border: "1px solid",
+                    borderColor: "neutral.400",
+                    borderRadius: "0.5rem",
+                    boxShadow: "sm",
+                }}
+            >
+            </Stack>
+            <Typography
+                width="100%"
+                fontSize="lg"
+                fontWeight={500}
+                textColor="primary.900"
+            >
+                Pengeluaran Bulan Ini
+            </Typography>
+            <Stack
+                width="100%"
+                sx={{
+                    width: "100%",
+                    padding: "0.375rem 1rem",
+                    border: "1px solid",
+                    borderColor: "neutral.400",
+                    borderRadius: "0.5rem",
+                    boxShadow: "sm",
+                }}
+            >
+            </Stack>
+            <Typography
+                width="100%"
+                fontSize="lg"
+                fontWeight={500}
+                textColor="primary.900"
+            >
+                Ratio Pengeluaran Bulan Ini
+            </Typography>
+            <Stack
+                width="100%"
+                sx={{
+                    width: "100%",
+                    padding: "0.375rem 1rem",
+                    border: "1px solid",
+                    borderColor: "neutral.400",
+                    borderRadius: "0.5rem",
+                    boxShadow: "sm",
+                }}
+            >
             </Stack>
         </PageContainer>
     )
