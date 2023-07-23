@@ -30,8 +30,6 @@ export default class UserRepository {
             .onConflictDoNothing()
             .returning()
 
-        console.error(created)
-
         return created
     }
 
