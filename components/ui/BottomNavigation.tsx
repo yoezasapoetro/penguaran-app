@@ -45,13 +45,13 @@ function NavButton(props: {
         >
             {isActiveMenu && <Box
                 sx={{
-                    width: 40,
-                    height: 10,
-                    borderBottomLeftRadius: "1.5rem",
-                    borderBottomRightRadius: "1.5rem",
+                    width: 30,
+                    height: 5,
+                    borderBottomLeftRadius: "50rem",
+                    borderBottomRightRadius: "50rem",
                     position: "absolute",
                     bgcolor: "common.white",
-                    top: -5,
+                    top: 0,
                 }}
             />}
             <IconSet {...iconProps} />

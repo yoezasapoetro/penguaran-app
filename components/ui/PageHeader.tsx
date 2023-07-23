@@ -46,7 +46,10 @@ export default function PageHeader(props: {
             maxWidth="sm"
             width="100%"
             sx={{
-                backgroundColor: "transparent",
+                position: "fixed",
+                zIndex: 4,
+                backgroundColor: "rgba(255, 255, 255, 0.5)",
+                backdropFilter: "blur(10px)",
                 boxShadow: "sm",
                 py: 2,
             }}

@@ -47,7 +47,7 @@ export default function ConfirmationModal(props: {
                         sx={{
                             fontSize: "md",
                             fontWeight: 400,
-                            borderRadius: "3rem",
+                            borderRadius: 0,
                             borderColor: colors.blue[900],
                             color: colors.blue[900],
                         }}
@@ -61,7 +61,7 @@ export default function ConfirmationModal(props: {
                         sx={{
                             fontSize: "md",
                             fontWeight: 500,
-                            borderRadius: "3rem",
+                            borderRadius: 0,
                             backgroundColor: colors.blue[900],
                             color: colors.green[300],
                         }}

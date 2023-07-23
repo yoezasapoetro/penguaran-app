@@ -359,6 +359,8 @@ export default function SumberDana() {
                         padding="1rem"
                         useFlexGap
                         spacing={2}
+                        marginTop={9}
+                        marginBottom={8}
                     >
                         <InformationBanner
                             title="Informasi"
@@ -386,11 +388,12 @@ export default function SumberDana() {
                                 />
                             )}
                         />
-                        <DataPagination
+                        {totalPage !== 0 && <DataPagination
                             currentPage={currentPage}
                             totalPage={totalPage}
                             onPageChange={setCurrentPage}
-                        />
+                        />}
+                        <CreateButton onClick={createCallback} />
                     </Stack>
                 )}
                 <SumberDanaModalForm
@@ -406,7 +409,6 @@ export default function SumberDana() {
                     onCommit={deleteSumberDanaCallback}
                 />
             </PageLayout>
-            <CreateButton onClick={createCallback} />
         </>
     )
 }

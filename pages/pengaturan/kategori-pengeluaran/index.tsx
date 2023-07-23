@@ -161,7 +161,7 @@ function KategoriPengeluaranModalForm({
                             type="submit"
                             fullWidth
                             sx={{
-                                borderRadius: "3rem",
+                                borderRadius: 0,
                                 fontWeight: 400,
                                 fontSize: "md",
                                 bgcolor: "primary.900",
@@ -395,6 +395,8 @@ export default function KategoriPengeluaran() {
                         padding="1rem"
                         useFlexGap
                         spacing={2}
+                        marginTop={9}
+                        marginBottom={8}
                     >
                         <InformationBanner
                             title="Informasi"
@@ -422,15 +424,15 @@ export default function KategoriPengeluaran() {
                                 />
                             )}
                         />
-                        <DataPagination
+                        {!!totalPage && <DataPagination
                             totalPage={totalPage}
                             currentPage={currentPage}
                             onPageChange={setCurrentPage}
-                        />
+                        />}
+                        <CreateButton onClick={createCallback} />
                     </Stack>
                 )}
             </PageLayout>
-            <CreateButton onClick={createCallback} />
             <KategoriPengeluaranModalForm
                 formMode={mode}
                 isOpen={isOpenFormModal}

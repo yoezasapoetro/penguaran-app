@@ -389,7 +389,8 @@ export default function Penjual() {
                     <Stack
                         padding="1rem"
                         useFlexGap
-                        spacing={2}
+                        marginTop={9}
+                        marginBottom={8}
                     >
                         <InformationBanner
                             title="Informasi"
@@ -418,11 +419,12 @@ export default function Penjual() {
                                 />
                             )}
                         />
-                        <DataPagination
+                        {totalPage !== 0 && <DataPagination
                             totalPage={totalPage}
                             currentPage={currentPage}
                             onPageChange={setCurrentPage}
-                        />
+                        />}
+                        <CreateButton onClick={createCallback} />
                     </Stack>
                 )}
                 <PenjualModalForm
@@ -438,7 +440,6 @@ export default function Penjual() {
                     onCommit={deletePenjualCallback}
                 />
             </PageLayout>
-            <CreateButton onClick={createCallback} />
         </>
     )
 }

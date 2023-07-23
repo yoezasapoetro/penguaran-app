@@ -203,13 +203,16 @@ function Timeline(props: {
                     <Box
                         sx={{
                             position: "absolute",
-                            background: "rgba(255, 255, 255, 0.8)",
-                            width: "100%",
+                            background: "rgba(255, 255, 255, 0.6)",
+                            backdropFilter: "blur(6px)",
                             height: "100%",
+                            width: "100%",
+                            margin: "-1rem",
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
                             rowGap: 1,
+                            zIndex: 3,
                         }}
                     >
                         <CircularProgress

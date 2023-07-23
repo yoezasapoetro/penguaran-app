@@ -6,12 +6,13 @@ export default function CreateButton(props: {
     return (
         <Box
             sx={{
-                position: "absolute",
+                position: "fixed",
                 bottom: 20,
                 left: 0,
                 right: 0,
                 margin: "0 1.5rem",
                 borderRadius: "0",
+                zIndex: 3,
                 boxShadow: 5,
             }}
         >
