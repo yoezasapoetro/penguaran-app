@@ -5,18 +5,20 @@ import { createClient } from "@libsql/client"
 import * as pgSchema from "@/db/schemas/pg";
 import * as sqliteSchema from "@/db/schemas/sqlite";
 
-const { SQLITE_DATABASE_URL, TURSO_AUTH_TOKEN, PG_DATABASE_URL } = process.env
+const { SQLITE_DATABASE_URL, TURSO_AUTH_TOKEN, PG_DATABASE_URL, NODE_ENV } = process.env
+
+const isDev = NODE_ENV === "development"
 
 export const pool = new Pool({
     connectionString: PG_DATABASE_URL
 })
 
-export const dbPg = neonDrizzle(pool, { schema: pgSchema })
+export const dbPg = neonDrizzle(pool, { schema: pgSchema, logger: isDev })
 
 const sqliteClient = createClient({
     url: SQLITE_DATABASE_URL,
     authToken: TURSO_AUTH_TOKEN,
 })
 
-export const dbSqlite = tursoDrizzle(sqliteClient, { schema: sqliteSchema })
+export const dbSqlite = tursoDrizzle(sqliteClient, { schema: sqliteSchema, logger: isDev })
 
