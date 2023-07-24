@@ -1,14 +1,140 @@
 import {
+    Alert,
+    AspectRatio,
+    Badge,
+    Box,
     Button,
+    Stack,
+    Typography,
+    TypographyProps,
 } from "@mui/joy"
+import {
+    BiLogOutCircle as LogoutIcon,
+} from "react-icons/bi"
+import NextImage from "next/image"
 
 import {
     PageHeader,
     PageLayout,
 } from "@/components/ui"
-import { signOut } from "next-auth/react"
+import { SessionContextValue, signOut, useSession } from "next-auth/react"
+
+function Profile(props: {
+    session: SessionContextValue<boolean>
+}) {
+    const user = props.session.data?.user
+    const labelProps: TypographyProps = {
+        textColor: "primary.900",
+        textAlign: "left",
+        fontSize: "sm",
+        fontWeight: 500,
+        gutterBottom: true,
+    }
+    const profileProps: TypographyProps = {
+        fontSize: "md",
+        textColor: "primary.900",
+        textAlign: "left",
+        sx: {
+            border: "1px solid",
+            borderColor: "neutral.300",
+            p: 1,
+        }
+    }
+
+    return (
+        <Stack
+            useFlexGap
+            rowGap={1}
+        >
+            <Stack
+                useFlexGap
+                width="100%"
+                alignItems="center"
+            >
+                {user && user.name && user.image && <AspectRatio
+                    ratio={1}
+                    sx={{
+                        width: "5rem",
+                        height: "5rem",
+                        borderRadius: "4rem",
+                    }}
+                >
+                    <NextImage
+                        alt={user.name}
+                        src={user.image}
+                        width={100}
+                        height={100}
+                    />
+                </AspectRatio>}
+            </Stack>
+
+            <Stack
+                useFlexGap
+                width="100%"
+                flexWrap="wrap"
+                rowGap={1}
+            >
+                <Box>
+                    <Typography
+                        {...labelProps}
+                    >
+                        Nama
+                    </Typography>
+                    <Typography
+                        {...profileProps}
+                    >
+                        {user?.name}
+                    </Typography>
+                </Box>
+                <Box>
+                    <Typography
+                        {...labelProps}
+                    >
+                        E-Mail
+                    </Typography>
+                    <Typography
+                        {...profileProps}
+                    >
+                        {user?.email}
+                    </Typography>
+                </Box>
+            </Stack>
+        </Stack>
+    )
+}
+
+function Subscription() {
+    return (
+        <Stack>
+            <Alert
+                variant="outlined"
+                color="info"
+            >
+                <Box>
+                    <Typography
+                        fontWeight={500}
+                        textColor="inherit"
+                    >
+                        Paket Berlangganan
+                    </Typography>
+                    <Typography
+                        fontWeight={300}
+                        fontSize="sm"
+                        textColor="inherit"
+                    >
+                        Untuk memaksimalkan platform agar terus tumbuh dan memberikan dukungan
+                        kepada anda, kami akan memberikan penawaran kepada anda biya yang harus
+                        di keluarkan untuk mendapatkan beberapa fitur menarik.
+                    </Typography>
+                </Box>
+            </Alert>
+        </Stack>
+    )
+}
 
 export default function Akun() {
+    const session = useSession()
+
     return (
         <>
             <PageHeader
@@ -17,8 +143,51 @@ export default function Akun() {
                 backUrl="/pengaturan"
             />
             <PageLayout>
+                <Stack
+                    useFlexGap
+                    rowGap={1}
+                    padding="1rem"
+                    marginTop={9}
+                    marginBottom={8}
+                >
+                    <Typography
+                        fontSize="lg"
+                        fontWeight={500}
+                        textColor="primary.900"
+                    >
+                        Profil
+                    </Typography>
+                    <Profile session={session} />
+
+                    <Box>
+                        <Badge
+                            badgeContent="Segera hadir"
+                            badgeInset="50% -55%"
+                        >
+                            <Typography
+                                fontSize="lg"
+                                fontWeight={500}
+                                textColor="primary.900"
+                            >
+                                Langganan
+                            </Typography>
+                        </Badge>
+                    </Box>
+                    <Subscription />
+                </Stack>
                 <Button
-                    fullWidth
+                    sx={{
+                        fontWeight: 400,
+                        backgroundColor: "primary.900",
+                        borderRadius: "0",
+                        color: "success.300",
+                        boxShadow: "md",
+                        position: "fixed",
+                        bottom: "1rem",
+                        left: "1rem",
+                        right: "1rem",
+                    }}
+                    startDecorator={<LogoutIcon size={18} />}
                     onClick={() => signOut({ callbackUrl: "/login", redirect: true })}
                 >
                     Keluar
