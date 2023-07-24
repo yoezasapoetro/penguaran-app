@@ -3,7 +3,7 @@ import { dbPg } from "@/lib/db"
 import { ExpenseDetailsModel, ExpenseModel } from "@/lib/models"
 import ExpenseDetailRepository from "@/repository/ExpenseDetailRepository"
 import ExpenseRepository from "@/repository/ExpenseRepository"
-import { ExpenseDetailPayload, ExpensePayload, ExpenseResults } from "@/types/Expense"
+import { DashboardAnalytics, DashboardExpenseItem, DashboardExpenseItems, DashboardExpenseRatioItem, ExpenseDetailPayload, ExpensePayload, ExpenseResults } from "@/types/Expense"
 
 export default class ExpenseService {
     private expenseRepository: ExpenseRepository
@@ -97,12 +97,18 @@ export default class ExpenseService {
     }
 
     async getDashboardAnalytics(req: NextApiRequest, res: NextApiResponse) {
+        const todayExpense = await this.expenseRepository.getTodayExpense()
+        const thisMonthExpense = await this.expenseRepository.getThisMonthExpense()
+        const expenseRatio = await this.expenseRepository.getExpenseRatio()
+
+        const dashboardAnalytics: DashboardAnalytics = {
+            todayExpense,
+            thisMonthExpense,
+            expenseRatio,
+        }
+
         return res.status(200).json({
-            data: {
-                todayExpense: this.expenseRepository.getTodayExpense(),
-                thisMonthExpense: this.expenseRepository.getThisMonthExpense(),
-                expenseRatio: this.expenseRepository.getExpenseRatio(),
-            }
+            data: dashboardAnalytics
         })
     }
 

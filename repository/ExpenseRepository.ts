@@ -13,7 +13,12 @@ import {
     expenseDetails,
 } from "@/db/schemas/pg";
 import AbstractRepository from "./AbstractRepository";
-import { ExpenseItem } from "@/types/Expense";
+import {
+    ExpenseItem,
+    DashboardExpenseItem,
+    DashboardExpenseItems,
+    DashboardExpenseRatioItem,
+} from "@/types/Expense";
 
 export default class ExpenseRepository extends AbstractRepository {
     private _getBeginDateFromMonth(month: number): Date {
@@ -90,10 +95,10 @@ export default class ExpenseRepository extends AbstractRepository {
     }
 
 
-    async getTodayExpense(): Promise<Partial<ExpenseItem>> {
+    async getTodayExpense(): Promise<DashboardExpenseItem> {
         const today = this.currentDate.toDateString()
 
-        const [result] = await this.client
+        const [result]: Array<DashboardExpenseItem> = await this.client
             .select({
                 total: expense.total,
                 storeName: sql<string>`${store.name}`.as("storeName"),
@@ -117,11 +122,11 @@ export default class ExpenseRepository extends AbstractRepository {
         return result
     }
 
-    async getThisMonthExpense(): Promise<Array<Partial<ExpenseItem>>> {
+    async getThisMonthExpense(): Promise<DashboardExpenseItems> {
         const startDate = this._getBeginDateFromMonth(this.currentMonth)
         const endDate = this._getEndDateFromMonth(startDate)
 
-        const result = await this.client
+        const result: DashboardExpenseItems = await this.client
             .select({
                 total: expense.total,
                 storeName: sql<string>`${store.name}`.as("storeName"),
@@ -149,17 +154,17 @@ export default class ExpenseRepository extends AbstractRepository {
         return result
     }
 
-    async getExpenseRatio() {
+    async getExpenseRatio(): Promise<Array<DashboardExpenseRatioItem>> {
         const startDate = this._getBeginDateFromMonth(this.currentMonth)
         const endDate = this._getEndDateFromMonth(startDate)
 
-        const results = await this.client
+        const results: Array<{ sourcePaymentName: string, total: string }> = await this.client
             .select({
                 sourcePaymentName: sql<string>`${sourcePayment.name}`.as("sourcePaymentName"),
                 total: sql<string>`sum(${expense.total})`,
             })
-            .from(expense)
-            .innerJoin(sourcePayment, eq(sourcePayment.id, expense.sourcePaymentId))
+            .from(sourcePayment)
+            .leftJoin(expense, eq(sourcePayment.id, expense.sourcePaymentId))
             .where(and(
                 eq(expense.userId, this.userId),
                 between(

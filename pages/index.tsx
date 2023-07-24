@@ -3,6 +3,7 @@ import { SessionContextValue, useSession } from "next-auth/react"
 import { PageContainer } from "@/components/ui"
 import { useQuery } from "@tanstack/react-query"
 import { fetchDashboard } from "@/actions/dashboard"
+import { DashboardAnalytics, DashboardExpenseItem, DashboardExpenseItems, DashboardExpenseRatioItem } from "@/types/Expense"
 
 function Greeting(props: {
     session: SessionContextValue<boolean>
@@ -49,8 +50,17 @@ export default function Home() {
 
     let results
 
-    function isEmpty(from: any, to: string): boolean {
-        return !from[to] || Object.keys(from[to]).length === 0
+    function isEmpty(from: DashboardAnalytics | undefined, to: keyof DashboardAnalytics) {
+        if (from) {
+            const item: any = !from[to]
+            if (Array.isArray(item)) {
+                return item.length === 0
+            } else if (typeof item === "object") {
+                return Object.keys(item).length === 0
+            }
+        } else {
+            return true
+        }
     }
 
     if (isSuccess) {
@@ -87,10 +97,10 @@ export default function Home() {
                         <Stack
                             useFlexGap
                         >
-                            <Typography>{results.todayExpense.categoryName}</Typography>
-                            <Typography>{results.todayExpense.storeName}</Typography>
-                            <Typography>{results.todayExpense.sourcePaymentName}</Typography>
-                            <Typography>{results.todayExpense.total}</Typography>
+                            <Typography>{results?.todayExpense.categoryName}</Typography>
+                            <Typography>{results?.todayExpense.storeName}</Typography>
+                            <Typography>{results?.todayExpense.sourcePaymentName}</Typography>
+                            <Typography>{results?.todayExpense.total}</Typography>
                         </Stack>
                     ) : (
                         <Typography

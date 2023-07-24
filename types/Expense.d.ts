@@ -3,6 +3,20 @@ export type ExpenseDetailPayload = {
     amount: number
 }
 
+
+export type DashboardExpenseItem = Omit<ExpenseItem, "id" | "createdAt" | "updatedAt">
+export type DashboardExpenseItems = Array<DashboardExpenseItem>
+export type DashboardExpenseRatioItem = {
+    sourcePaymentName: string,
+    total: string
+}
+
+export type DashboardAnalytics = {
+    todayExpense: DashboardExpenseItem,
+    thisMonthExpense: DashboardExpenseItems,
+    expenseRatio: Array<DashboardExpenseRatioItem>
+}
+
 export type ExpenseItem = {
     id: number
     total: string
