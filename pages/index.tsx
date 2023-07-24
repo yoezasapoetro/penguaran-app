@@ -50,7 +50,7 @@ export default function Home() {
     let results
 
     function isEmpty(from: any, to: string): boolean {
-        return Object.keys(from[to]).length === 0
+        return !from[to] || Object.keys(from[to]).length === 0
     }
 
     if (isSuccess) {
