@@ -124,6 +124,7 @@ function KategoriPengeluaranModalForm({
                             width: "100%",
                             height: "100%",
                             rowGap: "1rem",
+                            marginTop: "0.5rem",
                         }}
                     >
                         <FormSelect

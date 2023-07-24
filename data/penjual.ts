@@ -2,197 +2,216 @@ import { PenjualTypeData } from "@/types/Penjual";
 
 export const penjualType: Array<PenjualTypeData> = [
     {
-        label: "Supermarket dan toko swalayan",
-        group: "Perdagangan dan Retail"
+        label: "Toko kelontong, pasar, petani lokal",
+        group: "Bahan makanan segar - Makanan dan Minuman",
     },
     {
-        label: "Toko kelontong",
-        group: "Perdagangan dan Retail"
+        label: "Restoran, warung makan, kafe",
+        group: "Makanan siap saji - Makanan dan Minuman",
     },
     {
-        label: "Toko pakaian dan sepatu",
-        group: "Perdagangan dan Retail"
+        label: "Supermarket, toko minuman, kedai kopi",
+        group: "Minuman - Makanan dan Minuman",
     },
+
     {
-        label: "Toko elektronik dan peralatan rumah tangga",
-        group: "Perdagangan dan Retail"
+        label: "Perusahaan listrik, penyedia listrik",
+        group: "Listrik - Utilitas",
     },
+
     {
-        label: "Toko makanan dan minuman",
-        group: "Perdagangan dan Retail"
+        label: "Perusahaan air bersih, penyedia air",
+        group: "Air - Utilitas",
     },
+
     {
-        label: "Toko bahan bangunan",
-        group: "Perdagangan dan Retail"
+        label: "Perusahaan gas alam, penyedia gas",
+        group: "Gas - Utilitas",
     },
+
     {
-        label: "Toko buku dan alat tulis",
-        group: "Perdagangan dan Retail"
+        label: "SPBU, distributor bahan bakar",
+        group: "Bahan bakar - Transportasi",
     },
+
     {
-        label: "Bank",
-        group: "Jasa Keuangan"
-    }, {
-        label: "Asuransi",
-        group: "Jasa Keuangan"
+        label: "Transportasi umum (bus, kereta api, dll.)",
+        group: "Transportasi umum - Transportasi",
     },
+
     {
-        label: "Lembaga pembiayaan",
-        group: "Jasa Keuangan"
-    }, {
-        label: "Lembaga kartu kredit",
-        group: "Jasa Keuangan"
+        label: "Operator tempat parkir",
+        group: "Biaya parkir - Transportasi",
     },
+
     {
-        label: "Investasi dan manajemen aset",
-        group: "Jasa Keuangan"
-    }, {
-        label: "Restoran dan warung makan",
-        group: "Industri Makanan dan Minuman"
+        label: "Pemilik atau pengelola properti, agen real estate",
+        group: "Sewa atau cicilan rumah - Perumahan",
     },
+
     {
-        label: "Produsen makanan dan minuman",
-        group: "Industri Makanan dan Minuman"
+        label: "Jasa perbaikan rumah, kontraktor",
+        group: "Biaya perbaikan dan pemeliharaan rumah - Perumahan",
     },
+
     {
-        label: "Pabrik pengolahan makanan",
-        group: "Industri Makanan dan Minuman"
+        label: "Pemerintah daerah atau lembaga pajak",
+        group: "Pajak properti - Perumahan",
     },
+
     {
-        label: "Distributor bahan makanan dan minuman",
-        group: "Industri Makanan dan Minuman"
+        label: "Sekolah atau universitas, lembaga pendidikan",
+        group: "Biaya sekolah - Pendidikan",
     },
+
     {
-        label: "Perusahaan katering",
-        group: "Industri Makanan dan Minuman"
+        label: "Lembaga kursus atau pelatihan, tutor",
+        group: "Biaya kursus atau les tambahan - Pendidikan",
     },
+
     {
-        label: "Penyedia layanan internet",
-        group: "Teknologi Informasi dan Telekomunikasi"
+        label: "Universitas, lembaga pendidikan tinggi",
+        group: "Biaya pendidikan tinggi - Pendidikan",
     },
+
     {
-        label: "Penyedia jaringan telekomunikasi",
-        group: "Teknologi Informasi dan Telekomunikasi"
+        label: "Praktik dokter, rumah sakit, klinik",
+        group: "Biaya kunjungan dokter - Kesehatan",
     },
+
     {
-        label: "Pengembang perangkat lunak",
-        group: "Teknologi Informasi dan Telekomunikasi"
+        label: "Apotek, toko obat, apotek daring",
+        group: "Obat-obatan dan suplemen - Kesehatan",
     },
+
     {
-        label: "Perusahaan teknologi",
-        group: "Teknologi Informasi dan Telekomunikasi"
+        label: "Perusahaan asuransi kesehatan",
+        group: "Biaya asuransi kesehatan - Kesehatan",
     },
+
     {
-        label: "E-commerce dan platform online",
-        group: "Teknologi Informasi dan Telekomunikasi"
+        label: "Penyelenggara acara hiburan, bioskop",
+        group: "Bioskop, teater, atau konser - Hiburan",
     },
+
     {
-        label: "Kontraktor dan pembangunan",
-        group: "Konstruksi dan Properti"
+        label: "Agen perjalanan, maskapai penerbangan, hotel",
+        group: "Wisata dan liburan - Hiburan",
     },
+
     {
-        label: "Pengembang properti",
-        group: "Konstruksi dan Properti"
+        label: "Tempat olahraga, penyelenggara acara olahraga",
+        group: "Olahraga dan kegiatan rekreasi - Hiburan",
     },
+
     {
-        label: "Agensi properti",
-        group: "Konstruksi dan Properti"
+        label: "Perusahaan telekomunikasi",
+        group: "Tagihan telepon dan internet - Komunikasi",
     },
+
     {
-        label: "Arsitek dan desainer",
-        group: "Konstruksi dan Properti"
+        label: "Penyedia layanan TV kabel atau satelit",
+        group: "Biaya langganan TV kabel atau satelit - Komunikasi",
     },
+
     {
-        label: "Pabrik manufaktur",
-        group: "Manufaktur dan Industri"
+        label: "Provider seluler",
+        group: "Pulsa atau paket data - Komunikasi",
     },
+
     {
-        label: "Elektronik dan peralatan listrik",
-        group: "Manufaktur dan Industri"
+        label: "Perusahaan asuransi jiwa",
+        group: "Asuransi jiwa - Asuransi",
     },
+
     {
-        label: "Tekstil dan garmen",
-        group: "Manufaktur dan Industri"
+        label: "Perusahaan asuransi kendaraan",
+        group: "Asuransi kendaraan - Asuransi",
     },
+
     {
-        label: "Otomotif dan komponen mobil",
-        group: "Manufaktur dan Industri"
+        label: "Perusahaan asuransi properti",
+        group: "Asuransi properti - Asuransi",
     },
+
     {
-        label: "Farmasi dan produk kesehatan",
-        group: "Manufaktur dan Industri"
+        label: "Bank atau lembaga keuangan",
+        group: "Biaya bank - Keuangan",
     },
+
     {
-        label: "Maskapai penerbangan",
-        group: "Transportasi dan Logistik"
+        label: "Lembaga keuangan atau pemberi pinjaman",
+        group: "Bunga pinjaman atau cicilan - Keuangan",
     },
+
     {
-        label: "Perusahaan logistik dan pengiriman",
-        group: "Transportasi dan Logistik"
+        label: "Perusahaan investasi, bank",
+        group: "Biaya investasi atau tabungan - Keuangan",
     },
+
     {
-        label: "Angkutan darat (truk, bus, taksi)",
-        group: "Transportasi dan Logistik"
+        label: "Toko pakaian, butik",
+        group: "Pakaian - Pakaian dan Aksesori",
     },
+
     {
-        label: "Logistik gudang dan pergudangan",
-        group: "Transportasi dan Logistik"
+        label: "Toko sepatu, toko aksesori",
+        group: "Sepatu dan aksesori - Pakaian dan Aksesori",
     },
+
     {
-        label: "Rumah sakit dan klinik",
-        group: "Kesehatan dan Layanan Medis"
+        label: "Laundry, jasa penjahit",
+        group: "Perawatan pakaian - Pakaian dan Aksesori",
     },
+
     {
-        label: "Apotek dan toko obat",
-        group: "Kesehatan dan Layanan Medis"
+        label: "Toko peralatan rumah tangga, supermarket",
+        group: "Peralatan dapur dan peralatan rumah tangga - Kebutuhan Rumah Tangga",
     },
+
     {
-        label: "Praktisi medis dan dokter",
-        group: "Kesehatan dan Layanan Medis"
+        label: "Toko perlengkapan rumah tangga, supermarket",
+        group: "Peralatan kebersihan - Kebutuhan Rumah Tangga",
     },
+
     {
-        label: "Perusahaan farmasi",
-        group: "Kesehatan dan Layanan Medis"
+        label: "Supermarket, toko kelontong",
+        group: "Barang-barang kebutuhan sehari-hari - Kebutuhan Rumah Tangga",
     },
+
     {
-        label: "Layanan perawatan kesehatan",
-        group: "Kesehatan dan Layanan Medis"
+        label: "Salon kecantikan, pusat perawatan rambut",
+        group: "Perawatan rambut dan kecantikan - Perawatan Pribadi",
     },
+
     {
-        label: "Sekolah dan perguruan tinggi",
-        group: "Pendidikan dan Pelatihan"
+        label: "Toko produk perawatan kulit, apotek",
+        group: "Produk perawatan kulit dan tubuh - Perawatan Pribadi",
     },
+
     {
-        label: "Pusat kursus dan pelatihan",
-        group: "Pendidikan dan Pelatihan"
+        label: "Dokter gigi, klinik gigi",
+        group: "Perawatan kesehatan gigi - Perawatan Pribadi",
     },
+
     {
-        label: "Penerbitan pendidikan",
-        group: "Pendidikan dan Pelatihan"
+        label: "Gereja, masjid, lembaga amal",
+        group: "Donasi ke gereja, masjid, atau organisasi amal - Donasi dan Amal",
     },
+
     {
-        label: "Layanan konsultasi pendidikan",
-        group: "Pendidikan dan Pelatihan"
+        label: "Organisasi sosial, lembaga sukarela",
+        group: "Program sosial dan kegiatan sukarela - Donasi dan Amal",
     },
+
     {
-        label: "Bioskop dan teater",
-        group: "Hiburan dan Rekreasi"
+        label: "Tabungan pribadi, lembaga keuangan",
+        group: "Dana darurat - Biaya Darurat dan Kontinjensi",
     },
+
     {
-        label: "Tempat wisata dan pariwisata",
-        group: "Hiburan dan Rekreasi"
+        label: "Jasa perbaikan rumah atau bengkel",
+        group: "Dana perbaikan rumah atau kendaraan - Biaya Darurat dan Kontinjensi",
     },
-    {
-        label: "Tempat hiburan malam",
-        group: "Hiburan dan Rekreasi"
-    },
-    {
-        label: "Industri musik dan seni",
-        group: "Hiburan dan Rekreasi"
-    },
-    {
-        label: "Agen acara dan manajemen artis",
-        group: "Hiburan dan Rekreasi"
-    }
 ]
 

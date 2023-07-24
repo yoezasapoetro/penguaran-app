@@ -36,6 +36,7 @@ export default function FormSelect(props: {
                     root: {
                         sx: {
                             borderRadius: 0,
+                            width: "100%",
                         }
                     },
                     listbox: {
@@ -43,6 +44,7 @@ export default function FormSelect(props: {
                             borderRadius: 0,
                             boxShadow: "sm",
                             borderColor: "success.400",
+                            width: "100%",
                         }
                     }
                 }}

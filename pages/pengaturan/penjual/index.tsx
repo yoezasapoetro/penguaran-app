@@ -109,14 +109,10 @@ function PenjualModalForm({
                             width: "100%",
                             height: "100%",
                             rowGap: "1rem",
+                            marginTop: "0.5rem",
                             flex: "1",
                         }}
                     >
-                        <FormInput
-                            name="name"
-                            label="Nama"
-                            placeholder="Nama penjual & entitas anda."
-                        />
                         <FormSelect
                             name="type"
                             label="Tipe"
@@ -128,13 +124,28 @@ function PenjualModalForm({
                                         <Option
                                             value={option.label}
                                             label={option.label}
+                                            sx={{
+                                                maxWidth: "calc(100vw - 2rem)",
+                                            }}
                                         >
                                             <ListItemContent
-                                                sx={{ fontSize: "sm" }}
+                                                sx={{
+                                                    fontSize: "md",
+                                                    overflowWrap: "break-word",
+                                                    wordBreak: "break-word",
+                                                    whiteSpace: "pre-line",
+                                                }}
                                             >
                                                 {option.label}
                                                 <Typography
-                                                    fontSize="xs"
+                                                    fontSize="sm"
+                                                    fontWeight={500}
+                                                    sx={{
+                                                        overflowWrap: "break-word",
+                                                        wordBreak: "break-word",
+                                                        whiteSpace: "pre-line",
+                                                        hyphens: "manual",
+                                                    }}
                                                 >
                                                     {option.group}
                                                 </Typography>
@@ -145,6 +156,11 @@ function PenjualModalForm({
                             }}
                         />
                         <FormInput
+                            name="name"
+                            label="Nama"
+                            placeholder="Nama penjual & entitas anda."
+                        />
+                        <FormInput
                             name="address"
                             label="Alamat"
                             placeholder="Alamat penjual & entitas anda."
@@ -153,7 +169,7 @@ function PenjualModalForm({
                             type="submit"
                             fullWidth
                             sx={{
-                                borderRadius: "3rem",
+                                borderRadius: 0,
                                 fontWeight: 400,
                                 fontSize: "md",
                                 color: "success.300",
@@ -391,6 +407,7 @@ export default function Penjual() {
                         useFlexGap
                         marginTop={9}
                         marginBottom={8}
+                        rowGap={2}
                     >
                         <InformationBanner
                             title="Informasi"

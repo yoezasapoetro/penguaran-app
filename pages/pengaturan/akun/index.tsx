@@ -11,6 +11,9 @@ import {
 import {
     BiLogOutCircle as LogoutIcon,
 } from "react-icons/bi"
+import {
+    GiPriceTag as SubscriptionIcon,
+} from "react-icons/gi"
 import NextImage from "next/image"
 
 import {
@@ -44,60 +47,71 @@ function Profile(props: {
     return (
         <Stack
             useFlexGap
-            rowGap={1}
         >
-            <Stack
-                useFlexGap
-                width="100%"
-                alignItems="center"
+            <Typography
+                fontSize="lg"
+                fontWeight={500}
+                textColor="primary.900"
             >
-                {user && user.name && user.image && <AspectRatio
-                    ratio={1}
-                    sx={{
-                        width: "5rem",
-                        height: "5rem",
-                        borderRadius: "4rem",
-                    }}
-                >
-                    <NextImage
-                        alt={user.name}
-                        src={user.image}
-                        width={100}
-                        height={100}
-                    />
-                </AspectRatio>}
-            </Stack>
-
+                Profil
+            </Typography>
             <Stack
                 useFlexGap
-                width="100%"
-                flexWrap="wrap"
                 rowGap={1}
             >
-                <Box>
-                    <Typography
-                        {...labelProps}
+                <Stack
+                    useFlexGap
+                    width="100%"
+                    alignItems="center"
+                >
+                    {user && user.name && user.image && <AspectRatio
+                        ratio={1}
+                        sx={{
+                            width: "5rem",
+                            height: "5rem",
+                            borderRadius: "4rem",
+                        }}
                     >
-                        Nama
-                    </Typography>
-                    <Typography
-                        {...profileProps}
-                    >
-                        {user?.name}
-                    </Typography>
-                </Box>
-                <Box>
-                    <Typography
-                        {...labelProps}
-                    >
-                        E-Mail
-                    </Typography>
-                    <Typography
-                        {...profileProps}
-                    >
-                        {user?.email}
-                    </Typography>
-                </Box>
+                        <NextImage
+                            alt={user.name}
+                            src={user.image}
+                            width={100}
+                            height={100}
+                        />
+                    </AspectRatio>}
+                </Stack>
+
+                <Stack
+                    useFlexGap
+                    width="100%"
+                    flexWrap="wrap"
+                    rowGap={1}
+                >
+                    <Box>
+                        <Typography
+                            {...labelProps}
+                        >
+                            Nama
+                        </Typography>
+                        <Typography
+                            {...profileProps}
+                        >
+                            {user?.name}
+                        </Typography>
+                    </Box>
+                    <Box>
+                        <Typography
+                            {...labelProps}
+                        >
+                            E-Mail
+                        </Typography>
+                        <Typography
+                            {...profileProps}
+                        >
+                            {user?.email}
+                        </Typography>
+                    </Box>
+                </Stack>
             </Stack>
         </Stack>
     )
@@ -105,7 +119,24 @@ function Profile(props: {
 
 function Subscription() {
     return (
-        <Stack>
+        <Stack
+            useFlexGap
+            rowGap={1}
+        >
+            <Box>
+                <Badge
+                    badgeContent="Segera hadir"
+                    badgeInset="50% -55%"
+                >
+                    <Typography
+                        fontSize="lg"
+                        fontWeight={500}
+                        textColor="primary.900"
+                    >
+                        Langganan
+                    </Typography>
+                </Badge>
+            </Box>
             <Alert
                 variant="outlined"
                 color="info"
@@ -114,8 +145,14 @@ function Subscription() {
                     <Typography
                         fontWeight={500}
                         textColor="inherit"
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            columnGap: 2,
+                        }}
                     >
-                        Paket Berlangganan
+                        <SubscriptionIcon size={18} color="inherit" />
+                        <span>Paket Berlangganan</span>
                     </Typography>
                     <Typography
                         fontWeight={300}
@@ -123,8 +160,7 @@ function Subscription() {
                         textColor="inherit"
                     >
                         Untuk memaksimalkan platform agar terus tumbuh dan memberikan dukungan
-                        kepada anda, kami akan memberikan penawaran kepada anda biya yang harus
-                        di keluarkan untuk mendapatkan beberapa fitur menarik.
+                        kepada anda, kami akan memberikan penawaran kepada anda biaya untuk beberapa fitur menarik.
                     </Typography>
                 </Box>
             </Alert>
@@ -145,34 +181,12 @@ export default function Akun() {
             <PageLayout>
                 <Stack
                     useFlexGap
-                    rowGap={1}
+                    rowGap={3}
                     padding="1rem"
                     marginTop={9}
                     marginBottom={8}
                 >
-                    <Typography
-                        fontSize="lg"
-                        fontWeight={500}
-                        textColor="primary.900"
-                    >
-                        Profil
-                    </Typography>
                     <Profile session={session} />
-
-                    <Box>
-                        <Badge
-                            badgeContent="Segera hadir"
-                            badgeInset="50% -55%"
-                        >
-                            <Typography
-                                fontSize="lg"
-                                fontWeight={500}
-                                textColor="primary.900"
-                            >
-                                Langganan
-                            </Typography>
-                        </Badge>
-                    </Box>
                     <Subscription />
                 </Stack>
                 <Button

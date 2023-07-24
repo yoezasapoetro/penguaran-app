@@ -110,6 +110,7 @@ function SumberDanaModalForm({
                             width: "100%",
                             height: "100%",
                             rowGap: "1rem",
+                            marginTop: "0.5rem",
                             flex: "1",
                         }}
                     >
@@ -130,7 +131,7 @@ function SumberDanaModalForm({
                             type="submit"
                             fullWidth
                             sx={{
-                                borderRadius: "3rem",
+                                borderRadius: 0,
                                 color: "success.300",
                                 fontWeight: 400,
                                 backgroundColor: "primary.900",
