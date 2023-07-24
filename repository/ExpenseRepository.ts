@@ -14,7 +14,6 @@ import {
 } from "@/db/schemas/pg";
 import AbstractRepository from "./AbstractRepository";
 import {
-    ExpenseItem,
     DashboardExpenseItem,
     DashboardExpenseItems,
     DashboardExpenseRatioItem,
@@ -95,7 +94,7 @@ export default class ExpenseRepository extends AbstractRepository {
     }
 
 
-    async getTodayExpense(): Promise<DashboardExpenseItem> {
+    async getTodayExpense(): Promise<DashboardExpenseItem | null> {
         const today = this.currentDate.toDateString()
 
         const [result]: Array<DashboardExpenseItem> = await this.client
@@ -119,7 +118,7 @@ export default class ExpenseRepository extends AbstractRepository {
             )
             .limit(1)
 
-        return result
+        return result || null
     }
 
     async getThisMonthExpense(): Promise<DashboardExpenseItems> {
@@ -158,22 +157,32 @@ export default class ExpenseRepository extends AbstractRepository {
         const startDate = this._getBeginDateFromMonth(this.currentMonth)
         const endDate = this._getEndDateFromMonth(startDate)
 
-        const results: Array<{ sourcePaymentName: string, total: string }> = await this.client
+        const expenseOnSourcePayment = this.client
             .select({
-                sourcePaymentName: sql<string>`${sourcePayment.name}`.as("sourcePaymentName"),
-                total: sql<string>`sum(${expense.total})`,
+                total: expense.total,
+                sourcePaymentId: expense.sourcePaymentId,
+            })
+            .from(expense)
+            .where(between(
+                expense.expenseDate,
+                startDate.toDateString(),
+                endDate.toDateString(),
+            ))
+            .as("esp")
+
+        const results: Array<DashboardExpenseRatioItem> = await this.client
+            .select({
+                sourceName: sql<string>`${sourcePayment.name}`.as("sourceName"),
+                sourceType: sql<string>`${sourcePayment.type}`.as("sourceType"),
+                total: sql<string>`SUM(COALESCE(${expenseOnSourcePayment.total}, 0))`,
             })
             .from(sourcePayment)
-            .leftJoin(expense, eq(sourcePayment.id, expense.sourcePaymentId))
-            .where(and(
-                eq(expense.userId, this.userId),
-                between(
-                    expense.expenseDate,
-                    startDate.toDateString(),
-                    endDate.toDateString(),
-                )
-            ))
-            .groupBy(sourcePayment.name)
+            .leftJoin(expenseOnSourcePayment, eq(sourcePayment.id, expenseOnSourcePayment.sourcePaymentId))
+            .where(
+                eq(sourcePayment.userId, this.userId),
+            )
+            .orderBy(desc(sourcePayment.type))
+            .groupBy(sourcePayment.type, sourcePayment.name)
 
         return results
     }
