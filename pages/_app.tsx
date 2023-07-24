@@ -43,6 +43,10 @@ export default function App({
                 <meta
                     name="viewport"
                     content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover" />
+                <meta name="apple-mobile-web-app-capable" content="yes" />
+                <meta name="apple-mobile-web-app-title" content="Penguaran" />
+                <link rel="apple-touch-icon-precomposed" type="image/png" sizes="72x72" href="/static/icons/icon-72x72.png" />
+                <link rel="apple-touch-icon" type="image/png" sizes="72x72" href="/static/icons/icon-72x72.png" />
                 <link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32x32.png" />
                 <link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16x16.png" />
                 <link rel="shortcut icon" href="/static/icons/favicon.ico" />
