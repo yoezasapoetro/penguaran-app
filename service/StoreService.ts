@@ -14,25 +14,42 @@ export default class StoreService {
     async getAllHandler(req: NextApiRequest, res: NextApiResponse) {
         let result: Array<Partial<Store>> = []
         const { page = "1" } = req.query
+        const { cursor } = req.query
+        let offset = this.maxFetch
 
+        const isInfinite = cursor && Number(cursor) >= 0
         const currentPage = Number(page)
 
-        if (currentPage < 0) result = []
+        let nextCursor = 0
 
-        const offset = (currentPage - 1) * this.maxFetch
+        if (isInfinite) {
+            offset = Number(cursor)
+            nextCursor = offset
+        } else {
+            offset = (currentPage - 1) * this.maxFetch
+        }
 
         const total = await this.repository.countAll()
+        const totalPage = Math.ceil(Number(total) / this.maxFetch)
+        const inRange = (currentPage >= 1) && (currentPage <= totalPage)
 
-        if (currentPage > total) {
-            result = []
-        } else {
+        if (inRange || isInfinite) {
             result = await this.repository.getAll(offset, this.maxFetch)
+        }
+
+        if (nextCursor + this.maxFetch <= total) {
+            nextCursor = nextCursor + this.maxFetch
+        } else if (nextCursor + this.maxFetch > total) {
+            nextCursor = total
         }
 
         return res.status(200).json({
             data: result,
-            total,
-            totalPage: Math.ceil(total / this.maxFetch),
+            total: Number(total),
+            totalPage,
+            ...(isInfinite && nextCursor !== total ? {
+                nextCursor: Number(nextCursor),
+            }: {})
         })
     }
 

@@ -45,6 +45,7 @@ function PickerForm(props: {
     setCheckedValue: (value: number) => void
     checkedValue: number
     onClose: () => void
+    children: React.ReactNode
 }) {
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         props.setCheckedValue(Number(e.target.value))
@@ -57,7 +58,9 @@ function PickerForm(props: {
                 width: "100%",
                 height: "100%",
                 flexDirection: "column",
-                justifyContent: "space-between",
+                position: "relative",
+                rowGap: 1,
+                pb: 4,
             }}
         >
             {!props.result.length ? (
@@ -105,14 +108,14 @@ function PickerForm(props: {
                     ))}
                 </RadioGroup>
             )}
+            {props.children}
             <Button
-                fullWidth
                 onClick={props.onClose}
                 disabled={!props.result.length}
                 sx={{
                     borderRadius: 0,
                     boxShadow: "sm",
-                    color: "success.500",
+                    color: "success.400",
                     bgcolor: "primary.900",
                     [`&.${buttonClasses.disabled}`]: {
                         backgroundColor: "success.100",
@@ -129,8 +132,15 @@ function PickerForm(props: {
 export default function FormModalPicker(props: ModalFormProps & {
     result: Array<Partial<Record<string, any>>>
     selected: number
+    hasNextPage: boolean
+    fetchNextPage: () => void
     setSelected: (value: number) => void
 }) {
+    function handleLoadMore() {
+        props.hasNextPage && props.fetchNextPage()
+        return
+    }
+
     return (
         <ModalForm
             open={props.open}
@@ -144,7 +154,19 @@ export default function FormModalPicker(props: ModalFormProps & {
                 onClose={() => {
                     props.setOpen(false)
                 }}
-            />
+            >
+                {props.hasNextPage && <Button
+                    onClick={handleLoadMore}
+                    variant="outlined"
+                    sx={{
+                        borderRadius: 0,
+                        borderColor: "primary.900",
+                        color: "primary.900",
+                    }}
+                >
+                    Tampilkan lebih banyak
+                </Button>}
+            </PickerForm>
         </ModalForm>
     )
 }

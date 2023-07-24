@@ -8,6 +8,7 @@ import {
     BsXLg as CloseIcon,
 } from "react-icons/bs"
 import BottomDrawer from "./BottomDrawer"
+import { SxProps } from "@mui/joy/styles/types"
 
 export type ModalFormProps = {
     modalTitle: string
@@ -17,6 +18,7 @@ export type ModalFormProps = {
 
 export default function ModalForm(props: ModalFormProps & {
     children: React.ReactNode
+    sx?: SxProps
 }) {
     return (
         <BottomDrawer
@@ -33,6 +35,10 @@ export default function ModalForm(props: ModalFormProps & {
                     borderBottom: "1px solid",
                     borderBottomColor: "neutral.200",
                     py: 1,
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 3,
+                    backgroundColor: "white",
                 }}
             >
                 <Typography

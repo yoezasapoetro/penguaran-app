@@ -7,11 +7,11 @@ export type Penjual = {
     updatedAt: string
 }
 
-export type PenjualItemsReturn = Promise<{
+export type PenjualItemsReturn = {
     data: Penjual[]
     total: number
     totalPage: number
-}>
+}
 
 export type PenjualItemReturn = Promise<{
     data: Penjual

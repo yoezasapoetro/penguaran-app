@@ -69,8 +69,8 @@ export default function BottomDrawer(props: DrawerProps) {
                     sx={{
                         height: "100%",
                         width: "100%",
+                        marginBottom: 3,
                     }}
-                    spacing={2}
                 >
                     {props.children}
                 </Stack>

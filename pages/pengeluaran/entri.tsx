@@ -26,7 +26,7 @@ import {
     BsPlusLg as AddIcon,
     BsXLg as DeleteIcon,
 } from "react-icons/bs"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useInfiniteQuery } from "@tanstack/react-query"
 import {
     FieldArray,
     FieldArrayRenderProps,
@@ -49,9 +49,9 @@ import { useRouter } from "next/router"
 import { KategoriPengeluaran } from "@/types/KategoriPengeluaran"
 import { Penjual } from "@/types/Penjual"
 import { SumberDana } from "@/types/SumberDana"
-import { fetchKategoriPengeluaran } from "@/actions/kategoriPengeluaran"
-import { fetchSumberDana } from "@/actions/sumberDana"
-import { fetchPenjual } from "@/actions/penjual"
+import { fetchListKategoriPengeluaran } from "@/actions/kategoriPengeluaran"
+import { fetchListSumberDana } from "@/actions/sumberDana"
+import { fetchListPenjual } from "@/actions/penjual"
 import { addExpense } from "@/actions/expense"
 import { ExpensePayload } from "@/types/Expense"
 
@@ -61,10 +61,10 @@ const pickerInputSxProps: SxProps = {
     '--Input-focusedThickness': 1,
 }
 
-function CategoryPicker(props: {
+function CategoryPicker(props: InputProps & {
     label: string
     name: string
-} & InputProps) {
+}) {
     const [inputValue, setInputValue] = useState<string>("")
     const [open, setOpen] = useState<boolean>(false)
 
@@ -78,17 +78,21 @@ function CategoryPicker(props: {
         setInputValue(_value.name || "")
     }
 
-    const [page] = useState<number>(1)
     let result: Array<Partial<KategoriPengeluaran>> = []
 
-    const { data, isSuccess } = useQuery({
-        queryKey: ["kategoriPengeluaran", page],
-        queryFn: () => fetchKategoriPengeluaran(page),
-        enabled: open
+    const { data, status, fetchNextPage, hasNextPage } = useInfiniteQuery({
+        queryKey: ["kategoriPengeluaranList"],
+        queryFn: fetchListKategoriPengeluaran,
+        enabled: open,
+        getNextPageParam: (lastPage) => {
+            return lastPage.nextCursor
+        }
     })
 
-    if (isSuccess) {
-        result = data.data
+    if (status === "success") {
+        result = data.pages.reduce((acc: Array<Partial<KategoriPengeluaran>>, page) => {
+            return [...acc, ...page.data]
+        }, [])
     }
 
     return (
@@ -116,6 +120,8 @@ function CategoryPicker(props: {
                 modalTitle="Pilih kategori pengeluaran"
                 open={open}
                 setOpen={setOpen}
+                hasNextPage={hasNextPage || false}
+                fetchNextPage={fetchNextPage}
                 selected={field.value}
                 result={result}
                 setSelected={handleChange}
@@ -124,10 +130,10 @@ function CategoryPicker(props: {
     )
 }
 
-function StorePicker(props: {
+function StorePicker(props: InputProps & {
     label: string
     name: string
-} & InputProps) {
+}) {
     const [inputValue, setInputValue] = useState<string>("")
     const [open, setOpen] = useState<boolean>(false)
 
@@ -141,17 +147,21 @@ function StorePicker(props: {
         setInputValue(_value?.name || "")
     }
 
-    const [page] = useState<number>(1)
     let result: Array<Partial<Penjual>> = []
 
-    const { data, isSuccess } = useQuery({
-        queryKey: ["penjual", page],
-        queryFn: () => fetchPenjual(page),
-        enabled: open
+    const { data, status, hasNextPage, fetchNextPage } = useInfiniteQuery({
+        queryKey: ["penjual"],
+        queryFn: fetchListPenjual,
+        enabled: open,
+        getNextPageParam: (lastPage) => {
+            return lastPage.nextCursor
+        }
     })
 
-    if (isSuccess) {
-        result = data.data
+    if (status === "success") {
+        result = data.pages.reduce((acc: Array<Partial<Penjual>>, page) => {
+            return [...acc, ...page.data]
+        }, [])
     }
 
     return (
@@ -175,6 +185,8 @@ function StorePicker(props: {
                 modalTitle="Pilih penjual atau entitas"
                 open={open}
                 setOpen={setOpen}
+                hasNextPage={hasNextPage || false}
+                fetchNextPage={fetchNextPage}
                 result={result}
                 selected={field.value}
                 setSelected={handleChange}
@@ -183,10 +195,10 @@ function StorePicker(props: {
     )
 }
 
-function SourcePaymentPicker(props: {
+function SourcePaymentPicker(props: InputProps & {
     label: string
     name: string
-} & InputProps) {
+}) {
     const [inputValue, setInputValue] = useState<string>("")
     const [open, setOpen] = useState<boolean>(false)
 
@@ -200,17 +212,21 @@ function SourcePaymentPicker(props: {
         setInputValue(_value?.name || "")
     }
 
-    const [page] = useState<number>(1)
     let result: Array<Partial<SumberDana>> = []
 
-    const { data, isSuccess } = useQuery({
-        queryKey: ["sumberDana", page],
-        queryFn: () => fetchSumberDana(page),
-        enabled: open
+    const { data, status, hasNextPage, fetchNextPage } = useInfiniteQuery({
+        queryKey: ["sumberDana"],
+        queryFn: fetchListSumberDana,
+        enabled: open,
+        getNextPageParam: (lastPage) => {
+            return lastPage.nextCursor
+        }
     })
 
-    if (isSuccess) {
-        result = data.data
+    if (status === "success") {
+        result = data.pages.reduce((acc: Array<Partial<SumberDana>>, page) => {
+            return [...acc, ...page.data]
+        }, [])
     }
 
     return (
@@ -234,6 +250,8 @@ function SourcePaymentPicker(props: {
                 modalTitle="Pilih sumber dana"
                 open={open}
                 setOpen={setOpen}
+                hasNextPage={hasNextPage || false}
+                fetchNextPage={fetchNextPage}
                 result={result}
                 selected={field.value}
                 setSelected={handleChange}
@@ -306,7 +324,7 @@ function EntriPengeluaranForm() {
                     onClick: () => router.push("/pengeluaran")
                 },
             })
-        }
+        },
     }
     return (
         <>
@@ -315,6 +333,7 @@ function EntriPengeluaranForm() {
                     <form
                         onSubmit={props.handleSubmit}
                         style={{
+                            marginTop: "4.5rem",
                             height: "100%",
                             display: "flex",
                             flex: "1 0 auto",
@@ -427,23 +446,42 @@ function EntriPengeluaranForm() {
                                 }}
                             </FieldArray>
                         </Stack>
-                        <Button
-                            fullWidth
-                            disabled={props.isSubmitting}
-                            type="submit"
+                        <Box
                             sx={{
-                                borderRadius: 0,
-                                boxShadow: "sm",
-                                color: "success.500",
-                                bgcolor: "primary.900",
-                                [`&.${buttonClasses.disabled}`]: {
-                                    backgroundColor: "primary.50",
-                                    color: "success.500",
-                                },
+                                position: "relative",
+                                height: "6rem",
                             }}
                         >
-                            Simpan
-                        </Button>
+                            <Box sx={{
+                                height: "inherit",
+                                width: "100%",
+                                background: "linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255))",
+                                position: "fixed",
+                                bottom: "calc(1rem + 40px)",
+                                left: 0,
+                                right: 0,
+                            }}></Box>
+                            <Button
+                                disabled={props.isSubmitting}
+                                type="submit"
+                                sx={{
+                                    position: "fixed",
+                                    bottom: "1rem",
+                                    left: "1rem",
+                                    right: "1rem",
+                                    borderRadius: 0,
+                                    boxShadow: "sm",
+                                    color: "success.400",
+                                    bgcolor: "primary.900",
+                                    [`&.${buttonClasses.disabled}`]: {
+                                        backgroundColor: "primary.50",
+                                        color: "success.500",
+                                    },
+                                }}
+                            >
+                                Simpan
+                            </Button>
+                        </Box>
                     </form>
                 )}
             </Formik>

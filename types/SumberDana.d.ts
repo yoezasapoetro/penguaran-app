@@ -8,11 +8,11 @@ export type SumberDana = {
     updatedAt: string
 }
 
-export type SumberDanaItemsReturn = Promise<{
+export type SumberDanaItemsReturn = {
     data: SumberDana[]
     total: number
     totalPage: number
-}>
+}
 
 export type SumberDanaItemReturn = Promise<{
     data: SumberDana

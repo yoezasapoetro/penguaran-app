@@ -24,11 +24,11 @@ export type PrioritasPengeluaranData = {
     iconColor: string
 }
 
-export type KategoriPengeluaranItemsReturn = Promise<{
-    data: KategoriPengeluaran[]
+export type KategoriPengeluaranItemsReturn = {
+    data: Array<Partial<KategoriPengeluaran>>
     total: number
     totalPage: number
-}>
+}
 
 export type KategoriPengeluaranItemReturn = Promise<{
     data: KategoriPengeluaran
