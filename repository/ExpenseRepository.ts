@@ -13,6 +13,7 @@ import {
     expenseDetails,
 } from "@/db/schemas/pg";
 import AbstractRepository from "./AbstractRepository";
+import { ExpenseItem } from "@/types/Expense";
 
 export default class ExpenseRepository extends AbstractRepository {
     private _getBeginDateFromMonth(month: number): Date {
@@ -62,12 +63,6 @@ export default class ExpenseRepository extends AbstractRepository {
         return this.sqlQuery(startDate, endDate)
     }
 
-    selectTodayExpense() {
-        const currentDate = new Date()
-
-        return this.sqlQuery(currentDate, currentDate)
-    }
-
     async getAllByMonth(month: number, offset: number, limit: number): Promise<Array<any>> {
         const query = this.selectAllExpense(month)
 
@@ -92,6 +87,90 @@ export default class ExpenseRepository extends AbstractRepository {
             .from(query)
 
         return count
+    }
+
+
+    async getTodayExpense(): Promise<Partial<ExpenseItem>> {
+        const today = this.currentDate.toDateString()
+
+        const [result] = await this.client
+            .select({
+                total: expense.total,
+                storeName: sql<string>`${store.name}`.as("storeName"),
+                categoryName: sql<string>`${category.name}`.as("categoryName"),
+                sourcePaymentName: sql<string>`${sourcePayment.name}`.as("sourcePaymentName"),
+            })
+            .from(expense)
+            .innerJoin(store, eq(store.id, expense.storeId))
+            .innerJoin(sourcePayment, eq(sourcePayment.id, expense.sourcePaymentId))
+            .innerJoin(category, eq(category.id, expense.categoryId))
+            .where(and(
+                eq(expense.userId, this.userId),
+                eq(expense.expenseDate, today)
+            ))
+            .orderBy(
+                desc(expense.expenseDate),
+                desc(expense.id)
+            )
+            .limit(1)
+
+        return result
+    }
+
+    async getThisMonthExpense(): Promise<Array<Partial<ExpenseItem>>> {
+        const startDate = this._getBeginDateFromMonth(this.currentMonth)
+        const endDate = this._getEndDateFromMonth(startDate)
+
+        const result = await this.client
+            .select({
+                total: expense.total,
+                storeName: sql<string>`${store.name}`.as("storeName"),
+                categoryName: sql<string>`${category.name}`.as("categoryName"),
+                sourcePaymentName: sql<string>`${sourcePayment.name}`.as("sourcePaymentName"),
+            })
+            .from(expense)
+            .innerJoin(category, eq(category.id, expense.categoryId))
+            .innerJoin(store, eq(store.id, expense.storeId))
+            .innerJoin(sourcePayment, eq(sourcePayment.id, expense.sourcePaymentId))
+            .where(and(
+                eq(expense.userId, this.userId),
+                between(
+                    expense.expenseDate,
+                    startDate.toDateString(),
+                    endDate.toDateString(),
+                )
+            ))
+            .orderBy(
+                desc(expense.expenseDate),
+                desc(category.priority)
+            )
+            .limit(3)
+
+        return result
+    }
+
+    async getExpenseRatio() {
+        const startDate = this._getBeginDateFromMonth(this.currentMonth)
+        const endDate = this._getEndDateFromMonth(startDate)
+
+        const results = await this.client
+            .select({
+                sourcePaymentName: sql<string>`${sourcePayment.name}`.as("sourcePaymentName"),
+                total: sql<string>`sum(${expense.total})`,
+            })
+            .from(expense)
+            .innerJoin(sourcePayment, eq(sourcePayment.id, expense.sourcePaymentId))
+            .where(and(
+                eq(expense.userId, this.userId),
+                between(
+                    expense.expenseDate,
+                    startDate.toDateString(),
+                    endDate.toDateString(),
+                )
+            ))
+            .groupBy(sourcePayment.name)
+
+        return results
     }
 
     async create(payload: Partial<ExpenseModel>): Promise<Partial<Expense>> {

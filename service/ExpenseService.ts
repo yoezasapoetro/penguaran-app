@@ -96,6 +96,16 @@ export default class ExpenseService {
         })
     }
 
+    async getDashboardAnalytics(req: NextApiRequest, res: NextApiResponse) {
+        return res.status(200).json({
+            data: {
+                todayExpense: this.expenseRepository.getTodayExpense(),
+                thisMonthExpense: this.expenseRepository.getThisMonthExpense(),
+                expenseRatio: this.expenseRepository.getExpenseRatio(),
+            }
+        })
+    }
+
     async createHandler(req: NextApiRequest, res: NextApiResponse) {
         const { details, ...expense }: ExpensePayload = req.body
         const expensePayload: Partial<ExpenseModel> = {

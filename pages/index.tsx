@@ -1,6 +1,8 @@
 import { Stack, Typography } from "@mui/joy"
 import { SessionContextValue, useSession } from "next-auth/react"
 import { PageContainer } from "@/components/ui"
+import { useQuery } from "@tanstack/react-query"
+import { fetchDashboard } from "@/actions/dashboard"
 
 function Greeting(props: {
     session: SessionContextValue<boolean>
@@ -40,6 +42,21 @@ function Greeting(props: {
 export default function Home() {
     const session = useSession()
 
+    const { data, isSuccess } = useQuery({
+        queryKey: ["dashboard"],
+        queryFn: () => fetchDashboard(),
+    })
+
+    let results
+
+    function isEmpty(from: any, to: string): boolean {
+        return Object.keys(from[to]).length === 0
+    }
+
+    if (isSuccess) {
+        results = data.data
+    }
+
     return (
         <PageContainer
             rowGap={2}
@@ -65,6 +82,26 @@ export default function Home() {
                     boxShadow: "sm",
                 }}
             >
+                {!isEmpty(results, "todayExpense") ?
+                    (
+                        <Stack
+                            useFlexGap
+                        >
+                            <Typography>{results.todayExpense.categoryName}</Typography>
+                            <Typography>{results.todayExpense.storeName}</Typography>
+                            <Typography>{results.todayExpense.sourcePaymentName}</Typography>
+                            <Typography>{results.todayExpense.total}</Typography>
+                        </Stack>
+                    ) : (
+                        <Typography
+                            width="100%"
+                            textAlign="center"
+                            textColor="primary.900"
+                        >
+                            Tidak ada data..
+                        </Typography>
+                    )
+                }
             </Stack>
             <Typography
                 width="100%"
@@ -85,6 +122,22 @@ export default function Home() {
                     boxShadow: "sm",
                 }}
             >
+                {!isEmpty(results, "thisMonthExpense") ?
+                    (
+                        <Stack
+                            useFlexGap
+                        >
+                        </Stack>
+                    ) : (
+                        <Typography
+                            width="100%"
+                            textAlign="center"
+                            textColor="primary.900"
+                        >
+                            Tidak ada data..
+                        </Typography>
+                    )
+                }
             </Stack>
             <Typography
                 width="100%"
@@ -105,6 +158,22 @@ export default function Home() {
                     boxShadow: "sm",
                 }}
             >
+                {!isEmpty(results, "expenseRatio") ?
+                    (
+                        <Stack
+                            useFlexGap
+                        >
+                        </Stack>
+                    ) : (
+                        <Typography
+                            width="100%"
+                            textAlign="center"
+                            textColor="primary.900"
+                        >
+                            Tidak ada data..
+                        </Typography>
+                    )
+                }
             </Stack>
         </PageContainer>
     )
