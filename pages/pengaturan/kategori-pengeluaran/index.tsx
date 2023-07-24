@@ -287,7 +287,7 @@ export default function KategoriPengeluaran() {
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState<boolean>(false)
     const [isOpenFormModal, setIsOpenFormModal] = useState<boolean>(false)
 
-    const { data, isLoading } = useQuery({
+    const { data, isSuccess, isLoading } = useQuery({
         queryKey: ["kategoriPengeluaran", currentPage],
         queryFn: () => fetchKategoriPengeluaran(currentPage),
     })
@@ -313,9 +313,15 @@ export default function KategoriPengeluaran() {
         },
     })
 
-    const items: Array<KategoriPengeluaran> | undefined = data?.data
-    const totalPage = data?.totalPage as number
-    const isEmpty: boolean = data?.total === 0
+    let items: Array<Partial<KategoriPengeluaran>> = []
+    let totalPage: number = 0
+    let isEmpty: boolean = true
+
+    if (isSuccess) {
+        items = data.data
+        totalPage = data.totalPage
+        isEmpty = data.total === 0
+    }
 
     const createCallback = () => {
         setMode("create")
