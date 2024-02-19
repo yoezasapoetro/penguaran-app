@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { getToken } from "next-auth/jwt"
-import SourcePaymentService from "@/service/SourcePaymentService"
+import SourcePaymentService from "api/src/service/SourcePaymentService"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const token = await getToken({ req })

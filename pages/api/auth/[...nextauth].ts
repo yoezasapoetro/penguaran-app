@@ -1,18 +1,18 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google"
-import { DrizzleAdapter } from "@/lib/adapter";
-import { dbPg, dbSqlite } from "@/lib/db";
+import { PenguaranAuthenticationAdapter } from "api/src/adapter";
 
-const isDev = process.env.NODE_ENV !== "development"
+const { NODE_ENV, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, } = process.env
+const isDev = NODE_ENV !== "development"
 
 export const authOptions: NextAuthOptions = {
     debug: isDev,
-    adapter: DrizzleAdapter(dbPg, dbSqlite),
+    adapter: PenguaranAuthenticationAdapter(),
     providers: [
         GoogleProvider({
             name: "Google",
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            clientId: GOOGLE_CLIENT_ID || "",
+            clientSecret: GOOGLE_CLIENT_SECRET || "",
             authorization: {
                 params: {
                     prompt: "consent",

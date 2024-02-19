@@ -8,7 +8,7 @@ declare namespace NodeJS {
         SQLITE_DATABASE_URL: string
         TURSO_AUTH_TOKEN: string
         PG_HOST: string
-        PG_POR: string
+        PG_PORT: string
         PG_USER: string
         PG_PASS: string
         PG_DATABASE: string

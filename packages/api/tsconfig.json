@@ -1,0 +1,9 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "paths": {
+            "~api/*": ["./src/*"]
+        }
+    },
+    "include": ["types/*.ts", "db/**/*.ts"]
+}

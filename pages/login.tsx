@@ -1,5 +1,4 @@
 import { getProviders, signIn } from "next-auth/react"
-
 import {
     FcGoogle as GoogleIcon
 } from "react-icons/fc"
@@ -27,7 +26,6 @@ function LoginPage({ providers }: any) {
             rowGap={2}
         >
             <Typography
-                level="body1"
                 lineHeight="sm"
                 textAlign="center"
                 width="100%"
@@ -35,7 +33,6 @@ function LoginPage({ providers }: any) {
                 Mulai tanpa repot akan mengumpulkan kembali catatan dari berbagai sumber.
             </Typography>
             <Typography
-                level="body2"
                 lineHeight="sm"
                 textAlign="center"
                 width="100%"

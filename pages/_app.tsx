@@ -1,36 +1,14 @@
-import "@/styles/globals.css"
+import "@/assets/styles/globals.css"
+
 import Head from "next/head"
 import type { AppInitialProps } from "next/app"
 import { SessionProvider } from "next-auth/react"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
-import {
-    CssVarsProvider as JoyCssVarsProvider,
-    extendTheme as extendJoyTheme
-} from "@mui/joy/styles"
-import {
-    Experimental_CssVarsProvider as MaterialCssVarsProvider,
-    experimental_extendTheme as extendMaterialTheme,
-    THEME_ID as MATERIAL_THEME_ID,
-} from "@mui/material/styles"
-import { font } from "@/lib/utils/fonts"
+
+import { font } from "utils/fonts"
+import { UIProvider } from "./provider"
 
 const queryClient = new QueryClient()
-
-const joyTheme = extendJoyTheme({
-    components: {
-        JoyIconButton: {
-            styleOverrides: {
-                root: () => ({
-                    ["&:active, &:hover"]: {
-                        backgroundColor: "unset",
-                    }
-                })
-            }
-        }
-    }
-})
-
-const materialTheme = extendMaterialTheme()
 
 export default function App({
     Component,
@@ -59,11 +37,9 @@ export default function App({
             `}</style>
             <SessionProvider session={session}>
                 <QueryClientProvider client={queryClient}>
-                    <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
-                        <JoyCssVarsProvider theme={joyTheme}>
-                            <Component {...pageProps} />
-                        </JoyCssVarsProvider>
-                    </MaterialCssVarsProvider>
+                  <UIProvider>
+                    <Component {...pageProps} />
+                  </UIProvider>
                 </QueryClientProvider>
             </SessionProvider>
         </>

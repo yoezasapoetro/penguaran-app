@@ -1,0 +1,11 @@
+{
+    "name": "api",
+    "private": true,
+    "license": "UNLICENSED",
+    "version": "0.1.0",
+    "dependencies": {
+        "drizzle-orm": "^0.29.3",
+        "db": "workspace:*",
+        "types": "workspace:*"
+    }
+}

@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth"
 import { getToken } from "next-auth/jwt"
 
 import { authOptions } from "../auth/[...nextauth]"
-import ExpenseService from "@/service/ExpenseService"
+import ExpenseService from "api/src/service/ExpenseService"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, authOptions)

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { getToken } from "next-auth/jwt"
-import StoreService from "@/service/StoreService"
+import StoreService from "api/src/service/StoreService"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const token = await getToken({ req })

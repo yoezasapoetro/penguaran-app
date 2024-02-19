@@ -1,24 +1,13 @@
 {
+    "extends": "./tsconfig.base.json",
     "compilerOptions": {
-        "target": "es2020",
+        "baseUrl": ".",
+        "jsx": "preserve",
         "lib": [
             "dom",
             "dom.iterable",
             "esnext"
         ],
-        "allowJs": true,
-        "skipLibCheck": true,
-        "strict": true,
-        "forceConsistentCasingInFileNames": true,
-        "noEmit": true,
-        "esModuleInterop": true,
-        "module": "esnext",
-        "moduleResolution": "node",
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "jsx": "preserve",
-        "incremental": true,
-        "baseUrl": ".",
         "plugins": [
             {
                 "name": "next"
@@ -26,20 +15,15 @@
         ],
         "paths": {
             "@/*": [
-                "./*"
+                "./src/*"
             ]
         }
     },
     "include": [
-        "next-env.d.ts",
-        "process.d.ts",
-        "**/*.ts",
         "**/*.tsx",
+        "next-env.d.ts",
         "types/**/*.ts",
         "types/**/*.d.ts",
         ".next/types/**/*.ts"
-    ],
-    "exclude": [
-        "node_modules"
     ]
 }

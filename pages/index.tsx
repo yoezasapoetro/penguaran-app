@@ -8,17 +8,13 @@ import {
     SessionContextValue,
     useSession
 } from "next-auth/react"
-import { PageContainer } from "@/components/ui"
 import { useQuery } from "@tanstack/react-query"
 import { PieChart, Pie } from "recharts"
+import { useRouter } from "next/router"
+import { DashboardExpenseItem, DashboardExpenseItems, DashboardExpenseRatioItem } from "types/Expense"
 
 import { fetchDashboard } from "@/actions/dashboard"
-import {
-    DashboardExpenseItem,
-    DashboardExpenseItems,
-    DashboardExpenseRatioItem
-} from "@/types/Expense"
-import { useRouter } from "next/router"
+import { PageContainer } from "@/components/ui"
 
 function Greeting(props: {
     session: SessionContextValue<boolean>
@@ -90,7 +86,7 @@ function ThisMonthExpenses(props: {
     const router = useRouter()
 
     function redirectToExpense() {
-        router.push("/pengeluaran")
+        router.push("/expense")
     }
 
     return (

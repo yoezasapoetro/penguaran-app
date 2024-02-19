@@ -1,0 +1,12 @@
+{
+    "name": "types",
+    "private": true,
+    "license": "UNLICENSED",
+    "version": "0.1.0",
+    "files": [
+        "Store.ts",
+        "SourcePayment.ts",
+        "Expense.ts",
+        "Category.ts"
+    ]
+}
