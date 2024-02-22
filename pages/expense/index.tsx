@@ -26,11 +26,10 @@ import {
 import {
     PageTitle,
     PageContainer,
-} from "@/components/ui"
+} from "components/ui"
 import { useRouter } from "next/router"
-import { useQuery } from "@tanstack/react-query"
-import { fetchExpense } from "@/actions/expense"
-import { ExpenseItem, ExpenseResults } from "types/Expense"
+import { ExpenseGroupItem, ExpenseResults } from "types/Expense"
+import { trpc } from "api/utils/trpc"
 
 function TimelinePicker(props: {
     month: number
@@ -165,9 +164,9 @@ function Timeline(props: {
     let totalPage: number = 0
     const [page] = useState<number>(1)
 
-    const { data, isSuccess, isLoading } = useQuery({
-        queryKey: ["pengeluaran", props.month, page],
-        queryFn: () => fetchExpense(props.month, page),
+    const { data, isSuccess, isLoading } = trpc.dashboard.getAllByMonth.useQuery({
+        currentMonth: props.month,
+        currentPage: page
     })
 
     if (isSuccess) {
@@ -225,7 +224,7 @@ function Timeline(props: {
                         </Typography>
                     </Box>
                 )}
-                {isSuccess && totalPage > 0 && results.map((item: { dateGroup: string, expenses: Array<ExpenseItem> }, idx) => (
+                {isSuccess && totalPage > 0 && results.map((item: { dateGroup: string, expenses: Array<ExpenseGroupItem> }, idx) => (
                     <Grid
                         key={idx}
                         container
@@ -331,7 +330,7 @@ function Timeline(props: {
     )
 }
 
-export default function Pengeluaran() {
+export default function Expenses() {
     const router = useRouter()
 
     const addPengeluaranCallback = () => {

@@ -11,8 +11,8 @@ import {
     colors
 } from "@mui/joy"
 
-import AuthenticationImage from "@/assets/illustrations/authentication.png"
-import AppLogoImage from "@/assets/icons/app_icon.png"
+import AuthenticationImage from "assets/illustrations/authentication.png"
+import AppLogoImage from "assets/icons/app_icon.png"
 
 function LoginPage({ providers }: any) {
     return (

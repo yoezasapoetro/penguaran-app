@@ -1,19 +1,16 @@
-import "@/assets/styles/globals.css"
+import "assets/styles/globals.css"
 
 import Head from "next/head"
-import type { AppInitialProps } from "next/app"
-import { SessionProvider } from "next-auth/react"
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
+import type { AppType } from "next/app"
 
 import { font } from "utils/fonts"
+import { trpc } from "api/utils/trpc"
 import { UIProvider } from "./provider"
 
-const queryClient = new QueryClient()
-
-export default function App({
+const App: AppType = ({
     Component,
-    pageProps: { session, ...pageProps }
-}: AppInitialProps & { Component: any }) {
+    pageProps
+}) => {
     return (
         <>
             <Head>
@@ -35,13 +32,11 @@ export default function App({
                     --joy-fontFamily-body: ${font.style.fontFamily}
                 }
             `}</style>
-            <SessionProvider session={session}>
-                <QueryClientProvider client={queryClient}>
-                  <UIProvider>
-                    <Component {...pageProps} />
-                  </UIProvider>
-                </QueryClientProvider>
-            </SessionProvider>
+            <UIProvider>
+                <Component {...pageProps} />
+            </UIProvider>
         </>
     );
 }
+
+export default trpc.withTRPC(App)

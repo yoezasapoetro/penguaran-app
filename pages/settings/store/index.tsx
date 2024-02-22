@@ -1,16 +1,10 @@
 import * as React from "react"
 import { useState } from "react"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import {
-    Button,
-    ListItemContent,
-    Option,
     Stack,
     Typography,
     colors
 } from "@mui/joy"
-import { Form, Formik, FormikConfig, FormikHelpers } from "formik"
-import { z } from "zod"
 import {
     PageLayout,
     PageHeader,
@@ -19,176 +13,16 @@ import {
     DataWrapper,
     ActionButton,
     LogDate,
-    InformationBanner,
-    BottomDrawer,
-    FormSelect,
-    FormInput,
     ConfirmationModal,
-} from "@/components/ui"
-import { Store, StoreFormProps } from "types/Store"
-import {
-    addPenjual,
-    editPenjual,
-    fetchPenjual,
-    removePenjual
-} from "@/actions/store"
+} from "components/ui"
+import { StoreType, StoreFormData, StoreItemsReturn } from "types/Store"
 import { dataLogDate } from "utils/date"
-import { Stores } from "db/data"
-import { DataType } from "db/data/dataTypes"
-import {
-    FaCity as LocationIcon
-} from "react-icons/fa"
-import DataPagination from "@/components/ui/DataPagination"
+import { FaCity as LocationIcon } from "react-icons/fa"
+import DataPagination from "components/ui/DataPagination"
+import { trpc } from "api/utils/trpc"
+import { StoreForm } from "forms/index"
 
-function PenjualModalForm({
-    formMode,
-    formData,
-    isOpen,
-    onClose,
-    submission,
-}: StoreFormProps & {
-    isOpen: boolean,
-    onClose: () => void,
-    submission: (formData: Partial<Store>) => void
-}) {
-    const title: Record<string, string> = {
-        edit: "Edit Penjual atau Entitas",
-        create: "Tambah Penjual atau Entitas",
-    }
-
-    const isEdit = formMode === "edit"
-
-    const formikConfig: FormikConfig<Partial<Store>> = {
-        enableReinitialize: true,
-        initialValues: {
-            name: formData.name,
-            type: formData.type,
-            address: formData.address,
-        },
-        validationSchema: z.object({
-            name: z.string({
-                required_error: "Nama tidak boleh kosong."
-            }),
-            type: z.string({
-                required_error: "Tipe tidak boleh kosong"
-            })
-        }).required({
-            name: true,
-            type: true
-        }),
-        onSubmit: (data: any, action: FormikHelpers<any>) => {
-            submission({
-                name: data.name,
-                type: data.type,
-                address: data.address,
-                ...(isEdit ? { id: formData.id } : {})
-            })
-            action.setSubmitting(false)
-            action.resetForm()
-        },
-    }
-
-    return (
-        <BottomDrawer
-            open={isOpen}
-            onClose={onClose}
-            backdropClick
-        >
-            <Typography
-                fontSize="lg"
-                width="100%"
-                textAlign="center"
-            >
-                {formMode && title[formMode]}
-            </Typography>
-
-            <Formik
-                {...formikConfig}
-            >
-                {() => (
-                    <Form
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            width: "100%",
-                            height: "100%",
-                            rowGap: "1rem",
-                            marginTop: "0.5rem",
-                            flex: "1",
-                        }}
-                    >
-                        <FormSelect
-                            name="type"
-                            label="Tipe"
-                            placeholder="Tipe penjual & entitas anda."
-                            options={Stores}
-                            renderOption={(option: DataType) => {
-                                return (
-                                    <React.Fragment key={option.label}>
-                                        <Option
-                                            value={option.label}
-                                            sx={{
-                                                maxWidth: "calc(100vw - 2rem)",
-                                            }}
-                                        >
-                                            <ListItemContent
-                                                sx={{
-                                                    fontSize: "md",
-                                                    overflowWrap: "break-word",
-                                                    wordBreak: "break-word",
-                                                    whiteSpace: "pre-line",
-                                                }}
-                                            >
-                                                {option.label}
-                                                <Typography
-                                                    fontSize="sm"
-                                                    fontWeight={500}
-                                                    sx={{
-                                                        overflowWrap: "break-word",
-                                                        wordBreak: "break-word",
-                                                        whiteSpace: "pre-line",
-                                                        hyphens: "manual",
-                                                    }}
-                                                >
-                                                    {option.group}
-                                                </Typography>
-                                            </ListItemContent>
-                                        </Option>
-                                    </React.Fragment>
-                                )
-                            }}
-                        />
-                        <FormInput
-                            name="name"
-                            label="Nama"
-                            placeholder="Nama penjual & entitas anda."
-                        />
-                        <FormInput
-                            name="address"
-                            label="Alamat"
-                            placeholder="Alamat penjual & entitas anda."
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            sx={{
-                                borderRadius: 0,
-                                fontWeight: 400,
-                                fontSize: "md",
-                                color: "success.300",
-                                backgroundColor: "primary.900",
-                            }}
-                        >
-                            Simpan
-                        </Button>
-                    </Form>
-                )}
-            </Formik>
-        </BottomDrawer>
-    )
-}
-
-function DeletePenjualModal(props: {
+function WarningDeletionModal(props: {
     isOpen: boolean,
     onClose: () => void,
     onCommit: () => void,
@@ -221,9 +55,9 @@ function DeletePenjualModal(props: {
 }
 
 function DataItem(props: {
-    item: Store,
-    onEdit: (item: Partial<Store>) => void,
-    onDelete: (id: number) => void,
+    item: StoreType,
+    onEdit: (item: StoreType) => void,
+    onDelete: (id?: number) => void,
 }) {
     const { item } = props
     const logDate = dataLogDate(item)
@@ -280,49 +114,28 @@ function DataItem(props: {
     )
 }
 
-export default function Penjual() {
-    const queryClient = useQueryClient()
-
+export default function Stores() {
     const [currentPage, setCurrentPage] = useState<number>(1)
     const [mode, setMode] = useState<"create" | "edit" | null>(null)
-    const [formData, setFormData] = useState<Partial<Store>>({
+    const [formData, setFormData] = useState<StoreFormData>({
         name: "",
         type: "",
         address: "",
     })
 
-    const [formId, setFormId] = useState<number | undefined>()
+    const [formId, setFormId] = useState<number>()
     const [isOpenFormModal, setIsOpenFormModal] = useState(false)
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false)
 
-    const { data, isLoading } = useQuery({
-        queryKey: ["penjual", currentPage],
-        queryFn: () => fetchPenjual(currentPage)
+    const { data, isLoading } = trpc.store.getAll.useQuery({
+        page: currentPage
     })
+    const mutationDelete = trpc.store.delete.useMutation()
+    const mutationAddForm = trpc.store.create.useMutation()
+    const mutationEditForm = trpc.store.update.useMutation()
 
-    const mutationDelete = useMutation({
-        mutationFn: removePenjual,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["penjual"] })
-        },
-    })
-
-    const mutationAddForm = useMutation({
-        mutationFn: addPenjual,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["penjual"] })
-        },
-    })
-
-    const mutationEditForm = useMutation({
-        mutationFn: editPenjual,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["penjual"] })
-        },
-    })
-
-    const items: Array<Store> | undefined = data?.data
-    const totalPage = data?.totalPage as number
+    const items: StoreItemsReturn | undefined = data?.data
+    const totalPage = data?.totalPage
     const isEmpty: boolean = data?.total === 0
 
     const createCallback = () => {
@@ -335,12 +148,11 @@ export default function Penjual() {
         })
     }
 
-    const editCallback = (formData: Partial<Store>) => {
+    const editCallback = (data: StoreType) => {
         setFormData({
-            id: formData.id,
-            name: formData.name,
-            type: formData.type,
-            address: formData.address,
+            name: data.name,
+            type: data.type,
+            address: data.address || "",
         })
         setMode("edit")
         setIsOpenFormModal(true)
@@ -356,13 +168,13 @@ export default function Penjual() {
         setIsOpenFormModal(false)
     }
 
-    const submissionCallback = (payload: Partial<Store>) => {
+    const submissionCallback = (payload: StoreFormData) => {
         if (mode === "create") {
             mutationAddForm.mutate(payload)
         }
 
-        if (mode === "edit") {
-            mutationEditForm.mutate(payload)
+        if (mode === "edit" && !!formId) {
+            mutationEditForm.mutate({ id: formId, payload })
         }
 
         setFormData({
@@ -374,7 +186,7 @@ export default function Penjual() {
         setIsOpenFormModal(false)
     }
 
-    const deleteCallback = (id: number) => {
+    const deleteCallback = (id?: number) => {
         setFormId(id)
         setIsOpenDeleteModal(true)
     }
@@ -389,9 +201,11 @@ export default function Penjual() {
     }
 
     const deletePenjualCallback = () => {
-        mutationDelete.mutate(formId)
-        setFormId(undefined)
-        setIsOpenDeleteModal(false)
+        if (!!formId) {
+            mutationDelete.mutate({ id: formId })
+            setFormId(undefined)
+            setIsOpenDeleteModal(false)
+        }
     }
 
     return (
@@ -412,25 +226,9 @@ export default function Penjual() {
                         marginBottom={8}
                         rowGap={2}
                     >
-                        <InformationBanner
-                            title="Informasi"
-                        >
-                            <div>
-                                <Typography
-                                    fontSize="sm"
-                                    lineHeight="sm"
-                                    fontWeight={400}
-                                    textColor="white"
-                                >
-                                    Dengan mencatat data penjual & entitas,
-                                    Anda dapat memantau riwayat transaksi dan mengidentifikasi tren pengeluaran,
-                                    sehingga memungkinkan Anda untuk mengelola keuangan keluarga dengan lebih baik.
-                                </Typography>
-                            </div>
-                        </InformationBanner>
-                        <DataWrapper
+                        <DataWrapper<StoreType>
                             data={items}
-                            renderItem={(item: Store) => (
+                            renderItem={(item: StoreType) => (
                                 <DataItem
                                     key={item.id}
                                     item={item}
@@ -439,7 +237,7 @@ export default function Penjual() {
                                 />
                             )}
                         />
-                        {totalPage !== 0 && <DataPagination
+                        {!!totalPage && <DataPagination
                             totalPage={totalPage}
                             currentPage={currentPage}
                             onPageChange={setCurrentPage}
@@ -447,14 +245,14 @@ export default function Penjual() {
                         <CreateButton onClick={createCallback} />
                     </Stack>
                 )}
-                <PenjualModalForm
+                <StoreForm
                     formMode={mode}
                     isOpen={isOpenFormModal}
                     onClose={closeFormModalCallback}
                     formData={formData}
                     submission={submissionCallback}
                 />
-                <DeletePenjualModal
+                <WarningDeletionModal
                     isOpen={isOpenDeleteModal}
                     onClose={closeDeleteModalCallback}
                     onCommit={deletePenjualCallback}

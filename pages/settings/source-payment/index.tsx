@@ -1,15 +1,11 @@
 import * as React from "react"
 import { useState } from "react"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import {
     Box,
-    Button,
     Stack,
     Typography,
     colors
 } from "@mui/joy"
-import { Form, Formik, FormikConfig, FormikHelpers } from "formik"
-import { z } from "zod"
 import {
     BsBank as BankIcon,
     BsCash as MoneyIcon,
@@ -25,133 +21,15 @@ import {
     DataWrapper,
     ActionButton,
     LogDate,
-    InformationBanner,
-    BottomDrawer,
-    FormInput,
     ConfirmationModal,
-    FormRadioGroup,
-} from "@/components/ui"
-import { SourcePayment, SourcePaymentFormProps } from "types/SourcePayment"
-import {
-    addSumberDana,
-    editSumberDana,
-    fetchSumberDana,
-    removeSumberDana
-} from "@/actions/sourcePayment"
+} from "components/ui"
+import { SourcePaymentType, SourcePaymentItemsReturn, SourcePaymentFormData } from "types/SourcePayment"
 import { dataLogDate } from "utils/date"
-import { SourcePayments } from "db/data"
-import DataPagination from "@/components/ui/DataPagination"
+import DataPagination from "components/ui/DataPagination"
+import { trpc } from "api/utils/trpc"
+import { SourcePaymentForm } from "forms/index"
 
-function SumberDanaModalForm({
-    formMode,
-    formData,
-    isOpen,
-    onClose,
-    submission,
-}: SourcePaymentFormProps & {
-    isOpen: boolean,
-    onClose: () => void,
-    submission: (formData: Partial<SourcePayment>) => void
-}) {
-    const title: Record<string, string> = {
-        edit: "Edit Sumber Dana",
-        create: "Tambah Sumber Dana",
-    }
-
-    const isEdit = formMode === "edit"
-
-    const formikConfig: FormikConfig<Partial<SourcePayment>> = {
-        enableReinitialize: true,
-        initialValues: {
-            name: formData.name,
-            type: formData.type,
-        },
-        validationSchema: z.object({
-            name: z.string({
-                required_error: "Nama tidak boleh kosong."
-            }),
-            type: z.string({
-                required_error: "Tipe tidak boleh kosong"
-            })
-        }).required({
-            name: true,
-            type: true
-        }),
-        onSubmit: (data: any, action: FormikHelpers<any>) => {
-            submission({
-                name: data.name,
-                type: data.type,
-                ...(isEdit ? { id: formData.id } : {})
-            })
-            action.setSubmitting(false)
-            action.resetForm()
-        },
-    }
-
-    return (
-        <BottomDrawer
-            open={isOpen}
-            onClose={onClose}
-            backdropClick
-        >
-            <Typography
-                fontSize="lg"
-                textColor="primary.900"
-                width="100%"
-                textAlign="center"
-            >
-                {formMode && title[formMode]}
-            </Typography>
-
-            <Formik
-                {...formikConfig}
-            >
-                {() => (
-                    <Form
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            width: "100%",
-                            height: "100%",
-                            rowGap: "1rem",
-                            marginTop: "0.5rem",
-                            flex: "1",
-                        }}
-                    >
-                        <FormInput
-                            name="name"
-                            label="Nama"
-                            placeholder="Nama sumber dana anda."
-                        />
-                        <FormRadioGroup
-                            hasIconDecorator
-                            name="type"
-                            label="Tipe"
-                            placeholder="Tipe sumber dana anda."
-                            defaultValue="bank"
-                            options={SourcePayments}
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            sx={{
-                                borderRadius: 0,
-                                color: "success.300",
-                                fontWeight: 400,
-                                backgroundColor: "primary.900",
-                                fontSize: "md",
-                            }}
-                        >
-                            Simpan
-                        </Button>
-                    </Form>
-                )}
-            </Formik>
-        </BottomDrawer>
-    )
-}
-
-function DeleteSumberDanaModal({
+function WarningDeletionModal({
     isOpen,
     onClose,
     onCommit,
@@ -190,8 +68,8 @@ function DeleteSumberDanaModal({
 }
 
 function DataItem(props: {
-    item: SourcePayment,
-    onEdit: (item: Partial<SourcePayment>) => void,
+    item: SourcePaymentType,
+    onEdit: (item: SourcePaymentType) => void,
     onDelete: (id: number) => void,
 }) {
     const { item } = props
@@ -241,12 +119,10 @@ function DataItem(props: {
     )
 }
 
-export default function SumberDana() {
-    const queryClient = useQueryClient()
-
+export default function SourcePayments() {
     const [currentPage, setCurrentPage] = useState<number>(1)
     const [mode, setMode] = useState<"create" | "edit" | null>(null)
-    const [formData, setFormData] = useState<Partial<SourcePayment>>({
+    const [formData, setFormData] = useState<SourcePaymentFormData>({
         name: "",
         type: "",
     })
@@ -255,34 +131,15 @@ export default function SumberDana() {
     const [isOpenFormModal, setIsOpenFormModal] = useState(false)
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false)
 
-    const { data, isLoading } = useQuery({
-        queryKey: ["sumberDana", currentPage],
-        queryFn: () => fetchSumberDana(currentPage)
+    const { data, isLoading } = trpc.sourcePayment.getAll.useQuery({
+        page: currentPage
     })
+    const mutationDelete = trpc.sourcePayment.delete.useMutation()
+    const mutationAddForm = trpc.sourcePayment.create.useMutation()
+    const mutationEditForm = trpc.sourcePayment.update.useMutation()
 
-    const mutationDelete = useMutation({
-        mutationFn: removeSumberDana,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["sumberDana"] })
-        },
-    })
-
-    const mutationAddForm = useMutation({
-        mutationFn: addSumberDana,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["sumberDana"] })
-        },
-    })
-
-    const mutationEditForm = useMutation({
-        mutationFn: editSumberDana,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["sumberDana"] })
-        },
-    })
-
-    const items: Array<SourcePayment> | undefined = data?.data
-    const totalPage = data?.totalPage as number
+    const items: SourcePaymentItemsReturn | undefined = data?.data
+    const totalPage = data?.totalPage
     const isEmpty: boolean = data?.total === 0
 
     const createCallback = () => {
@@ -294,11 +151,10 @@ export default function SumberDana() {
         })
     }
 
-    const editCallback = (formData: Partial<SourcePayment>) => {
+    const editCallback = (data: SourcePaymentType) => {
         setFormData({
-            id: formData.id,
-            name: formData.name,
-            type: formData.type,
+            name: data.name,
+            type: data.type,
         })
         setMode("edit")
         setIsOpenFormModal(true)
@@ -313,13 +169,13 @@ export default function SumberDana() {
         setIsOpenFormModal(false)
     }
 
-    const submissionCallback = (payload: Partial<SourcePayment>) => {
+    const submissionCallback = (payload: SourcePaymentFormData) => {
         if (mode === "create") {
             mutationAddForm.mutate(payload)
         }
 
-        if (mode === "edit") {
-            mutationEditForm.mutate(payload)
+        if (mode === "edit" && !!formId) {
+            mutationEditForm.mutate({ id: formId, payload })
         }
 
         setFormData({
@@ -344,9 +200,11 @@ export default function SumberDana() {
     }
 
     const deleteSumberDanaCallback = () => {
-        mutationDelete.mutate(formId)
-        setFormId(undefined)
-        setIsOpenDeleteModal(false)
+        if (!!formId) {
+            mutationDelete.mutate({ id: formId })
+            setFormId(undefined)
+            setIsOpenDeleteModal(false)
+        }
     }
 
     return (
@@ -367,24 +225,9 @@ export default function SumberDana() {
                         marginTop={9}
                         marginBottom={8}
                     >
-                        <InformationBanner
-                            title="Informasi"
-                        >
-                            <div>
-                                <Typography
-                                    fontSize="sm"
-                                    lineHeight="sm"
-                                    fontWeight="xs"
-                                    textColor="common.white"
-                                >
-                                    Harap berikan kategori sumber dana untuk pengeluaran Anda.
-                                    Ini akan membantu Anda mengelompokkan dan melacak pengeluaran dengan lebih baik.
-                                </Typography>
-                            </div>
-                        </InformationBanner>
-                        <DataWrapper
+                        <DataWrapper<SourcePaymentType>
                             data={items}
-                            renderItem={(item: SourcePayment) => (
+                            renderItem={(item: SourcePaymentType) => (
                                 <DataItem
                                     key={item.id}
                                     item={item}
@@ -393,7 +236,7 @@ export default function SumberDana() {
                                 />
                             )}
                         />
-                        {totalPage !== 0 && <DataPagination
+                        {!!totalPage && <DataPagination
                             currentPage={currentPage}
                             totalPage={totalPage}
                             onPageChange={setCurrentPage}
@@ -401,14 +244,14 @@ export default function SumberDana() {
                         <CreateButton onClick={createCallback} />
                     </Stack>
                 )}
-                <SumberDanaModalForm
+                <SourcePaymentForm
                     formMode={mode}
                     isOpen={isOpenFormModal}
                     onClose={closeFormModalCallback}
                     formData={formData}
                     submission={submissionCallback}
                 />
-                <DeleteSumberDanaModal
+                <WarningDeletionModal
                     isOpen={isOpenDeleteModal}
                     onClose={closeDeleteModalCallback}
                     onCommit={deleteSumberDanaCallback}

@@ -1,6 +1,6 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google"
-import { PenguaranAuthenticationAdapter } from "api/src/adapter";
+import { PenguaranAuthenticationAdapter } from "api/adapter";
 
 const { NODE_ENV, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, } = process.env
 const isDev = NODE_ENV !== "development"

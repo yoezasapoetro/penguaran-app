@@ -14,16 +14,37 @@
             }
         ],
         "paths": {
-            "@/*": [
-                "./src/*"
+            "api/*": [
+                "./src/api/*"
+            ],
+            "db/*": [
+                "./src/db/*"
+            ],
+            "utils/*": [
+                "./src/utils/*"
+            ],
+            "types/*": [
+                "./src/types/*"
+            ],
+            "components/*": [
+                "./src/components/*"
+            ],
+            "assets/*": [
+                "./src/assets/*"
+            ],
+            "forms/*": [
+                "./src/forms/*"
+            ],
+            "pickers/*": [
+                "./src/pickers/*"
             ]
-        }
+        },
+        "tsBuildInfoFile": "node_modules/.cache/tsconfig.tsbuildinfo"
     },
     "include": [
         "**/*.tsx",
+        "**/*.ts",
         "next-env.d.ts",
-        "types/**/*.ts",
-        "types/**/*.d.ts",
         ".next/types/**/*.ts"
     ]
 }

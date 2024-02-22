@@ -16,10 +16,7 @@ import {
 } from "react-icons/gi"
 import NextImage from "next/image"
 
-import {
-    PageHeader,
-    PageLayout,
-} from "@/components/ui"
+import { PageHeader, PageLayout } from "components/ui"
 import { SessionContextValue, signOut, useSession } from "next-auth/react"
 
 function Profile(props: {

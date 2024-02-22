@@ -16,10 +16,10 @@ import {
 
 import Image, { StaticImageData } from "next/image"
 
-import JenisPengeluaranIcon from "@/assets/icons/jenis_pengeluaran.png"
-import SumberDanaIcon from "@/assets/icons/sumber_dana.png"
-import SellerIcon from "@/assets/icons/seller.png"
-import { PageContainer, PageTitle } from "@/components/ui"
+import JenisPengeluaranIcon from "assets/icons/jenis_pengeluaran.png"
+import SumberDanaIcon from "assets/icons/sumber_dana.png"
+import SellerIcon from "assets/icons/seller.png"
+import { PageContainer, PageTitle } from "components/ui"
 
 const SettingItem = ({
     title,

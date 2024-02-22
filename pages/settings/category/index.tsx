@@ -2,11 +2,8 @@ import * as React from "react"
 import { useState } from "react"
 import {
     Stack,
-    Button,
     Box,
     Typography,
-    ListItemContent,
-    Option,
 } from "@mui/joy"
 import {
     MdFiberManualRecord as LowPriority,
@@ -14,173 +11,24 @@ import {
     MdFiberSmartRecord as HighPriority,
 } from "react-icons/md"
 
+import { priorityColors } from "components/colors"
 import {
-    useMutation,
-    useQuery,
-    useQueryClient,
-} from "@tanstack/react-query"
-
-import {
-    FormikHelpers,
-    Form,
-    FormikConfig,
-    Formik
-} from "formik"
-import { z } from "zod"
-import { priorityColors } from "@/components/colors"
-import {
-    BottomDrawer,
     PageLayout,
     PageHeader,
     Loading,
     CreateButton,
     ActionButton,
-    FormSelect,
-    FormRadioGroup,
     ConfirmationModal,
     DataWrapper,
     LogDate,
-    InformationBanner,
     DataPagination,
-} from "@/components/ui"
+} from "components/ui"
 import { dataLogDate } from "utils/date"
-import { Categories as CategoryData, Priorities as PriorityData } from "db/data"
-import { Category, CategoryFormProps } from "types/Category"
-import { DataType } from "db/data/dataTypes"
-import {
-    addKategoriPengeluaran,
-    editKategoriPengeluaran,
-    fetchKategoriPengeluaran,
-    removeKategoriPengeluaran
-} from "@/actions/category"
+import { CategoryFormData, CategoryItemsReturn, CategoryType } from "types/Category"
+import { trpc } from "api/utils/trpc"
+import { CategoryForm } from "forms/index"
 
-function KategoriPengeluaranModalForm({
-    formMode,
-    formData,
-    isOpen,
-    onClose,
-    submission,
-}: CategoryFormProps & {
-    isOpen: boolean,
-    onClose: () => void,
-    submission: (formData: Partial<Category>) => void
-}) {
-    const title: Record<string, string> = {
-        edit: "Edit Kategori Pengeluaran",
-        create: "Tambah Kategori Pengeluaran",
-    }
-
-    const isEdit = formMode === "edit"
-
-    const formikConfig: FormikConfig<Partial<Category>> = {
-        enableReinitialize: true,
-        initialValues: {
-            name: formData.name,
-            priority: formData.priority,
-        },
-        validationSchema: z.object({
-            name: z.string({
-                    required_error: "Nama tidak boleh kosong."
-                }),
-                priority: z.number({
-                    required_error: "Prioritas tidak boleh kosong"
-                })
-                .min(0, "Level prioritas lebih dari 0")
-                .max(3, "Level prioritas kurang atau sama dengan 3")
-        }).required({
-            name: true,
-            priority: true
-        }),
-        onSubmit: (data: any, action: FormikHelpers<any>) => {
-            submission({
-                name: data.name,
-                priority: data.priority,
-                ...(isEdit ? { id: formData.id } : {})
-            })
-            action.setSubmitting(false)
-            action.resetForm()
-        },
-    }
-
-    return (
-        <BottomDrawer
-            open={isOpen}
-            onClose={onClose}
-            backdropClick
-        >
-            <Typography
-                fontSize="lg"
-                width="100%"
-                textAlign="center"
-            >
-                {formMode && title[formMode]}
-            </Typography>
-
-            <Formik
-                {...formikConfig}
-            >
-                {() => (
-                    <Form
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            width: "100%",
-                            height: "100%",
-                            rowGap: "1rem",
-                            marginTop: "0.5rem",
-                        }}
-                    >
-                        <FormSelect
-                            name="name"
-                            label="Nama"
-                            placeholder="Nama kategori pengeluaran anda."
-                            options={CategoryData}
-                            renderOption={(option: DataType) => (
-                                <React.Fragment key={option.label}>
-                                    <Option
-                                        value={option.label}
-                                    >
-                                        <ListItemContent
-                                            sx={{ fontSize: "sm" }}
-                                        >
-                                            {option.label}
-                                            <Typography>
-                                                {option.group}
-                                            </Typography>
-                                        </ListItemContent>
-                                    </Option>
-                                </React.Fragment>
-                            )}
-                        />
-                        <FormRadioGroup
-                            hasIconDecorator
-                            name="priority"
-                            label="Skala Prioritas"
-                            placeholder="Skala prioritas kategori pengeluaran."
-                            defaultValue={1}
-                            options={PriorityData}
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            sx={{
-                                borderRadius: 0,
-                                fontWeight: 400,
-                                fontSize: "md",
-                                bgcolor: "primary.900",
-                                color: "success.300",
-                            }}
-                        >
-                            Simpan
-                        </Button>
-                    </Form>
-                )}
-            </Formik>
-        </BottomDrawer>
-    )
-}
-
-function DeleteKategoriPengeluaranModal(props: {
+function WarningDeletionModal(props: {
     isOpen: boolean,
     onClose: () => void,
     onCommit: () => void,
@@ -212,8 +60,8 @@ function DeleteKategoriPengeluaranModal(props: {
 }
 
 function DataItem(props: {
-    item: Category,
-    onEdit: (item: Partial<Category>) => void,
+    item: CategoryType,
+    onEdit: (item: CategoryType) => void,
     onDelete: (id: number) => void,
 }) {
     const iconProps = {
@@ -253,9 +101,9 @@ function DataItem(props: {
                 spacing={1.5}
             >
                 <Box>
-                    {item.priority <= 1 && <LowPriority {...lowIconProps} />}
-                    {item.priority == 2 && <MediumPriority {...mediumIconProps} />}
-                    {item.priority == 3 && <HighPriority {...highIconProps} />}
+                    {!!item.priority && item.priority <= 1 && <LowPriority {...lowIconProps} />}
+                    {!!item.priority && item.priority == 2 && <MediumPriority {...mediumIconProps} />}
+                    {!!item.priority && item.priority == 3 && <HighPriority {...highIconProps} />}
                 </Box>
                 <Box
                     maxWidth={300}
@@ -275,46 +123,25 @@ function DataItem(props: {
     )
 }
 
-export default function KategoriPengeluaran() {
-    const queryClient = useQueryClient()
-
+export default function Categories() {
     const [currentPage, setCurrentPage] = useState<number>(1)
     const [mode, setMode] = useState<"create" | "edit" | null>(null)
-    const [formData, setFormData] = useState<Partial<Category>>({
+    const [formData, setFormData] = useState<CategoryFormData>({
         name: "",
         priority: 0,
     })
-    const [formId, setFormId] = useState<number | undefined>()
+    const [formId, setFormId] = useState<number>()
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState<boolean>(false)
     const [isOpenFormModal, setIsOpenFormModal] = useState<boolean>(false)
 
-    const { data, isSuccess, isLoading } = useQuery({
-        queryKey: ["kategoriPengeluaran", currentPage],
-        queryFn: () => fetchKategoriPengeluaran(currentPage),
+    const { data, isSuccess, isLoading } = trpc.category.getAll.useQuery({
+        page: currentPage
     })
+    const mutationDelete = trpc.category.delete.useMutation()
+    const mutationAddForm = trpc.category.create.useMutation()
+    const mutationEditForm = trpc.category.update.useMutation()
 
-    const mutationDelete = useMutation({
-        mutationFn: removeKategoriPengeluaran,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["kategoriPengeluaran"] })
-        },
-    })
-
-    const mutationAddForm = useMutation({
-        mutationFn: addKategoriPengeluaran,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["kategoriPengeluaran"] })
-        },
-    })
-
-    const mutationEditForm = useMutation({
-        mutationFn: editKategoriPengeluaran,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["kategoriPengeluaran"] })
-        },
-    })
-
-    let items: Array<Partial<Category>> = []
+    let items: CategoryItemsReturn = []
     let totalPage: number = 0
     let isEmpty: boolean = true
 
@@ -333,11 +160,10 @@ export default function KategoriPengeluaran() {
         })
     }
 
-    const editCallback = (formData: Partial<Category>) => {
+    const editCallback = (data: CategoryType) => {
         setFormData({
-            id: formData.id,
-            name: formData.name,
-            priority: formData.priority,
+            name: data.name,
+            priority: data.priority,
         })
         setMode("edit")
         setIsOpenFormModal(true)
@@ -352,13 +178,13 @@ export default function KategoriPengeluaran() {
         setIsOpenFormModal(false)
     }
 
-    const submissionCallback = (payload: Partial<Category>) => {
+    const submissionCallback = (payload: CategoryFormData) => {
         if (mode === "create") {
             mutationAddForm.mutate(payload)
         }
 
-        if (mode === "edit") {
-            mutationEditForm.mutate(payload)
+        if (mode === "edit" && !!formId) {
+            mutationEditForm.mutate({ id: formId, payload })
         }
 
         setFormData({
@@ -382,10 +208,12 @@ export default function KategoriPengeluaran() {
         setIsOpenDeleteModal(false)
     }
 
-    const deleteKategoriPengeluaranCallback = () => {
-        mutationDelete.mutate(formId)
-        setFormId(undefined)
-        setIsOpenDeleteModal(false)
+    const deleteCategoryCallback = () => {
+        if (!!formId) {
+            mutationDelete.mutate({ id: formId })
+            setFormId(undefined)
+            setIsOpenDeleteModal(false)
+        }
     }
 
     return (
@@ -406,24 +234,9 @@ export default function KategoriPengeluaran() {
                         marginTop={9}
                         marginBottom={8}
                     >
-                        <InformationBanner
-                            title="Informasi"
-                        >
-                            <div>
-                                <Typography
-                                    fontSize="sm"
-                                    lineHeight="sm"
-                                    fontWeight="sm"
-                                    textColor="white"
-                                >
-                                    Kategori pengeluaran adalah cara untuk mengelompokkan pengeluaran Anda.
-                                    Dengan menggunakan kategori, Anda dapat dengan mudah melihat laporan keuangan Anda berdasarkan prioritas.
-                                </Typography>
-                            </div>
-                        </InformationBanner>
-                        <DataWrapper
+                        <DataWrapper<CategoryType>
                             data={items}
-                            renderItem={(item: Category) => (
+                            renderItem={(item: CategoryType) => (
                                 <DataItem
                                     key={item.id}
                                     item={item}
@@ -441,17 +254,17 @@ export default function KategoriPengeluaran() {
                     </Stack>
                 )}
             </PageLayout>
-            <KategoriPengeluaranModalForm
+            <CategoryForm
                 formMode={mode}
                 isOpen={isOpenFormModal}
                 onClose={closeFormModalCallback}
                 formData={formData}
                 submission={submissionCallback}
             />
-            <DeleteKategoriPengeluaranModal
+            <WarningDeletionModal
                 isOpen={isOpenDeleteModal}
                 onClose={closeDeleteModalCallback}
-                onCommit={deleteKategoriPengeluaranCallback}
+                onCommit={deleteCategoryCallback}
             />
         </>
     )

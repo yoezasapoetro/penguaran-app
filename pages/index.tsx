@@ -8,13 +8,12 @@ import {
     SessionContextValue,
     useSession
 } from "next-auth/react"
-import { useQuery } from "@tanstack/react-query"
 import { PieChart, Pie } from "recharts"
 import { useRouter } from "next/router"
-import { DashboardExpenseItem, DashboardExpenseItems, DashboardExpenseRatioItem } from "types/Expense"
 
-import { fetchDashboard } from "@/actions/dashboard"
-import { PageContainer } from "@/components/ui"
+import { DashboardExpenseItem, DashboardExpenseItems, DashboardExpenseRatioItem } from "types/Dashboard"
+import { PageContainer } from "components/ui"
+import { trpc } from "api/utils/trpc"
 
 function Greeting(props: {
     session: SessionContextValue<boolean>
@@ -209,10 +208,7 @@ function ExpenseRatio(props: {
 export default function Home() {
     const session = useSession()
 
-    const { data, isSuccess } = useQuery({
-        queryKey: ["dashboard"],
-        queryFn: () => fetchDashboard(),
-    })
+    const { data, isSuccess } = trpc.dashboard.analytics.useQuery()
 
     let todayExpense: DashboardExpenseItem | null = null
     let thisMonthExpense: DashboardExpenseItems = []
