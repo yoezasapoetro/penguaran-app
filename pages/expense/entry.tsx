@@ -3,7 +3,7 @@ import { PageHeader, PageLayout } from "components/ui"
 import { GlobalStyles } from '@mui/joy'
 import { Toaster } from "sonner"
 
-import { ExpenseForm } from "forms/index"
+import { ExpenseForm } from "components/forms"
 
 export default function ExpensesEntry() {
     return (
@@ -23,7 +23,7 @@ export default function ExpensesEntry() {
             <PageHeader
                 title="Pengeluaran"
                 subtitle="Entri pengeluaran"
-                backUrl="/pengeluaran"
+                backUrl="/expense"
             />
             <PageLayout>
                 <Toaster position="top-center" richColors />

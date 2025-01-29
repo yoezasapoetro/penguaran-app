@@ -15,19 +15,10 @@ import {
     Grid,
     CircularProgress,
 } from "@mui/joy"
-import {
-    IoAdd as AddIcon,
-    IoChevronDownOutline as IndicatorIcon,
-    IoCashOutline as MoneyIcon,
-    IoBusinessOutline as PlaceIcon,
-    IoCalendarNumberOutline as CalendarIcon,
-} from "react-icons/io5"
-
-import {
-    PageTitle,
-    PageContainer,
-} from "components/ui"
 import { useRouter } from "next/router"
+
+import { PageTitle, PageContainer } from "components/ui"
+import { IndicatorIcon, AddIcon, CalendarIcon, PlaceIcon, MoneyIcon } from "components/icons"
 import { ExpenseGroupItem, ExpenseResults } from "types/Expense"
 import { trpc } from "api/utils/trpc"
 

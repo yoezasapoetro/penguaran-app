@@ -1,27 +1,9 @@
-import type { NeonDatabase } from "drizzle-orm/neon-serverless"
+import { LibSQLDatabase } from "drizzle-orm/libsql";
 
-export default abstract class AbstractRepository<T extends Record<string, any>> {
-    protected client: NeonDatabase<T>
-    protected userId: string
+export default abstract class AbstractRepository<T extends Record<string, unknown>> {
+    protected client: LibSQLDatabase<T>
 
-    constructor(client: NeonDatabase<T>, userId: string) {
+    constructor(client: LibSQLDatabase<T>) {
         this.client = client
-        this.userId = userId
-    }
-
-    get currentDate(): Date {
-        return new Date()
-    }
-
-    get currentYear(): number {
-        return this.currentDate.getFullYear()
-    }
-
-    get currentMonth(): number {
-        return this.currentDate.getMonth() - 1
-    }
-
-    getDateString(): string {
-        return this.currentDate.toISOString()
     }
 }

@@ -1,7 +1,4 @@
 import { getProviders, signIn } from "next-auth/react"
-import {
-    FcGoogle as GoogleIcon
-} from "react-icons/fc"
 import Image from "next/image"
 import {
     Button,
@@ -13,6 +10,7 @@ import {
 
 import AuthenticationImage from "assets/illustrations/authentication.png"
 import AppLogoImage from "assets/icons/app_icon.png"
+import { GoogleIcon } from "components/icons"
 
 function LoginPage({ providers }: any) {
     return (

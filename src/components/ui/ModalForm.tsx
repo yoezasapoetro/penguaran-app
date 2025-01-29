@@ -4,11 +4,10 @@ import {
     Typography,
     colors
 } from "@mui/joy"
-import {
-    BsXLg as CloseIcon,
-} from "react-icons/bs"
-import BottomDrawer from "./BottomDrawer"
 import { SxProps } from "@mui/joy/styles/types"
+
+import BottomDrawer from "./BottomDrawer"
+import { CloseIcon } from "components/icons"
 
 export type ModalFormProps = {
     modalTitle: string

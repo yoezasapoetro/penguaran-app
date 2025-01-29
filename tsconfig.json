@@ -31,19 +31,12 @@
             ],
             "assets/*": [
                 "./src/assets/*"
-            ],
-            "forms/*": [
-                "./src/forms/*"
-            ],
-            "pickers/*": [
-                "./src/pickers/*"
             ]
         },
         "tsBuildInfoFile": "node_modules/.cache/tsconfig.tsbuildinfo"
     },
     "include": [
         "**/*.tsx",
-        "**/*.ts",
         "next-env.d.ts",
         ".next/types/**/*.ts"
     ]

@@ -1,16 +1,17 @@
 import "assets/styles/globals.css"
 
 import Head from "next/head"
-import type { AppType } from "next/app"
+import type { AppInitialProps } from "next/app"
 
 import { font } from "utils/fonts"
 import { trpc } from "api/utils/trpc"
 import { UIProvider } from "./provider"
+import { SessionProvider } from "next-auth/react"
 
-const App: AppType = ({
+const App = ({
     Component,
-    pageProps
-}) => {
+    pageProps: { session, ...pageProps }
+}: AppInitialProps & { Component: any }) => {
     return (
         <>
             <Head>
@@ -32,9 +33,11 @@ const App: AppType = ({
                     --joy-fontFamily-body: ${font.style.fontFamily}
                 }
             `}</style>
-            <UIProvider>
-                <Component {...pageProps} />
-            </UIProvider>
+            <SessionProvider session={session}>
+                <UIProvider>
+                    <Component {...pageProps} />
+                </UIProvider>
+            </SessionProvider>
         </>
     );
 }

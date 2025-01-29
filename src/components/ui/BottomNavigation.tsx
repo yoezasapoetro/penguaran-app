@@ -5,16 +5,10 @@ import {
     Box,
     colors,
 } from "@mui/joy"
-
 import { NextRouter, useRouter } from "next/router"
-
-import {
-    LiaHomeSolid as HomeIcon,
-    LiaClipboardListSolid as ExpenseIcon,
-    LiaCogSolid as SettingsIcon,
-} from "react-icons/lia"
-
 import type { IconType } from "react-icons"
+
+import { HomeIcon, ExpenseIcon, SettingsIcon } from "components/icons"
 
 function isActive(route: string, routerPath: NextRouter): boolean {
     return route === routerPath.route
@@ -85,13 +79,13 @@ export default function BottomNavigation() {
                 icon={HomeIcon}
             />
             <NavButton
-                action={() => router.replace("/pengeluaran")}
+                action={() => router.replace("/expense")}
                 router={router}
                 to="/pengeluaran"
                 icon={ExpenseIcon}
             />
             <NavButton
-                action={() => router.replace("/pengaturan")}
+                action={() => router.replace("/settings")}
                 router={router}
                 to="/pengaturan"
                 icon={SettingsIcon}

@@ -5,11 +5,6 @@ import {
     Box,
     Typography,
 } from "@mui/joy"
-import {
-    MdFiberManualRecord as LowPriority,
-    MdRadioButtonChecked as MediumPriority,
-    MdFiberSmartRecord as HighPriority,
-} from "react-icons/md"
 
 import { priorityColors } from "components/colors"
 import {
@@ -26,7 +21,8 @@ import {
 import { dataLogDate } from "utils/date"
 import { CategoryFormData, CategoryItemsReturn, CategoryType } from "types/Category"
 import { trpc } from "api/utils/trpc"
-import { CategoryForm } from "forms/index"
+import { CategoryForm } from "components/forms"
+import { HighPriority, LowPriority, MediumPriority } from "components/icons"
 
 function WarningDeletionModal(props: {
     isOpen: boolean,
@@ -222,7 +218,7 @@ export default function Categories() {
                 <PageHeader
                     title="Pengaturan"
                     subtitle="Kategori Pengeluaran"
-                    backUrl="/pengaturan"
+                    backUrl="/settings"
                 />
                 {isLoading && !isEmpty ? (
                     <Loading />

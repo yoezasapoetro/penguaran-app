@@ -12,11 +12,8 @@ import {
     Typography,
 } from "@mui/joy"
 import { SxProps } from "@mui/joy/styles/types"
-import {
-    BsSquare as UncheckedIcon,
-    BsCheckSquareFill as CheckedIcon,
-} from "react-icons/bs"
 import ModalForm, { ModalFormProps } from "./ModalForm"
+import { CheckedIcon, UncheckedIcon } from "components/icons"
 
 const radioGroupSx: SxProps = {
     flexDirection: "column",

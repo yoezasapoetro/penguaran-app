@@ -7,13 +7,6 @@ import {
     colors
 } from "@mui/joy"
 import {
-    BsBank as BankIcon,
-    BsCash as MoneyIcon,
-} from "react-icons/bs"
-import {
-    HiOutlineWallet as EWalletIcon,
-} from "react-icons/hi2"
-import {
     PageLayout,
     PageHeader,
     CreateButton,
@@ -27,7 +20,8 @@ import { SourcePaymentType, SourcePaymentItemsReturn, SourcePaymentFormData } fr
 import { dataLogDate } from "utils/date"
 import DataPagination from "components/ui/DataPagination"
 import { trpc } from "api/utils/trpc"
-import { SourcePaymentForm } from "forms/index"
+import { SourcePaymentForm } from "components/forms"
+import { BankIcon, EWalletIcon, MoneyIcon } from "components/icons"
 
 function WarningDeletionModal({
     isOpen,
@@ -213,7 +207,7 @@ export default function SourcePayments() {
                 <PageHeader
                     title="Pengaturan"
                     subtitle="Sumber Dana"
-                    backUrl="/pengaturan"
+                    backUrl="/settings"
                 />
                 {isLoading && !isEmpty ? (
                     <Loading />

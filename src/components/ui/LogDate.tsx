@@ -1,7 +1,6 @@
 import { Stack, Typography, colors } from "@mui/joy"
-import {
-    LuInfo as InfoIcon,
-} from "react-icons/lu"
+
+import { InfoIcon } from "components/icons"
 
 export default function LogDate(props: {
     date: string

@@ -8,16 +8,11 @@ import {
     Typography,
     TypographyProps,
 } from "@mui/joy"
-import {
-    BiLogOutCircle as LogoutIcon,
-} from "react-icons/bi"
-import {
-    GiPriceTag as SubscriptionIcon,
-} from "react-icons/gi"
+import { SessionContextValue, signOut, useSession } from "next-auth/react"
 import NextImage from "next/image"
 
 import { PageHeader, PageLayout } from "components/ui"
-import { SessionContextValue, signOut, useSession } from "next-auth/react"
+import { LogoutIcon, SubscriptionIcon } from "components/icons"
 
 function Profile(props: {
     session: SessionContextValue<boolean>

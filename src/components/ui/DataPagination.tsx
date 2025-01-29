@@ -6,10 +6,8 @@ import {
     Stack,
     Typography,
 } from "@mui/joy"
-import {
-    IoArrowBackCircleOutline as BackIcon,
-    IoArrowForwardCircleOutline as NextIcon,
-} from "react-icons/io5"
+
+import { PreviousIcon, NextIcon } from "components/icons"
 
 export default function DataPagination(props: {
     currentPage: number
@@ -47,7 +45,7 @@ export default function DataPagination(props: {
                     else props.onPageChange(_curr - 1)
                 }}
             >
-                <BackIcon size={25} color={isDisabled(!showPrevious)} />
+                <PreviousIcon size={25} color={isDisabled(!showPrevious)} />
             </IconButton>
             <Typography
                 lineHeight="sm"

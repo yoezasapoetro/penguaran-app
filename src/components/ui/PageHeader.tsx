@@ -5,12 +5,9 @@ import {
     IconButton,
     colors,
 } from "@mui/joy"
-
-import {
-    MdOutlineArrowBackIosNew as BackIcon
-} from "react-icons/md"
-
 import { useRouter } from "next/router"
+
+import { BackIcon } from "components/icons"
 
 export default function PageHeader(props: {
     title: string

@@ -5,6 +5,7 @@ import {
     Typography,
     colors
 } from "@mui/joy"
+
 import {
     PageLayout,
     PageHeader,
@@ -17,10 +18,10 @@ import {
 } from "components/ui"
 import { StoreType, StoreFormData, StoreItemsReturn } from "types/Store"
 import { dataLogDate } from "utils/date"
-import { FaCity as LocationIcon } from "react-icons/fa"
 import DataPagination from "components/ui/DataPagination"
 import { trpc } from "api/utils/trpc"
-import { StoreForm } from "forms/index"
+import { StoreForm } from "components/forms"
+import { LocationIcon } from "components/icons"
 
 function WarningDeletionModal(props: {
     isOpen: boolean,
@@ -214,7 +215,7 @@ export default function Stores() {
                 <PageHeader
                     title="Pengaturan"
                     subtitle="Penjual & Entitas"
-                    backUrl="/pengaturan"
+                    backUrl="/settings"
                 />
                 {isLoading && !isEmpty ? (
                     <Loading />

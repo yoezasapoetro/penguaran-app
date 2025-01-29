@@ -10,17 +10,9 @@ import {
     colors,
 } from "@mui/joy"
 
-import {
-    LuPencil as PencilIcon,
-    LuTrash2 as Trash2Icon,
-    LuMoreVertical as MoreVerticalIcon,
-} from "react-icons/lu"
+import { Trash2Icon, PencilIcon, MoreVerticalIcon } from "components/icons"
 
-export default function ActionButton({
-    onEdit,
-    onDelete,
-    disableEdit = false,
-}: {
+export default function ActionButton(props: {
     disableEdit?: boolean
     onEdit: (data: any) => void
     onDelete: (data: any) => void
@@ -44,14 +36,14 @@ export default function ActionButton({
 
     const editActionProps = {
         ...actionProps,
-        ...(disableEdit ? {
+        ...(props.disableEdit ? {
             textColor: "var(--joy-palette-neutral-plainDisabledColor)"
         } : {}),
     }
 
     const editActionIconProps = {
         ...actionIconProps,
-        ...(disableEdit ? {
+        ...(props.disableEdit ? {
             color: "var(--joy-palette-neutral-plainDisabledColor)"
         } : {}),
     }
@@ -94,8 +86,8 @@ export default function ActionButton({
                 }}
             >
                 <MenuItem
-                    onClick={onEdit}
-                    disabled={disableEdit}
+                    onClick={props.onEdit}
+                    disabled={props.disableEdit}
                 >
                     <ListItemDecorator
                         sx={{
@@ -110,7 +102,7 @@ export default function ActionButton({
                         Edit
                     </Typography>
                 </MenuItem>
-                <MenuItem onClick={onDelete}>
+                <MenuItem onClick={props.onDelete}>
                     <ListItemDecorator
                         sx={{
                             padding: 0,

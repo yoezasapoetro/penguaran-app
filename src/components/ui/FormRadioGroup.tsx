@@ -1,8 +1,5 @@
 import * as React from "react"
-import {
-    useField,
-    useFormikContext,
-} from "formik"
+import { useField, useFormikContext } from "formik"
 import {
     FormControl,
     FormLabel,
@@ -12,35 +9,11 @@ import {
     Sheet,
     Typography,
     colors,
-    radioClasses,
     Box,
 } from "@mui/joy"
 
-import {
-    GoCheckCircleFill as CheckedIcon,
-} from "react-icons/go"
-import { SxProps } from "@mui/joy/styles/types"
-
-const radioGroupSxProps: SxProps = {
-    margin: 0,
-    gap: 2,
-    [`& .${radioClasses.checked}`]: {
-        [`& .${radioClasses.action}`]: {
-            inset: -1,
-            border: "2px solid",
-            borderColor: "success.300",
-        },
-    },
-    [`& .${radioClasses.radio}`]: {
-        display: "contents",
-        ['& > div']: {
-            zIndex: 2,
-            position: "absolute",
-            top: "-11px",
-            right: "-11px",
-        }
-    }
-}
+import { CheckedIcon } from "components/icons"
+import { radioGroupSxProps } from "utils/joyStyling"
 
 export default function FormRadioGroup(props: {
     label: string

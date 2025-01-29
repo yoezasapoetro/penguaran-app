@@ -1,40 +1,37 @@
 import { AdapterAccount, AdapterUser, AdapterSession, } from "next-auth/adapters"
 import type { Adapter as DefaultAdapter } from "next-auth/adapters"
 import { parseJSON } from "date-fns"
-import type { NeonDatabase } from "drizzle-orm/neon-serverless"
 import { LibSQLDatabase } from "drizzle-orm/libsql"
-import { User, BaseUser, Session, SessionCreated, } from "db/models"
-import { dbPg, dbSqlite } from "db/instance"
-import { buildUserFromAdapterUser, buildBaseUserFromAdapterUser, toAdapterUser } from "db/dto/baseUser.dto"
+
+import { db } from "db/instance"
+import { BaseUser, Session, SessionCreated, User } from "db/models"
+import { buildBaseUserFromAdapterUser, toAdapterUser } from "db/dto/baseUser.dto"
 import { buildBaseUserFromUser } from "db/dto/user.dto"
 import { buildAccountFromAdapterAccount, toAdapterAccount } from "db/dto/account.dto"
 
-import BaseUserRepository from "api/repository/Auth/BaseUserRepository"
-import UserRepository from "api/repository/UserRepository"
-import AccountRepository from "api/repository/Auth/AccountRepository"
-import SessionRepository from "api/repository/Auth/SessionRepository"
+import BaseUserRepository from "./repository/BaseUserRepository"
+import AccountRepository from "./repository/AccountRepository"
+import SessionRepository from "./repository/SessionRepository"
 
 function toNextSession(_session: Session): AdapterSession {
-    const _nextSession: AdapterSession = {
+    return {
         userId: _session.userId,
         sessionToken: _session.sessionToken,
         expires: parseJSON(_session.expires as string)
     }
-
-    return _nextSession
 }
 
 export const PenguaranAuthenticationAdapter = (): DefaultAdapter => {
-    const client: NeonDatabase<any> = dbPg
-    const clientSqlite: LibSQLDatabase<any> = dbSqlite
-    const userRepository = new UserRepository(client, "")
-    const baseUserRepository = new BaseUserRepository(clientSqlite)
-    const accountRepository = new AccountRepository(clientSqlite)
-    const sessionRepository = new SessionRepository(clientSqlite)
+    const client: LibSQLDatabase<any> = db
+    const baseUserRepository = new BaseUserRepository(client)
+    const accountRepository = new AccountRepository(client)
+    const sessionRepository = new SessionRepository(client)
 
     return {
         async createUser(adapterUser: Omit<AdapterUser, "id">): Promise<AdapterUser> {
             try {
+                // TODO: handle api to backend to check user
+                /*
                 let user: User
                 const existingUser = await userRepository.getByEmail(adapterUser.email)
 
@@ -45,6 +42,8 @@ export const PenguaranAuthenticationAdapter = (): DefaultAdapter => {
                 } else {
                     user = existingUser
                 }
+                */
+                let user: User = {} as User
 
                 const _user: BaseUser = await baseUserRepository.create(
                     buildBaseUserFromUser(user, adapterUser)
@@ -80,10 +79,13 @@ export const PenguaranAuthenticationAdapter = (): DefaultAdapter => {
             return toAdapterUser(_user)
         },
         async updateUser(adapterUser: Partial<AdapterUser> & Pick<AdapterUser, "id">): Promise<AdapterUser> {
+            // TODO: handle update user from backend
+            /*
             await userRepository.update(
                 buildUserFromAdapterUser(adapterUser),
                 adapterUser.id
             )
+             */
             const _base_user = await baseUserRepository.update(
                 buildBaseUserFromAdapterUser(adapterUser),
                 adapterUser.id
@@ -93,7 +95,8 @@ export const PenguaranAuthenticationAdapter = (): DefaultAdapter => {
         },
         async deleteUser(id: string): Promise<void> {
             await baseUserRepository.remove(id)
-            await userRepository.remove(id)
+            // TODO: handle delete user from backend
+            // await userRepository.remove(id)
         },
         async linkAccount(_account: AdapterAccount): Promise<AdapterAccount> {
             const payload = buildAccountFromAdapterAccount(_account)

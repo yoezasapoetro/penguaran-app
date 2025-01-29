@@ -34,8 +34,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-.vercel
 
 .turso
 /public/*.js
 /public/*.js*
+
+certificates
